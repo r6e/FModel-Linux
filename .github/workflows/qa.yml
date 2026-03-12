@@ -33,7 +33,7 @@ jobs:
         with:
           type: zip
           filename: ${{ github.sha }}.zip # will end up in working directory not the Publish folder
-          path: ./FModel/bin/Publish/FModel
+          path: ./FModel/bin/Publish/
 
       - name: Edit QA Artifact
         uses: ncipollo/release-action@v1.20.0
