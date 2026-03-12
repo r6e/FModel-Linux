@@ -14,7 +14,7 @@ namespace FModel.Services
 
     public class DiscordHandler
     {
-        private const string _APP_ID = "684489366189768767";
+        private const string _APP_ID = ""; // Disabled: no Discord application registered for this fork yet
 
         private RichPresence _currentPresence;
         private readonly DiscordRpcClient _client = new(_APP_ID);
@@ -33,6 +33,8 @@ namespace FModel.Services
 
         public void Initialize(string gameName)
         {
+            if (string.IsNullOrEmpty(_APP_ID)) return;
+
             _currentPresence = new RichPresence
             {
                 Assets = _staticAssets,

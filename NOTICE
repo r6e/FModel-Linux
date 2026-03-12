@@ -1,32 +1,32 @@
+This software is a derivative of FModel (<https://github.com/4sval/FModel>),
+copyright © Asval and FModel contributors. Licensed under the GNU General
+Public License v3.0.
+
 This software includes material developed by the following third-party libraries:
 
-- Adonis UI (https://github.com/benruehl/adonis-ui/blob/master/LICENSE) - Copyright (c) 2018 Benjamin Rühl. Licensed under the MIT License.
-- AutoUpdater.NET (https://github.com/ravibpatel/AutoUpdater.NET/blob/master/LICENSE) - Copyright (c) 2012-2023 RBSoft. Licensed under the MIT License.
-- AvalonEdit (https://github.com/icsharpcode/AvalonEdit/blob/master/LICENSE) - Copyright (c) AvalonEdit Contributors. Licensed under the MIT License.
-- CSCore (https://github.com/filoe/cscore/blob/master/license.md) - Licensed under the MS-PL License.
-- CUE4Parse (https://github.com/FabianFG/CUE4Parse/blob/master/LICENSE) - Copyright 2023 CUE4Parse Contributors. Licensed under the Apache License 2.0.
-- DiscordRichPresence (https://github.com/Lachee/discord-rpc-csharp/blob/master/LICENSE) - Copyright (c) 2021 Lachee. Licensed under the MIT License.
-- EpicManifestParser (https://github.com/NotOfficer/EpicManifestParser/blob/master/LICENSE) - Copyright (c) 2020 NotOfficer. Licensed under the MIT License.
-- ImGui.NET (https://github.com/mellinoe/ImGui.NET/blob/master/LICENSE) - Copyright (c) 2017 Eric Mellino and ImGui.NET contributors. Licensed under the MIT License.
-- K4os.Compression.LZ4 (https://github.com/MiloszKrajewski/K4os.Compression.LZ4/blob/master/LICENSE) - Copyright (c) 2017 Milosz Krajewski. Licensed under the MIT License.
-- Newtonsoft.Json (https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md) - Copyright (c) 2007 James Newton-King. Licensed under the MIT License.
-- NVorbis (https://github.com/NVorbis/NVorbis/blob/master/LICENSE) - Copyright (c) 2020 Andrew Ward. Licensed under the MIT License.
-- Oodle.NET (https://github.com/NotOfficer/Oodle.NET/blob/master/LICENSE) - Copyright (c) 2021 Officer. Licensed under the MIT License.
-- Ookii.Dialogs.Wpf (https://github.com/ookii-dialogs/ookii-dialogs-wpf/blob/master/LICENSE) - Copyright (c) C. Augusto Proiete 2018-2021 & Sven Groot 2009-2018. Licensed under the BSD 3-Clause License.
-- OpenTK (https://github.com/opentk/opentk/blob/master/LICENSE.md) - Copyright (c) 2006-2019 Stefanos Apostolopoulos for the Open Toolkit project. Licensed under the MIT License.
-- RestSharp (https://github.com/restsharp/RestSharp/blob/dev/LICENSE.txt) - Copyright (c) .NET Foundation and Contributors. Licensed under the Apache License 2.0.
-- Serilog (https://github.com/serilog/serilog/blob/dev/LICENSE) - Copyright 2013-2015 Serilog Contributors. Licensed under the Apache License 2.0.
-- SixLabors.ImageSharp (https://github.com/SixLabors/ImageSharp/blob/main/LICENSE) - Copyright (c) Six Labors. Licensed under the Apache License 2.0.
-- SkiaSharp (https://github.com/mono/SkiaSharp/blob/main/LICENSE.md) - Copyright (c) 2015-2016 Xamarin, Inc. & 2017-2018 Microsoft Corporation. Licensed under the MIT License.
-- VirtualizingWrapPanel (https://github.com/sbaeumlisberger/VirtualizingWrapPanel/blob/master/LICENSE) - Copyright (c) 2019 S. Bäumlisberger. Licensed under the MIT License.
+- Avalonia (<https://github.com/AvaloniaUI/Avalonia/blob/master/licence.md>) - Copyright (c) 2013-present AvalonUI project contributors. Licensed under the MIT License.
+- AvaloniaEdit (<https://github.com/AvaloniaUI/AvaloniaEdit/blob/master/LICENSE>) - Copyright (c) AvaloniaEdit Contributors. Licensed under the MIT License.
+- CUE4Parse (<https://github.com/FabianFG/CUE4Parse/blob/master/LICENSE>) - Copyright 2023 CUE4Parse Contributors. Licensed under the Apache License 2.0.
+- DiscordRichPresence (<https://github.com/Lachee/discord-rpc-csharp/blob/master/LICENSE>) - Copyright (c) 2021 Lachee. Licensed under the MIT License.
+- EpicManifestParser (<https://github.com/NotOfficer/EpicManifestParser/blob/master/LICENSE>) - Copyright (c) 2020 NotOfficer. Licensed under the MIT License.
+- K4os.Compression.LZ4 (<https://github.com/MiloszKrajewski/K4os.Compression.LZ4/blob/master/LICENSE>) - Copyright (c) 2017 Milosz Krajewski. Licensed under the MIT License.
+- Newtonsoft.Json (<https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md>) - Copyright (c) 2007 James Newton-King. Licensed under the MIT License.
+- NVorbis (<https://github.com/NVorbis/NVorbis/blob/master/LICENSE>) - Copyright (c) 2020 Andrew Ward. Licensed under the MIT License.
+- Oodle.NET (<https://github.com/NotOfficer/Oodle.NET/blob/master/LICENSE>) - Copyright (c) 2021 Officer. Licensed under the MIT License.
+- OpenTK (<https://github.com/opentk/opentk/blob/master/LICENSE.md>) - Copyright (c) 2006-2019 Stefanos Apostolopoulos for the Open Toolkit project. Licensed under the MIT License.
+- RestSharp (<https://github.com/restsharp/RestSharp/blob/dev/LICENSE.txt>) - Copyright (c) .NET Foundation and Contributors. Licensed under the Apache License 2.0.
+- Serilog (<https://github.com/serilog/serilog/blob/dev/LICENSE>) - Copyright 2013-2015 Serilog Contributors. Licensed under the Apache License 2.0.
+- SixLabors.ImageSharp (<https://github.com/SixLabors/ImageSharp/blob/main/LICENSE>) - Copyright (c) Six Labors. Licensed under the Apache License 2.0.
+- SkiaSharp (<https://github.com/mono/SkiaSharp/blob/main/LICENSE.md>) - Copyright (c) 2015-2016 Xamarin, Inc. & 2017-2018 Microsoft Corporation. Licensed under the MIT License.
+- Svg.Skia (<https://github.com/wieslawsoltes/Svg.Skia/blob/master/LICENSE.TXT>) - Copyright (c) Wiesław Šoltés. Licensed under the MIT License.
+- Twizzle.ImGui-Bundle.NET (<https://github.com/Twizzle/ImGui-Bundle.NET>) - Licensed under the MIT License.
 
 ---------------------------------------------------------------------------
 
 LICENSE TEXTS
+
 1. MIT License
-2. MS-PL License
-3. BSD 3-Clause License
-4. Apache License 2.0
+2. Apache License 2.0
 
 ---------------------------------------------------------------------------
 
@@ -64,13 +64,13 @@ A “contributor” is any person that distributes its contribution under this l
 
 “Licensed patents” are a contributor’s patent claims that read directly on its contribution.
 
-2. Grant of Rights
+1. Grant of Rights
 
 (A) Copyright Grant- Subject to the terms of this license, including the license conditions and limitations in section 3, each contributor grants you a non-exclusive, worldwide, royalty-free copyright license to reproduce its contribution, prepare derivative works of its contribution, and distribute its contribution or any derivative works that you create.
 
 (B) Patent Grant- Subject to the terms of this license, including the license conditions and limitations in section 3, each contributor grants you a non-exclusive, worldwide, royalty-free license under its licensed patents to make, have made, use, sell, offer for sale, import, and/or otherwise dispose of its contribution in the software or derivative works of the contribution in the software.
 
-3. Conditions and Limitations
+1. Conditions and Limitations
 
 (A) No Trademark License- This license does not grant you rights to use any contributors’ name, logo, or trademarks.
 

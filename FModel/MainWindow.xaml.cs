@@ -148,7 +148,16 @@ public partial class MainWindow : Window
 
         var newOrUpdated = UserSettings.Default.ShowChangelog;
 #if !DEBUG
-        ApplicationService.ApiEndpointView.FModelApi.CheckForUpdates(true);
+        var updateRelease = await ApplicationService.ApiEndpointView.FModelApi.CheckForUpdatesAsync();
+        if (updateRelease != null)
+        {
+            var downloadUrl = updateRelease.HtmlUrl ?? "https://github.com/r6e/FModel-Linux/releases";
+            FLogger.Append(ELog.Warning, () =>
+            {
+                FLogger.Text($"FModel Linux {updateRelease.TagName} is available! Download at: ", Constants.WHITE);
+                FLogger.Text(downloadUrl, Constants.YELLOW, true);
+            });
+        }
 #endif
 
         switch (UserSettings.Default.AesReload)
