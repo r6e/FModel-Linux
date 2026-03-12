@@ -48,13 +48,6 @@ public partial class App : Application
             desktop.Exit += AppExit;
         }
 
-        Dispatcher.UIThread.UnhandledExceptionFilter += (_, e) =>
-        {
-            Log.Error("{Exception}", e.Exception);
-            e.Handled = true;
-            ShowErrorDialog(e.Exception);
-        };
-
 #if DEBUG
         if (OperatingSystem.IsWindows())
             AttachConsole(-1);
@@ -147,6 +140,15 @@ public partial class App : Application
         Log.Information("{RuntimeVer}", RuntimeInformation.FrameworkDescription);
         Log.Information("Culture {SysLang}", CultureInfo.CurrentCulture);
 
+        // Subscribed after logger is initialised so Log.Error calls inside
+        // the handler are always directed to the configured sinks.
+        Dispatcher.UIThread.UnhandledExceptionFilter += (_, e) =>
+        {
+            Log.Error("{Exception}", e.Exception);
+            e.Handled = true;
+            ShowErrorDialog(e.Exception);
+        };
+
         base.OnFrameworkInitializationCompleted();
     }
 
@@ -210,7 +212,8 @@ public partial class App : Application
             }
             else
             {
-                try { dialog.Show(); }
+                try
+                { dialog.Show(); }
                 catch { return; }
                 await tcs.Task;
             }
@@ -219,7 +222,9 @@ public partial class App : Application
                 UserSettings.Delete();
             if (result != EErrorKind.Ignore)
                 ApplicationService.ApplicationView.Restart();
-        });
+        }).ContinueWith(
+            t => Log.Error("{Exception}", t.Exception!.InnerException),
+            TaskContinuationOptions.OnlyOnFaulted);
     }
 
     private string GetOperatingSystemProductName()
