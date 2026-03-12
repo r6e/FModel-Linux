@@ -1,5 +1,5 @@
-<adonisControls:AdonisWindow x:Class="FModel.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+<Window x:Class="FModel.MainWindow"
+        xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:FModel"
         xmlns:controls="clr-namespace:FModel.Views.Resources.Controls"
@@ -7,40 +7,16 @@
         xmlns:converters="clr-namespace:FModel.Views.Resources.Converters"
         xmlns:settings="clr-namespace:FModel.Settings"
         xmlns:services="clr-namespace:FModel.Services"
-        xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
-        xmlns:adonisControls="clr-namespace:AdonisUI.Controls;assembly=AdonisUI"
-        xmlns:adonisExtensions="clr-namespace:AdonisUI.Extensions;assembly=AdonisUI"
-        WindowStartupLocation="CenterScreen" Closing="OnClosing" Loaded="OnLoaded" PreviewKeyDown="OnWindowKeyDown"
-        Height="{Binding Source={x:Static SystemParameters.MaximizedPrimaryScreenHeight}, Converter={converters:RatioConverter}, ConverterParameter='0.95'}"
-        Width="{Binding Source={x:Static SystemParameters.MaximizedPrimaryScreenWidth}, Converter={converters:RatioConverter}, ConverterParameter='0.90'}">
-    <Window.TaskbarItemInfo>
-        <TaskbarItemInfo ProgressValue="1.0">
-            <TaskbarItemInfo.ProgressState>
-                <MultiBinding Converter="{converters:StatusToTaskbarStateConverter}">
-                    <Binding Path="Status.Kind" />
-                    <Binding Path="IsActive" RelativeSource="{RelativeSource AncestorType=Window}" />
-                </MultiBinding>
-            </TaskbarItemInfo.ProgressState>
-        </TaskbarItemInfo>
-    </Window.TaskbarItemInfo>
-    <adonisControls:AdonisWindow.Style>
-        <Style TargetType="adonisControls:AdonisWindow" BasedOn="{StaticResource {x:Type adonisControls:AdonisWindow}}" >
-            <Setter Property="Title" Value="{Binding DataContext.InitialWindowTitle, RelativeSource={RelativeSource Self}}" />
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding DataContext.TitleExtra, RelativeSource={RelativeSource Self}, Converter={x:Static converters:IsNullToBoolReversedConverter.Instance}}" Value="True">
-                    <Setter Property="Title">
-                        <Setter.Value>
-                            <MultiBinding StringFormat="{}{0} - {1} {2}">
-                                <Binding Path="DataContext.InitialWindowTitle" RelativeSource="{RelativeSource Self}" />
-                                <Binding Path="DataContext.GameDisplayName" RelativeSource="{RelativeSource Self}" />
-                                <Binding Path="DataContext.TitleExtra" RelativeSource="{RelativeSource Self}" />
-                            </MultiBinding>
-                        </Setter.Value>
-                    </Setter>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-    </adonisControls:AdonisWindow.Style>
+        WindowStartupLocation="CenterScreen"
+        Closing="OnClosing"
+        Loaded="OnLoaded"
+        KeyDown="OnWindowKeyDown"
+        Width="1400" Height="900">
+    <!--
+        Title is set in code-behind (OnLoaded / property change) to replicate the
+        DataTrigger-based title logic that was in the WPF AdonisWindow style.
+        TaskbarItemInfo (Windows-only) is handled in code-behind with an OS guard.
+    -->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -61,7 +37,7 @@
                         <MenuItem.Icon>
                             <Viewbox Width="16" Height="16">
                                 <Canvas Width="24" Height="24">
-                                    <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" Data="{StaticResource DirectoryIcon}" />
+                                    <Path Fill="{DynamicResource SystemColors.ControlTextBrushKey}" Data="{StaticResource DirectoryIcon}" />
                                 </Canvas>
                             </Viewbox>
                         </MenuItem.Icon>
@@ -70,7 +46,7 @@
                         <MenuItem.Icon>
                             <Viewbox Width="16" Height="16">
                                 <Canvas Width="24" Height="24">
-                                    <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" Data="{StaticResource KeyIcon}" />
+                                    <Path Fill="{DynamicResource SystemColors.ControlTextBrushKey}" Data="{StaticResource KeyIcon}" />
                                 </Canvas>
                             </Viewbox>
                         </MenuItem.Icon>
@@ -79,7 +55,7 @@
                         <MenuItem.Icon>
                             <Viewbox Width="16" Height="16">
                                 <Canvas Width="24" Height="24">
-                                    <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" Data="{StaticResource BackupIcon}" />
+                                    <Path Fill="{DynamicResource SystemColors.ControlTextBrushKey}" Data="{StaticResource BackupIcon}" />
                                 </Canvas>
                             </Viewbox>
                         </MenuItem.Icon>
@@ -88,7 +64,7 @@
                         <MenuItem.Icon>
                             <Viewbox Width="16" Height="16">
                                 <Canvas Width="24" Height="24">
-                                    <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" Data="{StaticResource InfoIcon}" />
+                                    <Path Fill="{DynamicResource SystemColors.ControlTextBrushKey}" Data="{StaticResource InfoIcon}" />
                                 </Canvas>
                             </Viewbox>
                         </MenuItem.Icon>
@@ -99,7 +75,7 @@
                         <MenuItem.Icon>
                             <Viewbox Width="16" Height="16">
                                 <Canvas Width="24" Height="24">
-                                    <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" Data="{StaticResource SearchIcon}" />
+                                    <Path Fill="{DynamicResource SystemColors.ControlTextBrushKey}" Data="{StaticResource SearchIcon}" />
                                 </Canvas>
                             </Viewbox>
                         </MenuItem.Icon>
@@ -108,7 +84,7 @@
                         <MenuItem.Icon>
                             <Viewbox Width="16" Height="16">
                                 <Canvas Width="24" Height="24">
-                                    <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" Data="{StaticResource SearchIcon}" />
+                                    <Path Fill="{DynamicResource SystemColors.ControlTextBrushKey}" Data="{StaticResource SearchIcon}" />
                                 </Canvas>
                             </Viewbox>
                         </MenuItem.Icon>
@@ -117,7 +93,7 @@
                         <MenuItem.Icon>
                             <Viewbox Width="16" Height="16">
                                 <Canvas Width="24" Height="24">
-                                    <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" Data="{StaticResource DirectoriesIcon}" />
+                                    <Path Fill="{DynamicResource SystemColors.ControlTextBrushKey}" Data="{StaticResource DirectoriesIcon}" />
                                 </Canvas>
                             </Viewbox>
                         </MenuItem.Icon>
@@ -128,7 +104,7 @@
                         <MenuItem.Icon>
                             <Viewbox Width="16" Height="16">
                                 <Canvas Width="24" Height="24">
-                                    <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.AccentForegroundBrush}}" Data="{StaticResource MeshIcon}" />
+                                    <Path Fill="{DynamicResource AccentColorBrush}" Data="{StaticResource MeshIcon}" />
                                 </Canvas>
                             </Viewbox>
                         </MenuItem.Icon>
@@ -137,7 +113,7 @@
                         <MenuItem.Icon>
                             <Viewbox Width="16" Height="16">
                                 <Canvas Width="24" Height="24">
-                                    <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.AccentForegroundBrush}}" Data="{StaticResource AudioIcon}" />
+                                    <Path Fill="{DynamicResource AccentColorBrush}" Data="{StaticResource AudioIcon}" />
                                 </Canvas>
                             </Viewbox>
                         </MenuItem.Icon>
@@ -146,7 +122,7 @@
                         <MenuItem.Icon>
                             <Viewbox Width="16" Height="16">
                                 <Canvas Width="24" Height="24">
-                                    <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.AccentForegroundBrush}}" Data="{StaticResource ImageMergerIcon}" />
+                                    <Path Fill="{DynamicResource AccentColorBrush}" Data="{StaticResource ImageMergerIcon}" />
                                 </Canvas>
                             </Viewbox>
                         </MenuItem.Icon>
@@ -158,7 +134,7 @@
                         <MenuItem.Icon>
                             <Viewbox Width="16" Height="16">
                                 <Canvas Width="24" Height="24">
-                                    <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.AccentForegroundBrush}}" Data="{StaticResource GiftIcon}" />
+                                    <Path Fill="{DynamicResource AccentColorBrush}" Data="{StaticResource GiftIcon}" />
                                 </Canvas>
                             </Viewbox>
                         </MenuItem.Icon>
@@ -167,7 +143,7 @@
                         <MenuItem.Icon>
                             <Viewbox Width="16" Height="16">
                                 <Canvas Width="24" Height="24">
-                                    <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.AccentForegroundBrush}}" Data="{StaticResource GitHubIcon}" />
+                                    <Path Fill="{DynamicResource AccentColorBrush}" Data="{StaticResource GitHubIcon}" />
                                 </Canvas>
                             </Viewbox>
                         </MenuItem.Icon>
@@ -176,7 +152,7 @@
                         <MenuItem.Icon>
                             <Viewbox Width="16" Height="16">
                                 <Canvas Width="24" Height="24">
-                                    <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.AccentForegroundBrush}}" Data="{StaticResource BugIcon}" />
+                                    <Path Fill="{DynamicResource AccentColorBrush}" Data="{StaticResource BugIcon}" />
                                 </Canvas>
                             </Viewbox>
                         </MenuItem.Icon>
@@ -185,7 +161,7 @@
                         <MenuItem.Icon>
                             <Viewbox Width="16" Height="16">
                                 <Canvas Width="24" Height="24">
-                                    <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.AccentForegroundBrush}}" Data="{StaticResource DiscordIcon}" />
+                                    <Path Fill="{DynamicResource AccentColorBrush}" Data="{StaticResource DiscordIcon}" />
                                 </Canvas>
                             </Viewbox>
                         </MenuItem.Icon>
@@ -194,7 +170,7 @@
                         <MenuItem.Icon>
                             <Viewbox Width="16" Height="16">
                                 <Canvas Width="24" Height="24">
-                                    <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.AccentForegroundBrush}}" Data="{StaticResource InfoIcon}" />
+                                    <Path Fill="{DynamicResource AccentColorBrush}" Data="{StaticResource InfoIcon}" />
                                 </Canvas>
                             </Viewbox>
                         </MenuItem.Icon>
@@ -211,7 +187,7 @@
                 <TextBlock Grid.Column="0" Text="Preview New Explorer System" VerticalAlignment="Center" />
                 <CheckBox Grid.Column="1" Margin="5 2 5 0" Unchecked="FeaturePreviewOnUnchecked" KeyboardNavigation.TabNavigation="None" KeyboardNavigation.ControlTabNavigation="None"
                           IsChecked="{Binding FeaturePreviewNewAssetExplorer, Source={x:Static local:Settings.UserSettings.Default}, Mode=TwoWay}"
-                          Style="{DynamicResource {x:Static adonisUi:Styles.ToggleSwitch}}"/>
+                          />
             </Grid>
         </Grid>
 
@@ -222,7 +198,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <GroupBox Grid.Column="0" adonisExtensions:LayerExtension.Layer="2"
+            <GroupBox Grid.Column="0"
                       Padding="0" Background="Transparent">
                 <TabControl x:Name="LeftTabControl" SelectionChanged="OnTabItemChange" SelectedIndex="{Binding SelectedLeftTabIndex, Mode=TwoWay}">
                     <TabItem Style="{StaticResource TabItemFillSpace}" Header="Archives">
@@ -261,7 +237,7 @@
                                 </Grid.RowDefinitions>
 
                                 <Separator Grid.Row="0" Style="{StaticResource CustomSeparator}" Tag="GAME ARCHIVES" />
-                                <ListBox Grid.Row="1" x:Name="DirectoryFilesListBox" Style="{StaticResource DirectoryFilesListBox}" MouseDoubleClick="OnMouseDoubleClick" />
+                                <ListBox Grid.Row="1" x:Name="DirectoryFilesListBox" Style="{StaticResource DirectoryFilesListBox}" DoubleTapped="OnMouseDoubleClick" />
                                 <Separator Grid.Row="2" Style="{StaticResource CustomSeparator}" Tag="INFORMATION" />
                                 <StackPanel Grid.Row="3" Orientation="Vertical" Margin="0 0 0 5">
                                     <Grid HorizontalAlignment="Stretch">
@@ -321,27 +297,27 @@
                                     </TextBlock>
                                 </StackPanel>
                                 <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <Button Style="{DynamicResource {x:Static adonisUi:Styles.ToolbarButton}}" ToolTip="Bring Selected Folder To View" Padding="4"
+                                    <Button  ToolTip="Bring Selected Folder To View" Padding="4"
                                             Command="{Binding MenuCommand}" CommandParameter="{Binding SelectedItem, ElementName=AssetsFolderName}">
                                         <Viewbox Width="16" Height="16" HorizontalAlignment="Center">
                                             <Canvas Width="24" Height="24">
-                                                <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" Data="{StaticResource LocateMeIcon}" />
+                                                <Path Fill="{DynamicResource SystemColors.ControlTextBrushKey}" Data="{StaticResource LocateMeIcon}" />
                                             </Canvas>
                                         </Viewbox>
                                     </Button>
-                                    <!-- <Button Style="{DynamicResource {x:Static adonisUi:Styles.ToolbarButton}}" ToolTip="Expand All (not appropriate for huge amount of folders)" Padding="4" -->
+                                    <!-- <Button  ToolTip="Expand All (not appropriate for huge amount of folders)" Padding="4" -->
                                     <!--         Command="{Binding MenuCommand}" CommandParameter="ToolBox_Expand_All"> -->
                                     <!--     <Viewbox Width="16" Height="16" HorizontalAlignment="Center"> -->
                                     <!--         <Canvas Width="24" Height="24"> -->
-                                    <!--             <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" Data="{StaticResource UnfoldIcon}" /> -->
+                                    <!--             <Path Fill="{DynamicResource SystemColors.ControlTextBrushKey}" Data="{StaticResource UnfoldIcon}" /> -->
                                     <!--         </Canvas> -->
                                     <!--     </Viewbox> -->
                                     <!-- </Button> -->
-                                    <Button Style="{DynamicResource {x:Static adonisUi:Styles.ToolbarButton}}" ToolTip="Collapse All" Padding="4"
+                                    <Button  ToolTip="Collapse All" Padding="4"
                                             Command="{Binding MenuCommand}" CommandParameter="ToolBox_Collapse_All">
                                         <Viewbox Width="16" Height="16" HorizontalAlignment="Center">
                                             <Canvas Width="24" Height="24">
-                                                <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" Data="{StaticResource FoldIcon}"/>
+                                                <Path Fill="{DynamicResource SystemColors.ControlTextBrushKey}" Data="{StaticResource FoldIcon}"/>
                                             </Canvas>
                                         </Viewbox>
                                     </Button>
@@ -351,9 +327,9 @@
                             <TreeView Grid.Row="2"
                                       x:Name="AssetsFolderName"
                                       Style="{StaticResource AssetsFolderTreeView}"
-                                      SelectedItemChanged="OnAssetsTreeSelectedItemChanged"
-                                      PreviewKeyDown="OnFoldersPreviewKeyDown"
-                                      PreviewMouseDoubleClick="OnAssetsTreeMouseDoubleClick">
+                                      SelectionChanged="OnAssetsTreeSelectedItemChanged"
+                                      KeyDown="OnFoldersPreviewKeyDown"
+                                      DoubleTapped="OnAssetsTreeMouseDoubleClick">
                             </TreeView>
                             <Separator Grid.Row="3" Style="{StaticResource CustomSeparator}" Tag="INFORMATION" />
                             <StackPanel Grid.Row="4" Orientation="Vertical" Margin="0 0 0 5">
@@ -390,7 +366,7 @@
                         <DockPanel>
 
                             <inputs:SearchTextBox DockPanel.Dock="Top" x:Name="AssetsSearchTextBox"
-                                                  Text="{Binding SelectedItem.SearchText, ElementName=AssetsFolderName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  Text="{Binding SelectedItem.SearchText, ElementName=AssetsFolderName, Mode=TwoWay}"
                                                   ClearButtonClick="OnClearFilterClick" />
 
                             <Grid DockPanel.Dock="Top">
@@ -407,8 +383,8 @@
 
                                 <ListBox Grid.Row="1" x:Name="AssetsListName"
                                          Style="{StaticResource AssetsListBox}"
-                                         PreviewMouseDoubleClick="OnAssetsListMouseDoubleClick"
-                                         PreviewKeyDown="OnPreviewKeyDown" />
+                                         DoubleTapped="OnAssetsListMouseDoubleClick"
+                                         KeyDown="OnPreviewKeyDown" />
 
                                 <Separator Grid.Row="2" Style="{StaticResource CustomSeparator}" Tag="INFORMATION" />
                                 <StackPanel Grid.Row="3" Orientation="Vertical" Margin="0 0 0 5">
@@ -444,10 +420,10 @@
             </GroupBox>
 
             <GridSplitter Grid.Column="1" ResizeDirection="Columns" Width="4" VerticalAlignment="Stretch"
-                          ResizeBehavior="PreviousAndNext" MouseDoubleClick="OnGridSplitterDoubleClick"
-                          Background="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}" />
+                          ResizeBehavior="PreviousAndNext" DoubleTapped="OnGridSplitterDoubleClick"
+                          Background="{DynamicResource SystemColors.ControlBrushKey}" />
 
-            <GroupBox Grid.Column="2" adonisExtensions:LayerExtension.Layer="2"
+            <GroupBox Grid.Column="2"
                       Padding="0" Background="Transparent">
                 <Grid Margin="0 0 3 0">
                     <Grid.RowDefinitions>
@@ -457,9 +433,9 @@
 
                     <Grid Grid.Row="0">
                         <Border BorderThickness="1" Padding="10"
-                                BorderBrush="{DynamicResource {x:Static adonisUi:Brushes.Layer3BorderBrush}}"
-                                Background="{DynamicResource {x:Static adonisUi:Brushes.Layer3BackgroundBrush}}"
-                                Visibility="{Binding IsAssetsExplorerVisible, Converter={StaticResource BoolToVisibilityConverter}}">
+                                
+                                Background="{DynamicResource SystemColors.AppWorkspaceBrushKey}"
+                                IsVisible="{Binding IsAssetsExplorerVisible}">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
@@ -467,7 +443,7 @@
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
 
-                                <Grid Grid.Row="0" adonisExtensions:LayerExtension.Layer="3">
+                                <Grid Grid.Row="0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="5" />
@@ -475,7 +451,7 @@
                                     </Grid.ColumnDefinitions>
 
                                     <inputs:SearchTextBox x:Name="AssetsExplorerSearch" Grid.Column="0"
-                                                          Text="{Binding SelectedItem.SearchText, ElementName=AssetsFolderName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                          Text="{Binding SelectedItem.SearchText, ElementName=AssetsFolderName, Mode=TwoWay}"
                                                           ClearButtonClick="OnClearFilterClick" />
 
                                     <ComboBox x:Name="CategoriesSelector" Grid.Column="2"
@@ -490,14 +466,14 @@
                                 <ListBox x:Name="AssetsExplorer" Grid.Row="2"
                                          ItemsSource="{Binding SelectedItem.CombinedEntries, ElementName=AssetsFolderName, IsAsync=True}"
                                          Style="{StaticResource TiledExplorer}"
-                                         Background="{DynamicResource {x:Static adonisUi:Brushes.Layer3BackgroundBrush}}"
-                                         PreviewKeyDown="OnPreviewKeyDown" />
+                                         Background="{DynamicResource SystemColors.AppWorkspaceBrushKey}"
+                                         KeyDown="OnPreviewKeyDown" />
                             </Grid>
                         </Border>
 
                         <TabControl x:Name="TabControlName"
                                     Style="{StaticResource GameFilesTabControl}"
-                                    Visibility="{Binding IsAssetsExplorerVisible, Converter={x:Static converters:InvertBoolToVisibilityConverter.Instance}, ConverterParameter=Hidden}" />
+                                    IsVisible="{Binding IsAssetsExplorerVisible, Converter={x:Static converters:InvertBooleanConverter.Instance}}" />
                     </Grid>
 
                     <Border Grid.Row="0"
@@ -505,31 +481,20 @@
                             HorizontalAlignment="Right"
                             Margin="12,12,20,12"
                             Opacity="0.5"
-                            Visibility="{Binding FeaturePreviewNewAssetExplorer, Source={x:Static settings:UserSettings.Default}, Converter={StaticResource BoolToVisibilityConverter}}"
-                            Background="{DynamicResource {x:Static adonisUi:Brushes.Layer2BackgroundBrush}}"
+                            IsVisible="{Binding FeaturePreviewNewAssetExplorer, Source={x:Static settings:UserSettings.Default}}"
                             CornerRadius="8"
-                            Padding="4"
-                            Effect="{DynamicResource ShadowEffect}">
-                        <Border.Triggers>
-                            <EventTrigger RoutedEvent="MouseEnter">
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                         To="1"
-                                                         Duration="0:0:0.2" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                            <EventTrigger RoutedEvent="MouseLeave">
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                         To="0.5"
-                                                         Duration="0:0:0.2" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                        </Border.Triggers>
+                            Padding="4">
+                        <!-- Opacity fade replaces WPF Storyboard EventTriggers on MouseEnter/Leave -->
+                        <Border.Transitions>
+                            <Transitions>
+                                <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
+                            </Transitions>
+                        </Border.Transitions>
+                        <Border.Styles>
+                            <Style Selector="Border:pointerover">
+                                <Setter Property="Opacity" Value="1" />
+                            </Style>
+                        </Border.Styles>
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Center">
                             <ToggleButton Width="32"
@@ -537,35 +502,27 @@
                                           Cursor="Hand"
                                           Margin="0,0,2,0"
                                           IsChecked="{Binding IsAssetsExplorerVisible, Mode=TwoWay}"
-                                          Style="{StaticResource AssetsExplorerToggleButtonStyle}" />
+                                          Theme="{StaticResource AssetsExplorerToggleButtonStyle}" />
                             <ToggleButton Width="32"
                                           Height="32"
                                           Cursor="Hand"
-                                          Checked="OnPreviewTexturesToggled"
+                                          IsCheckedChanged="OnPreviewTexturesToggled"
                                           Focusable="False"
+                                          ToolTip.Tip="Preview Textures (OFF)"
                                           IsChecked="{Binding PreviewTexturesAssetExplorer, Source={x:Static settings:UserSettings.Default}, Mode=TwoWay}">
-                                <ToggleButton.Style>
-                                    <Style TargetType="ToggleButton"
-                                           BasedOn="{StaticResource ModernToggleButtonStyle}">
-                                        <Setter Property="ToolTip"
-                                                Value="Preview Textures (OFF)" />
-                                        <Style.Triggers>
-                                            <Trigger Property="IsChecked"
-                                                     Value="True">
-                                                <Setter Property="Background"
-                                                        Value="MediumPurple" />
-                                                <Setter Property="ToolTip"
-                                                        Value="Preview Textures (ON)" />
-                                            </Trigger>
-                                        </Style.Triggers>
+                                <ToggleButton.Styles>
+                                    <!-- WPF IsChecked=True trigger: purple background and updated tooltip -->
+                                    <Style Selector="ToggleButton:checked">
+                                        <Setter Property="Background" Value="MediumPurple" />
+                                        <Setter Property="ToolTip.Tip" Value="Preview Textures (ON)" />
                                     </Style>
-                                </ToggleButton.Style>
+                                </ToggleButton.Styles>
                                 <Viewbox Width="16"
                                          Height="16">
                                     <Canvas Width="24"
                                             Height="24">
                                         <Path Data="{StaticResource TextureIconAlt}"
-                                              Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" />
+                                              Fill="{DynamicResource SystemColors.ControlTextBrushKey}" />
                                     </Canvas>
                                 </Viewbox>
                             </ToggleButton>
@@ -583,19 +540,19 @@
 
                             <controls:CustomRichTextBox Grid.Column="0" Grid.ColumnSpan="3" x:Name="LogRtbName" Style="{StaticResource CustomRichTextBox}" />
                             <StackPanel Grid.Column="2" Orientation="Vertical" VerticalAlignment="Bottom" Margin="-5 -5 5 5">
-                                <Button Style="{DynamicResource {x:Static adonisUi:Styles.ToolbarButton}}" ToolTip="Open Output Folder" Padding="0,4,0,4"
+                                <Button  ToolTip="Open Output Folder" Padding="0,4,0,4"
                                         Command="{Binding MenuCommand}" CommandParameter="ToolBox_Open_Output_Directory" Focusable="False">
                                     <Viewbox Width="16" Height="16" HorizontalAlignment="Center">
                                         <Canvas Width="24" Height="24">
-                                            <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" Data="{StaticResource FolderIcon}" />
+                                            <Path Fill="{DynamicResource SystemColors.ControlTextBrushKey}" Data="{StaticResource FolderIcon}" />
                                         </Canvas>
                                     </Viewbox>
                                 </Button>
-                                <Button Style="{DynamicResource {x:Static adonisUi:Styles.ToolbarButton}}" ToolTip="Clear Logs" Padding="0,4,0,4"
+                                <Button  ToolTip="Clear Logs" Padding="0,4,0,4"
                                         Command="{Binding MenuCommand}" CommandParameter="ToolBox_Clear_Logs" Focusable="False">
                                     <Viewbox Width="16" Height="16" HorizontalAlignment="Center">
                                         <Canvas Width="24" Height="24">
-                                            <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" Data="{StaticResource TrashIcon}"/>
+                                            <Path Fill="{DynamicResource SystemColors.ControlTextBrushKey}" Data="{StaticResource TrashIcon}"/>
                                         </Canvas>
                                     </Viewbox>
                                 </Button>
@@ -606,108 +563,32 @@
             </GroupBox>
         </Grid>
 
-        <StatusBar Grid.Row="3" MinHeight="28" MaxHeight="28"
-                   adonisExtensions:LayerExtension.Layer="3">
-            <StatusBar.Style>
-                <Style TargetType="{x:Type StatusBar}" BasedOn="{StaticResource {x:Type StatusBar}}">
-                    <Style.Triggers>
-                        <!--don't mind me, MultiDataTrigger just sucks-->
-                        <DataTrigger Binding="{Binding Status.Kind}" Value="{x:Static local:EStatusKind.Ready}">
-                            <Setter Property="Background" Value="{DynamicResource {x:Static adonisUi:Brushes.AccentBrush}}" />
-                            <Setter Property="Foreground" Value="White" />
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Status.Kind}" Value="{x:Static local:EStatusKind.Completed}">
-                            <Setter Property="Background" Value="{DynamicResource {x:Static adonisUi:Brushes.AccentBrush}}" />
-                            <Setter Property="Foreground" Value="White" />
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Status.Kind}" Value="{x:Static local:EStatusKind.Loading}">
-                            <Setter Property="Background" Value="{DynamicResource {x:Static adonisUi:Brushes.AlertBrush}}" />
-                            <Setter Property="Foreground" Value="White" />
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Status.Kind}" Value="{x:Static local:EStatusKind.Stopping}">
-                            <Setter Property="Background" Value="{DynamicResource {x:Static adonisUi:Brushes.AlertBrush}}" />
-                            <Setter Property="Foreground" Value="White" />
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Status.Kind}" Value="{x:Static local:EStatusKind.Stopped}">
-                            <Setter Property="Background" Value="{DynamicResource {x:Static adonisUi:Brushes.ErrorBrush}}" />
-                            <Setter Property="Foreground" Value="White" />
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Status.Kind}" Value="{x:Static local:EStatusKind.Failed}">
-                            <Setter Property="Background" Value="{DynamicResource {x:Static adonisUi:Brushes.ErrorBrush}}" />
-                            <Setter Property="Foreground" Value="White" />
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding StatusChangeAttempted, Source={x:Static services:ApplicationService.ThreadWorkerView}}" Value="True">
-                            <DataTrigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard Duration="0:0:0.8">
-                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(StatusBar.Background).(SolidColorBrush.Color)" FillBehavior="Stop">
-                                            <ColorAnimationUsingKeyFrames.KeyFrames>
-                                                <DiscreteColorKeyFrame KeyTime="0:0:0" Value="#CE5555" />
-                                                <DiscreteColorKeyFrame KeyTime="0:0:0.2" Value="#C22B2B" />
-                                                <DiscreteColorKeyFrame KeyTime="0:0:0.4" Value="#CE5555" />
-                                                <DiscreteColorKeyFrame KeyTime="0:0:0.6" Value="#C22B2B" />
-                                                <DiscreteColorKeyFrame KeyTime="0:0:0.8" Value="#CE5555" />
-                                            </ColorAnimationUsingKeyFrames.KeyFrames>
-                                        </ColorAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </DataTrigger.EnterActions>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding OperationCancelled, Source={x:Static services:ApplicationService.ThreadWorkerView}}" Value="True">
-                            <DataTrigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard Duration="0:0:1">
-                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(StatusBar.Background).(SolidColorBrush.Color)" FillBehavior="Stop">
-                                            <ColorAnimationUsingKeyFrames.KeyFrames>
-                                                <DiscreteColorKeyFrame KeyTime="0:0:0" Value="#C22B2B" />
-                                                <DiscreteColorKeyFrame KeyTime="0:0:1" Value="#CE5555" />
-                                            </ColorAnimationUsingKeyFrames.KeyFrames>
-                                        </ColorAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </DataTrigger.EnterActions>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </StatusBar.Style>
+        <!--
+            StatusBar: WPF StatusBar/StatusBarItem and Style.Triggers/DataTriggers
+            replaced with a Border+DockPanel. Background colour is set from
+            code-behind (UpdateStatusBarColor) when Status.Kind changes; the
+            flash animations (StatusChangeAttempted, OperationCancelled) are
+            also handled in code-behind via DispatcherTimer.
+        -->
+        <Border x:Name="StatusBarBorder" Grid.Row="3" MinHeight="28" MaxHeight="28"
+                Padding="5,0">
+            <DockPanel LastChildFill="False">
+                <TextBlock x:Name="StatusLabel"
+                           DockPanel.Dock="Left"
+                           VerticalAlignment="Center"
+                           Text="{Binding Status.Label}" />
 
-            <StatusBarItem Margin="5,0,0,0" >
-                <TextBlock>
-                    <TextBlock.Style>
-                        <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Text" Value="{Binding Status.Label}" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Status.Kind}" Value="{x:Static local:EStatusKind.Loading}">
-                                    <Setter Property="Text" Value="{Binding Status.Label, StringFormat='{}{0} …'}" />
-                                </DataTrigger>
-                                <MultiDataTrigger>
-                                    <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding CanBeCanceled, Source={x:Static services:ApplicationService.ThreadWorkerView}}" Value="True" />
-                                        <Condition Binding="{Binding Status.Kind}" Value="{x:Static local:EStatusKind.Loading}" />
-                                    </MultiDataTrigger.Conditions>
-                                    <Setter Property="Text" Value="{Binding Status.Label, StringFormat='{}{0} …    ESC to Cancel'}" />
-                                </MultiDataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
-            </StatusBarItem>
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <Viewbox Width="16" Height="16" Margin="0,0,10,0">
+                        <Canvas Width="24" Height="24">
+                            <Path Fill="{DynamicResource AccentColorBrush}" Data="{StaticResource StatusBarIcon}" />
+                        </Canvas>
+                    </Viewbox>
 
-            <StatusBarItem Margin="0 0 5 0" HorizontalAlignment="Right">
-                <StackPanel Orientation="Horizontal">
-                    <StatusBarItem Margin="0 0 10 0" HorizontalContentAlignment="Stretch">
-                        <Viewbox Width="16" Height="16">
-                            <Canvas Width="24" Height="24">
-                                <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.AccentForegroundBrush}}" Data="{StaticResource StatusBarIcon}" />
-                            </Canvas>
-                        </Viewbox>
-                    </StatusBarItem>
-
-                    <StatusBarItem Margin="10 0 0 0">
-                        <TextBlock Text="{Binding LastUpdateCheck, Source={x:Static local:Settings.UserSettings.Default}, Converter={x:Static converters:RelativeDateTimeConverter.Instance}, StringFormat=Last Refresh: {0}}" />
-                    </StatusBarItem>
+                    <TextBlock VerticalAlignment="Center" Margin="10,0,0,0"
+                               Text="{Binding LastUpdateCheck, Source={x:Static settings:UserSettings.Default}, Converter={x:Static converters:RelativeDateTimeConverter.Instance}, StringFormat=Last Refresh: {0}}" />
                 </StackPanel>
-            </StatusBarItem>
-        </StatusBar>
+            </DockPanel>
+        </Border>
     </Grid>
-</adonisControls:AdonisWindow>
+</Window>
