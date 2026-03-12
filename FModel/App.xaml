@@ -13,11 +13,14 @@
         <ResourceDictionary>
             <!-- Accent colours preserved from original AdonisUI scheme -->
             <Color x:Key="AccentColor">#206BD4</Color>
-            <SolidColorBrush x:Key="AccentColorBrush" Color="{StaticResource AccentColor}" />
+            <SolidColorBrush x:Key="AccentColorBrush"
+                             Color="{StaticResource AccentColor}" />
             <Color x:Key="AlertColor">#D49220</Color>
-            <SolidColorBrush x:Key="AlertColorBrush" Color="{StaticResource AlertColor}" />
+            <SolidColorBrush x:Key="AlertColorBrush"
+                             Color="{StaticResource AlertColor}" />
             <Color x:Key="ErrorColor">#C22B2B</Color>
-            <SolidColorBrush x:Key="ErrorColorBrush" Color="{StaticResource ErrorColor}" />
+            <SolidColorBrush x:Key="ErrorColorBrush"
+                             Color="{StaticResource ErrorColor}" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
