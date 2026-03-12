@@ -148,16 +148,29 @@ public partial class MainWindow : Window
 
         var newOrUpdated = UserSettings.Default.ShowChangelog;
 #if !DEBUG
-        var updateRelease = await ApplicationService.ApiEndpointView.FModelApi.CheckForUpdatesAsync();
-        if (updateRelease != null)
+        _ = Task.Run(async () =>
         {
-            var downloadUrl = updateRelease.HtmlUrl ?? "https://github.com/r6e/FModel-Linux/releases";
-            FLogger.Append(ELog.Warning, () =>
+            try
             {
-                FLogger.Text($"FModel Linux {updateRelease.TagName} is available! Download at: ", Constants.WHITE);
-                FLogger.Text(downloadUrl, Constants.YELLOW, true);
-            });
-        }
+                var updateRelease = await ApplicationService.ApiEndpointView.FModelApi.CheckForUpdatesAsync();
+                if (updateRelease != null)
+                {
+                    var downloadUrl = updateRelease.HtmlUrl ?? "https://github.com/r6e/FModel-Linux/releases";
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        FLogger.Append(ELog.Warning, () =>
+                        {
+                            FLogger.Text($"FModel Linux {updateRelease.TagName} is available! Download at: ", Constants.WHITE);
+                            FLogger.Text(downloadUrl, Constants.YELLOW, true);
+                        });
+                    });
+                }
+            }
+            catch
+            {
+                // Ignore update check failures to avoid impacting startup.
+            }
+        });
 #endif
 
         switch (UserSettings.Default.AesReload)

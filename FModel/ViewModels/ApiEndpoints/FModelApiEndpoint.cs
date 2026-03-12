@@ -128,7 +128,10 @@ public class FModelApiEndpoint : AbstractApiProvider
             ? currentVersionStr[..currentVersionStr.IndexOf('-')]
             : currentVersionStr;
         if (!System.Version.TryParse(currentVersionPart, out var currentVersion))
+        {
+            Log.Warning("Could not parse current application version: {Version}", currentVersionStr);
             return null;
+        }
 
         if (latestVersion <= currentVersion)
         {

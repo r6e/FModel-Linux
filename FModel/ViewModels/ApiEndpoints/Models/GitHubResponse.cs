@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using FModel.Framework;
 using FModel.Settings;
+using Serilog;
 using J = Newtonsoft.Json.JsonPropertyAttribute;
 
 namespace FModel.ViewModels.ApiEndpoints.Models;
@@ -97,14 +98,20 @@ public class GitHubCommit : ViewModel
     {
         if (IsCurrent) return;
 
+        var url = Asset?.BrowserDownloadUrl;
+        if (string.IsNullOrEmpty(url))
+        {
+            Log.Warning("Download skipped: no asset URL available for commit {Sha}", ShortSha);
+            return;
+        }
+
         try
         {
-            Process.Start(new ProcessStartInfo(Asset.BrowserDownloadUrl) { UseShellExecute = true });
+            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
         }
         catch (Exception exception)
         {
-            UserSettings.Default.ShowChangelog = false;
-            throw new InvalidOperationException($"Could not open download URL: {exception.Message}", exception);
+            Log.Warning(exception, "Could not open download URL: {Url}", url);
         }
     }
 }

@@ -8,6 +8,9 @@ on:
         required: true
         default: "4.0.X.X"
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
