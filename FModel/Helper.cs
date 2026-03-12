@@ -40,7 +40,8 @@ public static class Helper
         else
         {
             var w = GetOpenedWindow<T>(windowName);
-            if (windowName == "Search For Packages") w.WindowState = WindowState.Normal;
+            if (windowName == "Search For Packages")
+                w.WindowState = WindowState.Normal;
             w.Focus();
         }
     }
@@ -59,7 +60,8 @@ public static class Helper
 
     public static void CloseWindow<T>(string windowName) where T : Window
     {
-        if (!IsWindowOpen<T>(windowName)) return;
+        if (!IsWindowOpen<T>(windowName))
+            return;
         GetOpenedWindow<T>(windowName).Close();
     }
 
