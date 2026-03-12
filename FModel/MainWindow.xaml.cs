@@ -71,7 +71,7 @@ public partial class MainWindow : Window
         if (e.PropertyName is nameof(ApplicationViewModel.TitleExtra)
                            or nameof(ApplicationViewModel.GameDisplayName)
                            or nameof(ApplicationViewModel.InitialWindowTitle))
-            UpdateWindowTitle();
+            Dispatcher.UIThread.InvokeAsync(UpdateWindowTitle);
     }
 
     // --- Status bar colour (replaces WPF DataTrigger style) ---
@@ -79,38 +79,44 @@ public partial class MainWindow : Window
     private void OnStatusKindChanged(object sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(FStatus.Kind))
-            UpdateStatusBarColor();
+            Dispatcher.UIThread.InvokeAsync(UpdateStatusBarColor);
+        else if (e.PropertyName == nameof(FStatus.Label))
+            Dispatcher.UIThread.InvokeAsync(UpdateStatusLabel);
     }
 
     private void UpdateStatusBarColor()
     {
-        if (StatusBarBorder is null) return;
-        var (bg, fg) = _applicationView.Status.Kind switch
+        if (StatusBarBorder is null)
+            return;
+        var brushKey = _applicationView.Status.Kind switch
         {
-            EStatusKind.Ready or EStatusKind.Completed =>
-                (Application.Current!.FindResource("AccentColorBrush") as IBrush, Brushes.White),
-            EStatusKind.Loading or EStatusKind.Stopping =>
-                (Application.Current!.FindResource("AlertColorBrush") as IBrush, Brushes.White),
-            EStatusKind.Stopped or EStatusKind.Failed =>
-                (Application.Current!.FindResource("ErrorColorBrush") as IBrush, Brushes.White),
-            _ => ((IBrush?)null, (IBrush?)null)
+            EStatusKind.Ready or EStatusKind.Completed => "AccentColorBrush",
+            EStatusKind.Loading or EStatusKind.Stopping => "AlertColorBrush",
+            EStatusKind.Stopped or EStatusKind.Failed => "ErrorColorBrush",
+            _ => (string?) null
         };
-        if (bg != null) StatusBarBorder.Background = bg;
-        if (fg != null) StatusBarBorder.Foreground = fg;
+        if (brushKey is null)
+            return;
+        if (Application.Current!.TryGetResource(brushKey, ActualThemeVariant, out var resource)
+            && resource is IBrush bg)
+        {
+            StatusBarBorder.Background = bg;
+            StatusBarBorder.Foreground = Brushes.White;
+        }
     }
 
     private void OnThreadWorkerPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         // Flash animations for StatusChangeAttempted / OperationCancelled
         // are tracked as TODO: implement via DispatcherTimer in a later pass.
-        if (e.PropertyName == nameof(ThreadWorkerViewModel.CanBeCanceled)
-            || e.PropertyName == nameof(ThreadWorkerViewModel.CanBeCanceled))
-            UpdateStatusLabel();
+        if (e.PropertyName == nameof(ThreadWorkerViewModel.CanBeCanceled))
+            Dispatcher.UIThread.InvokeAsync(UpdateStatusLabel);
     }
 
     private void UpdateStatusLabel()
     {
-        if (StatusLabel is null) return;
+        if (StatusLabel is null)
+            return;
         var kind = _applicationView.Status.Kind;
         var label = _applicationView.Status.Label;
         StatusLabel.Text = kind == EStatusKind.Loading && _threadWorkerView.CanBeCanceled
@@ -134,7 +140,7 @@ public partial class MainWindow : Window
         var screen = Screens.Primary;
         if (screen != null)
         {
-            Width  = screen.WorkingArea.Width  * 0.90 / screen.PixelDensity;
+            Width = screen.WorkingArea.Width * 0.90 / screen.PixelDensity;
             Height = screen.WorkingArea.Height * 0.95 / screen.PixelDensity;
         }
 
@@ -307,7 +313,8 @@ public partial class MainWindow : Window
 
     private void OnAssetsTreeMouseDoubleClick(object sender, TappedEventArgs e)
     {
-        if (sender is not TreeView { SelectedItem: TreeItem treeItem } || treeItem.Folders.Count > 0) return;
+        if (sender is not TreeView { SelectedItem: TreeItem treeItem } || treeItem.Folders.Count > 0)
+            return;
         _applicationView.SelectedLeftTabIndex++;
     }
 
@@ -324,7 +331,8 @@ public partial class MainWindow : Window
             var container = listBox.ContainerFromIndex(i) as Control;
             if (container == null)
             {
-                if (foundVisibleItem) break;
+                if (foundVisibleItem)
+                    break;
                 continue;
             }
 
@@ -338,7 +346,8 @@ public partial class MainWindow : Window
 
     private void OnAssetsTreeSelectedItemChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (sender is not TreeView { SelectedItem: TreeItem }) return;
+        if (sender is not TreeView { SelectedItem: TreeItem })
+            return;
 
         _applicationView.IsAssetsExplorerVisible = true;
         _applicationView.SelectedLeftTabIndex = 1;
@@ -346,10 +355,12 @@ public partial class MainWindow : Window
 
     private async void OnAssetsListMouseDoubleClick(object sender, TappedEventArgs e)
     {
-        if (sender is not ListBox listBox) return;
+        if (sender is not ListBox listBox)
+            return;
 
         var selectedItems = listBox.SelectedItems?.OfType<GameFileViewModel>().Select(gvm => gvm.Asset).ToArray();
-        if (selectedItems == null || selectedItems.Length == 0) return;
+        if (selectedItems == null || selectedItems.Length == 0)
+            return;
 
         await _threadWorkerView.Begin(cancellationToken => { _applicationView.CUE4Parse.ExtractSelected(cancellationToken, selectedItems); });
     }
@@ -365,7 +376,8 @@ public partial class MainWindow : Window
 
     private void OnMouseDoubleClick(object sender, TappedEventArgs e)
     {
-        if (!_applicationView.Status.IsReady || sender is not ListBox listBox) return;
+        if (!_applicationView.Status.IsReady || sender is not ListBox listBox)
+            return;
         UserSettings.Default.LoadingMode = ELoadingMode.Multiple;
         _applicationView.LoadingModes.LoadCommand.Execute(listBox.SelectedItems);
     }
