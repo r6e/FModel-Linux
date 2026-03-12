@@ -44,8 +44,16 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            // TODO(#15): desktop.MainWindow = new Views.MainWindow();
             desktop.Exit += AppExit;
         }
+
+        Dispatcher.UIThread.UnhandledExceptionFilter += (_, e) =>
+        {
+            Log.Error("{Exception}", e.Exception);
+            e.Handled = true;
+            ShowErrorDialog(e.Exception);
+        };
 
 #if DEBUG
         if (OperatingSystem.IsWindows())
@@ -114,7 +122,8 @@ public partial class App : Application
 
         Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FModel"));
         Directory.CreateDirectory(Path.Combine(UserSettings.Default.OutputDirectory, "Backups"));
-        if (createMe) Directory.CreateDirectory(Path.Combine(UserSettings.Default.OutputDirectory, "Exports"));
+        if (createMe)
+            Directory.CreateDirectory(Path.Combine(UserSettings.Default.OutputDirectory, "Exports"));
         Directory.CreateDirectory(Path.Combine(UserSettings.Default.OutputDirectory, "Logs"));
         Directory.CreateDirectory(Path.Combine(UserSettings.Default.OutputDirectory, ".data"));
 
@@ -146,11 +155,12 @@ public partial class App : Application
         Log.Information("––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––");
         Log.CloseAndFlush();
         UserSettings.Save();
+        Environment.Exit(0);
     }
 
     internal static void ShowErrorDialog(Exception ex)
     {
-        Dispatcher.UIThread.Post(async () =>
+        Dispatcher.UIThread.InvokeAsync(async () =>
         {
             var result = EErrorKind.Ignore;
             var tcs = new TaskCompletionSource();
@@ -195,11 +205,15 @@ public partial class App : Application
 
             var owner = (Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
             if (owner != null)
+            {
                 await dialog.ShowDialog(owner);
+            }
             else
-                dialog.Show();
-
-            await tcs.Task;
+            {
+                try { dialog.Show(); }
+                catch { return; }
+                await tcs.Task;
+            }
 
             if (result == EErrorKind.ResetSettings)
                 UserSettings.Delete();
