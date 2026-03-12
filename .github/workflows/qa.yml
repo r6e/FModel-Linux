@@ -1,44 +1,44 @@
 name: FModel Linux QA Builder
 
 on:
-    push:
-        branches: [dev]
+  push:
+    branches: [dev]
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: GIT Checkout
-              uses: actions/checkout@v6
-              with:
-                  submodules: "recursive"
+    steps:
+      - name: GIT Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: "recursive"
 
-            - name: .NET 8 Setup
-              uses: actions/setup-dotnet@v5
-              with:
-                  dotnet-version: "8.0.x"
+      - name: .NET 8 Setup
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "8.0.x"
 
-            - name: .NET Restore
-              run: dotnet restore "./FModel/FModel.slnx"
+      - name: .NET Restore
+        run: dotnet restore "./FModel/FModel.slnx"
 
-            - name: .NET Publish
-              run: dotnet publish "./FModel/FModel.csproj" -c Release --no-restore --no-self-contained -r linux-x64 -f net8.0 -o "./FModel/bin/Publish/" -p:PublishReadyToRun=false -p:PublishSingleFile=true -p:DebugType=None -p:GenerateDocumentationFile=false -p:DebugSymbols=false
+      - name: .NET Publish
+        run: dotnet publish "./FModel/FModel.csproj" -c Release --no-restore --no-self-contained -r linux-x64 -f net8.0 -o "./FModel/bin/Publish/" -p:PublishReadyToRun=false -p:PublishSingleFile=true -p:DebugType=None -p:GenerateDocumentationFile=false -p:DebugSymbols=false
 
-            - name: ZIP File
-              uses: thedoctor0/zip-release@0.7.6
-              with:
-                  type: zip
-                  filename: ${{ github.sha }}.zip # will end up in working directory not the Publish folder
-                  path: ./FModel/bin/Publish/FModel
+      - name: ZIP File
+        uses: thedoctor0/zip-release@0.7.6
+        with:
+          type: zip
+          filename: ${{ github.sha }}.zip # will end up in working directory not the Publish folder
+          path: ./FModel/bin/Publish/FModel
 
-            - name: Edit QA Artifact
-              uses: ncipollo/release-action@v1.20.0
-              with:
-                  token: ${{ secrets.GITHUB_TOKEN }}
-                  name: "FModel Linux QA Testing"
-                  body: "Dev builds (Linux)"
-                  tag: "qa"
-                  artifacts: ${{ github.sha }}.zip
-                  prerelease: true
-                  allowUpdates: true
+      - name: Edit QA Artifact
+        uses: ncipollo/release-action@v1.20.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: "FModel Linux QA Testing"
+          body: "Dev builds (Linux)"
+          tag: "qa"
+          artifacts: ${{ github.sha }}.zip
+          prerelease: true
+          allowUpdates: true
