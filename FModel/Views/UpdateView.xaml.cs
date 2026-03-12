@@ -15,13 +15,15 @@ public partial class UpdateView : Window
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (DataContext is not UpdateViewModel viewModel) return;
+        if (DataContext is not UpdateViewModel viewModel)
+            return;
         _ = viewModel.LoadAsync();
     }
 
     private void OnDownloadLatest(object sender, RoutedEventArgs e)
     {
-        if (DataContext is not UpdateViewModel viewModel) return;
+        if (DataContext is not UpdateViewModel viewModel)
+            return;
         viewModel.DownloadLatest();
     }
 }

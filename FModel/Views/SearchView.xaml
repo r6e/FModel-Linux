@@ -4,114 +4,184 @@
         xmlns:settings="clr-namespace:FModel.Settings"
         xmlns:converters="clr-namespace:FModel.Views.Resources.Converters"
         WindowStartupLocation="CenterScreen"
-        KeyDown="OnWindowKeyDown" StateChanged="OnStateChanged"
-        Height="810" Width="1248"
+        KeyDown="OnWindowKeyDown"
+        StateChanged="OnStateChanged"
+        Height="810"
+        Width="1248"
         Title="Search For Packages">
     <Grid Margin="5 5">
-        <GroupBox Padding="0" Background="Transparent">
-            <TabControl x:Name="SearchTabControl" SelectionChanged="OnTabItemChange">
-                <TabItem Style="{StaticResource TabItemFillSpace}" Header="By Path">
+        <GroupBox Padding="0"
+                  Background="Transparent">
+            <TabControl x:Name="SearchTabControl"
+                        SelectionChanged="OnTabItemChange">
+                <TabItem Style="{StaticResource TabItemFillSpace}"
+                         Header="By Path">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
-                        <Grid Grid.Row="0" Margin="0 0 0 5" ZIndex="0">
+                        <Grid Grid.Row="0"
+                              Margin="0 0 0 5"
+                              ZIndex="0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <Grid Grid.Column="0" ZIndex="1" HorizontalAlignment="Left" Margin="5 2 0 0">
-                                <Viewbox Width="16" Height="16">
-                                    <Canvas Width="24" Height="24">
-                                        <Path Fill="White" Data="{StaticResource SearchIcon}" />
+                            <Grid Grid.Column="0"
+                                  ZIndex="1"
+                                  HorizontalAlignment="Left"
+                                  Margin="5 2 0 0">
+                                <Viewbox Width="16"
+                                         Height="16">
+                                    <Canvas Width="24"
+                                            Height="24">
+                                        <Path Fill="White"
+                                              Data="{StaticResource SearchIcon}" />
                                     </Canvas>
                                 </Viewbox>
                             </Grid>
-                            <TextBox x:Name="SearchTextBox" Grid.Column="0" Grid.ColumnSpan="2" Padding="25 0 0 0" AcceptsTab="False" AcceptsReturn="False"
+                            <TextBox x:Name="SearchTextBox"
+                                     Grid.Column="0"
+                                     Grid.ColumnSpan="2"
+                                     Padding="25 0 0 0"
+                                     AcceptsTab="False"
+                                     AcceptsReturn="False"
                                      Text="{Binding SearchTab.FilterText, Mode=TwoWay}"
                                      Watermark="Write your pattern and press enter..." />
-                            <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                <ToggleButton ToolTip="Match Case" Padding="5" IsChecked="{Binding SearchTab.HasMatchCaseEnabled}">
-                                    <Viewbox Width="16" Height="16" HorizontalAlignment="Center">
-                                        <Canvas Width="24" Height="24">
-                                            <Path Fill="White" Data="{StaticResource MatchCaseIcon}" />
+                            <StackPanel Grid.Column="1"
+                                        Orientation="Horizontal">
+                                <ToggleButton ToolTip="Match Case"
+                                              Padding="5"
+                                              IsChecked="{Binding SearchTab.HasMatchCaseEnabled}">
+                                    <Viewbox Width="16"
+                                             Height="16"
+                                             HorizontalAlignment="Center">
+                                        <Canvas Width="24"
+                                                Height="24">
+                                            <Path Fill="White"
+                                                  Data="{StaticResource MatchCaseIcon}" />
                                         </Canvas>
                                     </Viewbox>
                                 </ToggleButton>
-                                <ToggleButton ToolTip="Regex" Padding="5" IsChecked="{Binding SearchTab.HasRegexEnabled}">
-                                    <Viewbox Width="16" Height="16" HorizontalAlignment="Center">
-                                        <Canvas Width="24" Height="24">
-                                            <Path Fill="White" Data="{StaticResource RegexIcon}" />
+                                <ToggleButton ToolTip="Regex"
+                                              Padding="5"
+                                              IsChecked="{Binding SearchTab.HasRegexEnabled}">
+                                    <Viewbox Width="16"
+                                             Height="16"
+                                             HorizontalAlignment="Center">
+                                        <Canvas Width="24"
+                                                Height="24">
+                                            <Path Fill="White"
+                                                  Data="{StaticResource RegexIcon}" />
                                         </Canvas>
                                     </Viewbox>
                                 </ToggleButton>
-                                <Button ToolTip="Sort File Sizes" Padding="5" Click="OnSearchSortClick">
-                                    <Viewbox Width="16" Height="16" HorizontalAlignment="Center">
-                                        <Canvas Width="24" Height="24">
-                                            <Path Fill="White" Data="{StaticResource SortIcon}" />
+                                <Button ToolTip="Sort File Sizes"
+                                        Padding="5"
+                                        Click="OnSearchSortClick">
+                                    <Viewbox Width="16"
+                                             Height="16"
+                                             HorizontalAlignment="Center">
+                                        <Canvas Width="24"
+                                                Height="24">
+                                            <Path Fill="White"
+                                                  Data="{StaticResource SortIcon}" />
                                         </Canvas>
                                     </Viewbox>
                                 </Button>
-                                <Button ToolTip="Clear Search Filter" Padding="5" Click="OnDeleteSearchClick">
-                                    <Viewbox Width="16" Height="16" HorizontalAlignment="Center">
-                                        <Canvas Width="24" Height="24">
-                                            <Path Fill="White" Data="{StaticResource BackspaceIcon}"/>
+                                <Button ToolTip="Clear Search Filter"
+                                        Padding="5"
+                                        Click="OnDeleteSearchClick">
+                                    <Viewbox Width="16"
+                                             Height="16"
+                                             HorizontalAlignment="Center">
+                                        <Canvas Width="24"
+                                                Height="24">
+                                            <Path Fill="White"
+                                                  Data="{StaticResource BackspaceIcon}" />
                                         </Canvas>
                                     </Viewbox>
                                 </Button>
                             </StackPanel>
-                            <TextBlock Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10 0 0 0" FontStyle="Italic">
+                            <TextBlock Grid.Column="2"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Right"
+                                       Margin="10 0 0 0"
+                                       FontStyle="Italic">
                                 <TextBlock.Text>
                                     <MultiBinding StringFormat="{}{0:# ### ### ##0} Loaded Packages ({1})">
-                                        <Binding Path="SearchTab.ResultsCount" FallbackValue="0" />
-                                        <Binding Path="SearchTab.CurrentSortSizeMode" FallbackValue="None" />
+                                        <Binding Path="SearchTab.ResultsCount"
+                                                 FallbackValue="0" />
+                                        <Binding Path="SearchTab.CurrentSortSizeMode"
+                                                 FallbackValue="None" />
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>
                         </Grid>
-                        <DataGrid Grid.Row="1" x:Name="SearchDataGrid"
-                                  IsReadOnly="True" AutoGenerateColumns="False"
+                        <DataGrid Grid.Row="1"
+                                  x:Name="SearchDataGrid"
+                                  IsReadOnly="True"
+                                  AutoGenerateColumns="False"
                                   ItemsSource="{Binding SearchTab.SearchResultsView, IsAsync=True}"
                                   DoubleTapped="OnAssetDoubleClick">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Path" Binding="{Binding Path}" Width="*" />
-                                <DataGridTextColumn Header="Archive" Binding="{Binding Vfs.Name}" Width="225" />
-                                <DataGridTextColumn Header="Size" Binding="{Binding Size, Converter={x:Static converters:SizeToStringConverter.Instance}}" Width="100" />
+                                <DataGridTextColumn Header="Path"
+                                                    Binding="{Binding Path}"
+                                                    Width="*" />
+                                <DataGridTextColumn Header="Archive"
+                                                    Binding="{Binding Vfs.Name}"
+                                                    Width="225" />
+                                <DataGridTextColumn Header="Size"
+                                                    Binding="{Binding Size, Converter={x:Static converters:SizeToStringConverter.Instance}}"
+                                                    Width="100" />
                             </DataGrid.Columns>
                             <DataGrid.ContextMenu>
                                 <ContextMenu DataContext="{Binding PlacementTarget, RelativeSource={RelativeSource Self}}">
-                                    <MenuItem Header="Go To" Click="OnAssetDoubleClick">
+                                    <MenuItem Header="Go To"
+                                              Click="OnAssetDoubleClick">
                                         <MenuItem.Icon>
-                                            <Viewbox Width="16" Height="16">
-                                                <Canvas Width="24" Height="24">
-                                                    <Path Fill="White" Data="{StaticResource GoToIcon}" />
+                                            <Viewbox Width="16"
+                                                     Height="16">
+                                                <Canvas Width="24"
+                                                        Height="24">
+                                                    <Path Fill="White"
+                                                          Data="{StaticResource GoToIcon}" />
                                                 </Canvas>
                                             </Viewbox>
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Header="Extract in New Tab" Click="OnAssetExtract">
+                                    <MenuItem Header="Extract in New Tab"
+                                              Click="OnAssetExtract">
                                         <MenuItem.Icon>
-                                            <Viewbox Width="16" Height="16">
-                                                <Canvas Width="24" Height="24">
-                                                    <Path Fill="White" Data="{StaticResource ExtractIcon}" />
+                                            <Viewbox Width="16"
+                                                     Height="16">
+                                                <Canvas Width="24"
+                                                        Height="24">
+                                                    <Path Fill="White"
+                                                          Data="{StaticResource ExtractIcon}" />
                                                 </Canvas>
                                             </Viewbox>
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Header="Find References" Click="OnFindRefs">
+                                    <MenuItem Header="Find References"
+                                              Click="OnFindRefs">
                                         <MenuItem.Icon>
-                                            <Viewbox Width="16" Height="16">
-                                                <Canvas Width="24" Height="24">
-                                                    <Path Fill="White" Data="{StaticResource SearchIcon}" />
+                                            <Viewbox Width="16"
+                                                     Height="16">
+                                                <Canvas Width="24"
+                                                        Height="24">
+                                                    <Path Fill="White"
+                                                          Data="{StaticResource SearchIcon}" />
                                                 </Canvas>
                                             </Viewbox>
                                         </MenuItem.Icon>
                                         <MenuItem.IsEnabled>
-                                            <Binding Path="PlacementTarget.SelectedItem" RelativeSource="{RelativeSource AncestorType=ContextMenu}">
+                                            <Binding Path="PlacementTarget.SelectedItem"
+                                                     RelativeSource="{RelativeSource AncestorType=ContextMenu}">
                                                 <Binding.Converter>
                                                     <converters:GameFileMeetsConditionConverter>
                                                         <converters:GameFileMeetsConditionConverter.Conditions>
@@ -123,7 +193,8 @@
                                             </Binding>
                                         </MenuItem.IsEnabled>
                                     </MenuItem>
-                                    <MenuItem Header="Decompile Blueprint" Command="{Binding DataContext.mainApplication.RightClickMenuCommand}">
+                                    <MenuItem Header="Decompile Blueprint"
+                                              Command="{Binding DataContext.mainApplication.RightClickMenuCommand}">
                                         <MenuItem.CommandParameter>
                                             <MultiBinding Converter="{x:Static converters:MultiParameterConverter.Instance}">
                                                 <Binding Source="Assets_Decompile" />
@@ -131,14 +202,18 @@
                                             </MultiBinding>
                                         </MenuItem.CommandParameter>
                                         <MenuItem.Icon>
-                                            <Viewbox Width="16" Height="16">
-                                                <Canvas Width="24" Height="24">
-                                                    <Path Fill="White" Data="{StaticResource CppIcon}" />
+                                            <Viewbox Width="16"
+                                                     Height="16">
+                                                <Canvas Width="24"
+                                                        Height="24">
+                                                    <Path Fill="White"
+                                                          Data="{StaticResource CppIcon}" />
                                                 </Canvas>
                                             </Viewbox>
                                         </MenuItem.Icon>
                                         <MenuItem.IsEnabled>
-                                            <Binding Path="PlacementTarget.SelectedItem" RelativeSource="{RelativeSource AncestorType=ContextMenu}">
+                                            <Binding Path="PlacementTarget.SelectedItem"
+                                                     RelativeSource="{RelativeSource AncestorType=ContextMenu}">
                                                 <Binding.Converter>
                                                     <converters:GameFileMeetsConditionConverter>
                                                         <converters:GameFileMeetsConditionConverter.Conditions>
@@ -163,14 +238,18 @@
                                             </MultiBinding>
                                         </MenuItem.CommandParameter>
                                         <MenuItem.Icon>
-                                            <Viewbox Width="16" Height="16">
-                                                <Canvas Width="24" Height="24">
-                                                    <Path Fill="White" Data="{StaticResource ExportIcon}" />
+                                            <Viewbox Width="16"
+                                                     Height="16">
+                                                <Canvas Width="24"
+                                                        Height="24">
+                                                    <Path Fill="White"
+                                                          Data="{StaticResource ExportIcon}" />
                                                 </Canvas>
                                             </Viewbox>
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Header="Save Properties (.json)" Command="{Binding DataContext.mainApplication.RightClickMenuCommand}">
+                                    <MenuItem Header="Save Properties (.json)"
+                                              Command="{Binding DataContext.mainApplication.RightClickMenuCommand}">
                                         <MenuItem.CommandParameter>
                                             <MultiBinding Converter="{x:Static converters:MultiParameterConverter.Instance}">
                                                 <Binding Source="Assets_Save_Properties" />
@@ -178,14 +257,18 @@
                                             </MultiBinding>
                                         </MenuItem.CommandParameter>
                                         <MenuItem.Icon>
-                                            <Viewbox Width="16" Height="16">
-                                                <Canvas Width="24" Height="24">
-                                                    <Path Fill="White" Data="{StaticResource SaveIcon}" />
+                                            <Viewbox Width="16"
+                                                     Height="16">
+                                                <Canvas Width="24"
+                                                        Height="24">
+                                                    <Path Fill="White"
+                                                          Data="{StaticResource SaveIcon}" />
                                                 </Canvas>
                                             </Viewbox>
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Header="Save Texture" Command="{Binding DataContext.mainApplication.RightClickMenuCommand}">
+                                    <MenuItem Header="Save Texture"
+                                              Command="{Binding DataContext.mainApplication.RightClickMenuCommand}">
                                         <MenuItem.CommandParameter>
                                             <MultiBinding Converter="{x:Static converters:MultiParameterConverter.Instance}">
                                                 <Binding Source="Assets_Save_Textures" />
@@ -193,14 +276,18 @@
                                             </MultiBinding>
                                         </MenuItem.CommandParameter>
                                         <MenuItem.Icon>
-                                            <Viewbox Width="16" Height="16">
-                                                <Canvas Width="24" Height="24">
-                                                    <Path Fill="White" Data="{StaticResource TextureIcon}" />
+                                            <Viewbox Width="16"
+                                                     Height="16">
+                                                <Canvas Width="24"
+                                                        Height="24">
+                                                    <Path Fill="White"
+                                                          Data="{StaticResource TextureIcon}" />
                                                 </Canvas>
                                             </Viewbox>
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Header="Save Model" Command="{Binding DataContext.mainApplication.RightClickMenuCommand}">
+                                    <MenuItem Header="Save Model"
+                                              Command="{Binding DataContext.mainApplication.RightClickMenuCommand}">
                                         <MenuItem.CommandParameter>
                                             <MultiBinding Converter="{x:Static converters:MultiParameterConverter.Instance}">
                                                 <Binding Source="Assets_Save_Models" />
@@ -208,14 +295,18 @@
                                             </MultiBinding>
                                         </MenuItem.CommandParameter>
                                         <MenuItem.Icon>
-                                            <Viewbox Width="16" Height="16">
-                                                <Canvas Width="24" Height="24">
-                                                    <Path Fill="White" Data="{StaticResource ModelIcon}" />
+                                            <Viewbox Width="16"
+                                                     Height="16">
+                                                <Canvas Width="24"
+                                                        Height="24">
+                                                    <Path Fill="White"
+                                                          Data="{StaticResource ModelIcon}" />
                                                 </Canvas>
                                             </Viewbox>
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Header="Save Animation" Command="{Binding DataContext.mainApplication.RightClickMenuCommand}">
+                                    <MenuItem Header="Save Animation"
+                                              Command="{Binding DataContext.mainApplication.RightClickMenuCommand}">
                                         <MenuItem.CommandParameter>
                                             <MultiBinding Converter="{x:Static converters:MultiParameterConverter.Instance}">
                                                 <Binding Source="Assets_Save_Animations" />
@@ -223,14 +314,18 @@
                                             </MultiBinding>
                                         </MenuItem.CommandParameter>
                                         <MenuItem.Icon>
-                                            <Viewbox Width="16" Height="16">
-                                                <Canvas Width="24" Height="24">
-                                                    <Path Fill="White" Data="{StaticResource AnimationIcon}" />
+                                            <Viewbox Width="16"
+                                                     Height="16">
+                                                <Canvas Width="24"
+                                                        Height="24">
+                                                    <Path Fill="White"
+                                                          Data="{StaticResource AnimationIcon}" />
                                                 </Canvas>
                                             </Viewbox>
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Header="Save Audio" Command="{Binding DataContext.mainApplication.RightClickMenuCommand}">
+                                    <MenuItem Header="Save Audio"
+                                              Command="{Binding DataContext.mainApplication.RightClickMenuCommand}">
                                         <MenuItem.CommandParameter>
                                             <MultiBinding Converter="{x:Static converters:MultiParameterConverter.Instance}">
                                                 <Binding Source="Assets_Save_Audio" />
@@ -238,9 +333,12 @@
                                             </MultiBinding>
                                         </MenuItem.CommandParameter>
                                         <MenuItem.Icon>
-                                            <Viewbox Width="16" Height="16">
-                                                <Canvas Width="24" Height="24">
-                                                    <Path Fill="White" Data="{StaticResource AudioIcon}" />
+                                            <Viewbox Width="16"
+                                                     Height="16">
+                                                <Canvas Width="24"
+                                                        Height="24">
+                                                    <Path Fill="White"
+                                                          Data="{StaticResource AudioIcon}" />
                                                 </Canvas>
                                             </Viewbox>
                                         </MenuItem.Icon>
@@ -248,13 +346,17 @@
                                     <Separator />
                                     <MenuItem Header="Copy">
                                         <MenuItem.Icon>
-                                            <Viewbox Width="16" Height="16">
-                                                <Canvas Width="24" Height="24">
-                                                    <Path Fill="White" Data="{StaticResource CopyIcon}" />
+                                            <Viewbox Width="16"
+                                                     Height="16">
+                                                <Canvas Width="24"
+                                                        Height="24">
+                                                    <Path Fill="White"
+                                                          Data="{StaticResource CopyIcon}" />
                                                 </Canvas>
                                             </Viewbox>
                                         </MenuItem.Icon>
-                                        <MenuItem Header="Package Path" Command="{Binding DataContext.mainApplication.CopyCommand}">
+                                        <MenuItem Header="Package Path"
+                                                  Command="{Binding DataContext.mainApplication.CopyCommand}">
                                             <MenuItem.CommandParameter>
                                                 <MultiBinding Converter="{x:Static converters:MultiParameterConverter.Instance}">
                                                     <Binding Source="File_Path" />
@@ -262,7 +364,8 @@
                                                 </MultiBinding>
                                             </MenuItem.CommandParameter>
                                         </MenuItem>
-                                        <MenuItem Header="Package Name" Command="{Binding DataContext.mainApplication.CopyCommand}">
+                                        <MenuItem Header="Package Name"
+                                                  Command="{Binding DataContext.mainApplication.CopyCommand}">
                                             <MenuItem.CommandParameter>
                                                 <MultiBinding Converter="{x:Static converters:MultiParameterConverter.Instance}">
                                                     <Binding Source="File_Name" />
@@ -270,7 +373,8 @@
                                                 </MultiBinding>
                                             </MenuItem.CommandParameter>
                                         </MenuItem>
-                                        <MenuItem Header="Directory Path" Command="{Binding DataContext.mainApplication.CopyCommand}">
+                                        <MenuItem Header="Directory Path"
+                                                  Command="{Binding DataContext.mainApplication.CopyCommand}">
                                             <MenuItem.CommandParameter>
                                                 <MultiBinding Converter="{x:Static converters:MultiParameterConverter.Instance}">
                                                     <Binding Source="Directory_Path" />
@@ -278,7 +382,8 @@
                                                 </MultiBinding>
                                             </MenuItem.CommandParameter>
                                         </MenuItem>
-                                        <MenuItem Header="Package Path w/o Extension" Command="{Binding DataContext.mainApplication.CopyCommand}">
+                                        <MenuItem Header="Package Path w/o Extension"
+                                                  Command="{Binding DataContext.mainApplication.CopyCommand}">
                                             <MenuItem.CommandParameter>
                                                 <MultiBinding Converter="{x:Static converters:MultiParameterConverter.Instance}">
                                                     <Binding Source="File_Path_No_Extension" />
@@ -286,7 +391,8 @@
                                                 </MultiBinding>
                                             </MenuItem.CommandParameter>
                                         </MenuItem>
-                                        <MenuItem Header="Package Name w/o Extension" Command="{Binding DataContext.mainApplication.CopyCommand}">
+                                        <MenuItem Header="Package Name w/o Extension"
+                                                  Command="{Binding DataContext.mainApplication.CopyCommand}">
                                             <MenuItem.CommandParameter>
                                                 <MultiBinding Converter="{x:Static converters:MultiParameterConverter.Instance}">
                                                     <Binding Source="File_Name_No_Extension" />
@@ -300,24 +406,31 @@
                         </DataGrid>
                     </Grid>
                 </TabItem>
-                <TabItem Style="{StaticResource TabItemFillSpace}" HorizontalAlignment="Stretch">
+                <TabItem Style="{StaticResource TabItemFillSpace}"
+                         HorizontalAlignment="Stretch">
                     <TabItem.Header>
                         <TextBlock>
                             <TextBlock.Text>
-                                <MultiBinding FallbackValue="By Reference" StringFormat="{}{0:### ### ##0} References for {1}">
+                                <MultiBinding FallbackValue="By Reference"
+                                              StringFormat="{}{0:### ### ##0} References for {1}">
                                     <Binding Path="RefTab.SearchResults.Count" />
-                                    <Binding Path="RefTab.RefFile.Name" TargetNullValue="Unknown file"/>
+                                    <Binding Path="RefTab.RefFile.Name"
+                                             TargetNullValue="Unknown file" />
                                 </MultiBinding>
                             </TextBlock.Text>
                         </TextBlock>
                     </TabItem.Header>
                     <TabItem.ContextMenu>
                         <ContextMenu DataContext="{Binding PlacementTarget, RelativeSource={RelativeSource Self}}">
-                            <MenuItem Header="Go To" Click="OnGoToRefPackage">
+                            <MenuItem Header="Go To"
+                                      Click="OnGoToRefPackage">
                                 <MenuItem.Icon>
-                                    <Viewbox Width="16" Height="16">
-                                        <Canvas Width="24" Height="24">
-                                            <Path Fill="White" Data="{StaticResource GoToIcon}" />
+                                    <Viewbox Width="16"
+                                             Height="16">
+                                        <Canvas Width="24"
+                                                Height="24">
+                                            <Path Fill="White"
+                                                  Data="{StaticResource GoToIcon}" />
                                         </Canvas>
                                     </Viewbox>
                                 </MenuItem.Icon>
@@ -330,102 +443,167 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
-                        <Grid Grid.Row="0" Margin="0 0 0 5" ZIndex="0">
+                        <Grid Grid.Row="0"
+                              Margin="0 0 0 5"
+                              ZIndex="0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <Grid Grid.Column="0" ZIndex="1" HorizontalAlignment="Left" Margin="5 2 0 0">
-                                <Viewbox Width="16" Height="16">
-                                    <Canvas Width="24" Height="24">
-                                        <Path Fill="White" Data="{StaticResource SearchIcon}" />
+                            <Grid Grid.Column="0"
+                                  ZIndex="1"
+                                  HorizontalAlignment="Left"
+                                  Margin="5 2 0 0">
+                                <Viewbox Width="16"
+                                         Height="16">
+                                    <Canvas Width="24"
+                                            Height="24">
+                                        <Path Fill="White"
+                                              Data="{StaticResource SearchIcon}" />
                                     </Canvas>
                                 </Viewbox>
                             </Grid>
-                            <TextBox x:Name="RefSearchTextBox" Grid.Column="0" Grid.ColumnSpan="2" Padding="25 0 0 0" AcceptsTab="False" AcceptsReturn="False"
+                            <TextBox x:Name="RefSearchTextBox"
+                                     Grid.Column="0"
+                                     Grid.ColumnSpan="2"
+                                     Padding="25 0 0 0"
+                                     AcceptsTab="False"
+                                     AcceptsReturn="False"
                                      Text="{Binding RefTab.FilterText, Mode=TwoWay}"
                                      Watermark="Write your pattern and press enter..." />
-                            <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                <ToggleButton ToolTip="Match Case" Padding="5" IsChecked="{Binding RefTab.HasMatchCaseEnabled}">
-                                    <Viewbox Width="16" Height="16" HorizontalAlignment="Center">
-                                        <Canvas Width="24" Height="24">
-                                            <Path Fill="White" Data="{StaticResource MatchCaseIcon}" />
+                            <StackPanel Grid.Column="1"
+                                        Orientation="Horizontal">
+                                <ToggleButton ToolTip="Match Case"
+                                              Padding="5"
+                                              IsChecked="{Binding RefTab.HasMatchCaseEnabled}">
+                                    <Viewbox Width="16"
+                                             Height="16"
+                                             HorizontalAlignment="Center">
+                                        <Canvas Width="24"
+                                                Height="24">
+                                            <Path Fill="White"
+                                                  Data="{StaticResource MatchCaseIcon}" />
                                         </Canvas>
                                     </Viewbox>
                                 </ToggleButton>
-                                <ToggleButton ToolTip="Regex" Padding="5" IsChecked="{Binding RefTab.HasRegexEnabled}">
-                                    <Viewbox Width="16" Height="16" HorizontalAlignment="Center">
-                                        <Canvas Width="24" Height="24">
-                                            <Path Fill="White" Data="{StaticResource RegexIcon}" />
+                                <ToggleButton ToolTip="Regex"
+                                              Padding="5"
+                                              IsChecked="{Binding RefTab.HasRegexEnabled}">
+                                    <Viewbox Width="16"
+                                             Height="16"
+                                             HorizontalAlignment="Center">
+                                        <Canvas Width="24"
+                                                Height="24">
+                                            <Path Fill="White"
+                                                  Data="{StaticResource RegexIcon}" />
                                         </Canvas>
                                     </Viewbox>
                                 </ToggleButton>
-                                <Button ToolTip="Sort File Sizes" Padding="5" Click="OnSearchSortClick">
-                                    <Viewbox Width="16" Height="16" HorizontalAlignment="Center">
-                                        <Canvas Width="24" Height="24">
-                                            <Path Fill="White" Data="{StaticResource SortIcon}" />
+                                <Button ToolTip="Sort File Sizes"
+                                        Padding="5"
+                                        Click="OnSearchSortClick">
+                                    <Viewbox Width="16"
+                                             Height="16"
+                                             HorizontalAlignment="Center">
+                                        <Canvas Width="24"
+                                                Height="24">
+                                            <Path Fill="White"
+                                                  Data="{StaticResource SortIcon}" />
                                         </Canvas>
                                     </Viewbox>
                                 </Button>
-                                <Button ToolTip="Clear Search Filter" Padding="5" Click="OnDeleteSearchClick">
-                                    <Viewbox Width="16" Height="16" HorizontalAlignment="Center">
-                                        <Canvas Width="24" Height="24">
-                                            <Path Fill="White" Data="{StaticResource BackspaceIcon}"/>
+                                <Button ToolTip="Clear Search Filter"
+                                        Padding="5"
+                                        Click="OnDeleteSearchClick">
+                                    <Viewbox Width="16"
+                                             Height="16"
+                                             HorizontalAlignment="Center">
+                                        <Canvas Width="24"
+                                                Height="24">
+                                            <Path Fill="White"
+                                                  Data="{StaticResource BackspaceIcon}" />
                                         </Canvas>
                                     </Viewbox>
                                 </Button>
                             </StackPanel>
-                            <TextBlock Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10 0 0 0" FontStyle="Italic">
+                            <TextBlock Grid.Column="2"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Right"
+                                       Margin="10 0 0 0"
+                                       FontStyle="Italic">
                                 <TextBlock.Text>
                                     <MultiBinding StringFormat="{}{0:# ### ### ##0} Packages with reference ({1})">
-                                        <Binding Path="RefTab.ResultsCount" FallbackValue="0" />
-                                        <Binding Path="RefTab.CurrentSortSizeMode" FallbackValue="None" />
+                                        <Binding Path="RefTab.ResultsCount"
+                                                 FallbackValue="0" />
+                                        <Binding Path="RefTab.CurrentSortSizeMode"
+                                                 FallbackValue="None" />
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>
                         </Grid>
 
-                        <DataGrid Grid.Row="1" x:Name="RefDataGrid"
-                                  IsReadOnly="True" AutoGenerateColumns="False"
+                        <DataGrid Grid.Row="1"
+                                  x:Name="RefDataGrid"
+                                  IsReadOnly="True"
+                                  AutoGenerateColumns="False"
                                   ItemsSource="{Binding RefTab.SearchResultsView, IsAsync=True}"
                                   DoubleTapped="OnAssetDoubleClick">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Path" Binding="{Binding Path}" Width="*" />
-                                <DataGridTextColumn Header="Archive" Binding="{Binding Vfs.Name}" Width="225" />
-                                <DataGridTextColumn Header="Size" Binding="{Binding Size, Converter={x:Static converters:SizeToStringConverter.Instance}}" Width="100" />
+                                <DataGridTextColumn Header="Path"
+                                                    Binding="{Binding Path}"
+                                                    Width="*" />
+                                <DataGridTextColumn Header="Archive"
+                                                    Binding="{Binding Vfs.Name}"
+                                                    Width="225" />
+                                <DataGridTextColumn Header="Size"
+                                                    Binding="{Binding Size, Converter={x:Static converters:SizeToStringConverter.Instance}}"
+                                                    Width="100" />
                             </DataGrid.Columns>
                             <DataGrid.ContextMenu>
                                 <ContextMenu DataContext="{Binding PlacementTarget, RelativeSource={RelativeSource Self}}">
-                                    <MenuItem Header="Go To" Click="OnAssetDoubleClick">
+                                    <MenuItem Header="Go To"
+                                              Click="OnAssetDoubleClick">
                                         <MenuItem.Icon>
-                                            <Viewbox Width="16" Height="16">
-                                                <Canvas Width="24" Height="24">
-                                                    <Path Fill="White" Data="{StaticResource GoToIcon}" />
+                                            <Viewbox Width="16"
+                                                     Height="16">
+                                                <Canvas Width="24"
+                                                        Height="24">
+                                                    <Path Fill="White"
+                                                          Data="{StaticResource GoToIcon}" />
                                                 </Canvas>
                                             </Viewbox>
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Header="Extract in New Tab" Click="OnAssetExtract">
+                                    <MenuItem Header="Extract in New Tab"
+                                              Click="OnAssetExtract">
                                         <MenuItem.Icon>
-                                            <Viewbox Width="16" Height="16">
-                                                <Canvas Width="24" Height="24">
-                                                    <Path Fill="White" Data="{StaticResource ExtractIcon}" />
+                                            <Viewbox Width="16"
+                                                     Height="16">
+                                                <Canvas Width="24"
+                                                        Height="24">
+                                                    <Path Fill="White"
+                                                          Data="{StaticResource ExtractIcon}" />
                                                 </Canvas>
                                             </Viewbox>
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Header="Find References" Click="OnFindRefs">
+                                    <MenuItem Header="Find References"
+                                              Click="OnFindRefs">
                                         <MenuItem.Icon>
-                                            <Viewbox Width="16" Height="16">
-                                                <Canvas Width="24" Height="24">
-                                                    <Path Fill="White" Data="{StaticResource SearchIcon}" />
+                                            <Viewbox Width="16"
+                                                     Height="16">
+                                                <Canvas Width="24"
+                                                        Height="24">
+                                                    <Path Fill="White"
+                                                          Data="{StaticResource SearchIcon}" />
                                                 </Canvas>
                                             </Viewbox>
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Header="Decompile Blueprint" Command="{Binding DataContext.mainApplication.RightClickMenuCommand}">
+                                    <MenuItem Header="Decompile Blueprint"
+                                              Command="{Binding DataContext.mainApplication.RightClickMenuCommand}">
                                         <MenuItem.CommandParameter>
                                             <MultiBinding Converter="{x:Static converters:MultiParameterConverter.Instance}">
                                                 <Binding Source="Assets_Decompile" />
@@ -433,9 +611,12 @@
                                             </MultiBinding>
                                         </MenuItem.CommandParameter>
                                         <MenuItem.Icon>
-                                            <Viewbox Width="16" Height="16">
-                                                <Canvas Width="24" Height="24">
-                                                    <Path Fill="White" Data="{StaticResource CppIcon}" />
+                                            <Viewbox Width="16"
+                                                     Height="16">
+                                                <Canvas Width="24"
+                                                        Height="24">
+                                                    <Path Fill="White"
+                                                          Data="{StaticResource CppIcon}" />
                                                 </Canvas>
                                             </Viewbox>
                                         </MenuItem.Icon>
@@ -454,14 +635,18 @@
                                             </MultiBinding>
                                         </MenuItem.CommandParameter>
                                         <MenuItem.Icon>
-                                            <Viewbox Width="16" Height="16">
-                                                <Canvas Width="24" Height="24">
-                                                    <Path Fill="White" Data="{StaticResource ExportIcon}" />
+                                            <Viewbox Width="16"
+                                                     Height="16">
+                                                <Canvas Width="24"
+                                                        Height="24">
+                                                    <Path Fill="White"
+                                                          Data="{StaticResource ExportIcon}" />
                                                 </Canvas>
                                             </Viewbox>
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Header="Save Properties (.json)" Command="{Binding DataContext.mainApplication.RightClickMenuCommand}">
+                                    <MenuItem Header="Save Properties (.json)"
+                                              Command="{Binding DataContext.mainApplication.RightClickMenuCommand}">
                                         <MenuItem.CommandParameter>
                                             <MultiBinding Converter="{x:Static converters:MultiParameterConverter.Instance}">
                                                 <Binding Source="Assets_Save_Properties" />
@@ -469,14 +654,18 @@
                                             </MultiBinding>
                                         </MenuItem.CommandParameter>
                                         <MenuItem.Icon>
-                                            <Viewbox Width="16" Height="16">
-                                                <Canvas Width="24" Height="24">
-                                                    <Path Fill="White" Data="{StaticResource SaveIcon}" />
+                                            <Viewbox Width="16"
+                                                     Height="16">
+                                                <Canvas Width="24"
+                                                        Height="24">
+                                                    <Path Fill="White"
+                                                          Data="{StaticResource SaveIcon}" />
                                                 </Canvas>
                                             </Viewbox>
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Header="Save Texture" Command="{Binding DataContext.mainApplication.RightClickMenuCommand}">
+                                    <MenuItem Header="Save Texture"
+                                              Command="{Binding DataContext.mainApplication.RightClickMenuCommand}">
                                         <MenuItem.CommandParameter>
                                             <MultiBinding Converter="{x:Static converters:MultiParameterConverter.Instance}">
                                                 <Binding Source="Assets_Save_Textures" />
@@ -484,14 +673,18 @@
                                             </MultiBinding>
                                         </MenuItem.CommandParameter>
                                         <MenuItem.Icon>
-                                            <Viewbox Width="16" Height="16">
-                                                <Canvas Width="24" Height="24">
-                                                    <Path Fill="White" Data="{StaticResource TextureIcon}" />
+                                            <Viewbox Width="16"
+                                                     Height="16">
+                                                <Canvas Width="24"
+                                                        Height="24">
+                                                    <Path Fill="White"
+                                                          Data="{StaticResource TextureIcon}" />
                                                 </Canvas>
                                             </Viewbox>
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Header="Save Model" Command="{Binding DataContext.mainApplication.RightClickMenuCommand}">
+                                    <MenuItem Header="Save Model"
+                                              Command="{Binding DataContext.mainApplication.RightClickMenuCommand}">
                                         <MenuItem.CommandParameter>
                                             <MultiBinding Converter="{x:Static converters:MultiParameterConverter.Instance}">
                                                 <Binding Source="Assets_Save_Models" />
@@ -499,14 +692,18 @@
                                             </MultiBinding>
                                         </MenuItem.CommandParameter>
                                         <MenuItem.Icon>
-                                            <Viewbox Width="16" Height="16">
-                                                <Canvas Width="24" Height="24">
-                                                    <Path Fill="White" Data="{StaticResource ModelIcon}" />
+                                            <Viewbox Width="16"
+                                                     Height="16">
+                                                <Canvas Width="24"
+                                                        Height="24">
+                                                    <Path Fill="White"
+                                                          Data="{StaticResource ModelIcon}" />
                                                 </Canvas>
                                             </Viewbox>
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Header="Save Animation" Command="{Binding DataContext.mainApplication.RightClickMenuCommand}">
+                                    <MenuItem Header="Save Animation"
+                                              Command="{Binding DataContext.mainApplication.RightClickMenuCommand}">
                                         <MenuItem.CommandParameter>
                                             <MultiBinding Converter="{x:Static converters:MultiParameterConverter.Instance}">
                                                 <Binding Source="Assets_Save_Animations" />
@@ -514,14 +711,18 @@
                                             </MultiBinding>
                                         </MenuItem.CommandParameter>
                                         <MenuItem.Icon>
-                                            <Viewbox Width="16" Height="16">
-                                                <Canvas Width="24" Height="24">
-                                                    <Path Fill="White" Data="{StaticResource AnimationIcon}" />
+                                            <Viewbox Width="16"
+                                                     Height="16">
+                                                <Canvas Width="24"
+                                                        Height="24">
+                                                    <Path Fill="White"
+                                                          Data="{StaticResource AnimationIcon}" />
                                                 </Canvas>
                                             </Viewbox>
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Header="Save Audio" Command="{Binding DataContext.mainApplication.RightClickMenuCommand}">
+                                    <MenuItem Header="Save Audio"
+                                              Command="{Binding DataContext.mainApplication.RightClickMenuCommand}">
                                         <MenuItem.CommandParameter>
                                             <MultiBinding Converter="{x:Static converters:MultiParameterConverter.Instance}">
                                                 <Binding Source="Assets_Save_Audio" />
@@ -529,9 +730,12 @@
                                             </MultiBinding>
                                         </MenuItem.CommandParameter>
                                         <MenuItem.Icon>
-                                            <Viewbox Width="16" Height="16">
-                                                <Canvas Width="24" Height="24">
-                                                    <Path Fill="White" Data="{StaticResource AudioIcon}" />
+                                            <Viewbox Width="16"
+                                                     Height="16">
+                                                <Canvas Width="24"
+                                                        Height="24">
+                                                    <Path Fill="White"
+                                                          Data="{StaticResource AudioIcon}" />
                                                 </Canvas>
                                             </Viewbox>
                                         </MenuItem.Icon>
@@ -539,13 +743,17 @@
                                     <Separator />
                                     <MenuItem Header="Copy">
                                         <MenuItem.Icon>
-                                            <Viewbox Width="16" Height="16">
-                                                <Canvas Width="24" Height="24">
-                                                    <Path Fill="White" Data="{StaticResource CopyIcon}" />
+                                            <Viewbox Width="16"
+                                                     Height="16">
+                                                <Canvas Width="24"
+                                                        Height="24">
+                                                    <Path Fill="White"
+                                                          Data="{StaticResource CopyIcon}" />
                                                 </Canvas>
                                             </Viewbox>
                                         </MenuItem.Icon>
-                                        <MenuItem Header="Package Path" Command="{Binding DataContext.mainApplication.CopyCommand}">
+                                        <MenuItem Header="Package Path"
+                                                  Command="{Binding DataContext.mainApplication.CopyCommand}">
                                             <MenuItem.CommandParameter>
                                                 <MultiBinding Converter="{x:Static converters:MultiParameterConverter.Instance}">
                                                     <Binding Source="File_Path" />
@@ -553,7 +761,8 @@
                                                 </MultiBinding>
                                             </MenuItem.CommandParameter>
                                         </MenuItem>
-                                        <MenuItem Header="Package Name" Command="{Binding DataContext.mainApplication.CopyCommand}">
+                                        <MenuItem Header="Package Name"
+                                                  Command="{Binding DataContext.mainApplication.CopyCommand}">
                                             <MenuItem.CommandParameter>
                                                 <MultiBinding Converter="{x:Static converters:MultiParameterConverter.Instance}">
                                                     <Binding Source="File_Name" />
@@ -561,7 +770,8 @@
                                                 </MultiBinding>
                                             </MenuItem.CommandParameter>
                                         </MenuItem>
-                                        <MenuItem Header="Directory Path" Command="{Binding DataContext.mainApplication.CopyCommand}">
+                                        <MenuItem Header="Directory Path"
+                                                  Command="{Binding DataContext.mainApplication.CopyCommand}">
                                             <MenuItem.CommandParameter>
                                                 <MultiBinding Converter="{x:Static converters:MultiParameterConverter.Instance}">
                                                     <Binding Source="Directory_Path" />
@@ -569,7 +779,8 @@
                                                 </MultiBinding>
                                             </MenuItem.CommandParameter>
                                         </MenuItem>
-                                        <MenuItem Header="Package Path w/o Extension" Command="{Binding DataContext.mainApplication.CopyCommand}">
+                                        <MenuItem Header="Package Path w/o Extension"
+                                                  Command="{Binding DataContext.mainApplication.CopyCommand}">
                                             <MenuItem.CommandParameter>
                                                 <MultiBinding Converter="{x:Static converters:MultiParameterConverter.Instance}">
                                                     <Binding Source="File_Path_No_Extension" />
@@ -577,7 +788,8 @@
                                                 </MultiBinding>
                                             </MenuItem.CommandParameter>
                                         </MenuItem>
-                                        <MenuItem Header="Package Name w/o Extension" Command="{Binding DataContext.mainApplication.CopyCommand}">
+                                        <MenuItem Header="Package Name w/o Extension"
+                                                  Command="{Binding DataContext.mainApplication.CopyCommand}">
                                             <MenuItem.CommandParameter>
                                                 <MultiBinding Converter="{x:Static converters:MultiParameterConverter.Instance}">
                                                     <Binding Source="File_Name_No_Extension" />

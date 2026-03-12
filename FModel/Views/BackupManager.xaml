@@ -2,10 +2,14 @@
         xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:converters="clr-namespace:FModel.Views.Resources.Converters"
-        WindowStartupLocation="CenterScreen" CanResize="False" SizeToContent="Height" Loaded="OnLoaded"
+        WindowStartupLocation="CenterScreen"
+        CanResize="False"
+        SizeToContent="Height"
+        Loaded="OnLoaded"
         Width="432"
         Title="Backup Manager">
-    <Grid Margin="10" Background="Transparent">
+    <Grid Margin="10"
+          Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
@@ -21,25 +25,48 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" TextAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center"
+        <TextBlock Grid.Row="0"
+                   Grid.Column="0"
+                   Grid.ColumnSpan="3"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
                    Text="You can only use backup files when loading new &amp; modified archives. FModel will compare your local archives with the backup file you selected to filter packages and only show what you asked. We provide pre-created backups for some popular games but you can still create your own that will store information about all the game's packages at time T, for later use." />
 
-        <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Click="OnCreateBackupClick"
+        <Button Grid.Row="2"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Click="OnCreateBackupClick"
                 Content="Create" />
 
-        <Separator Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource CustomSeparator}" Tag="PRE-CREATED BACKUP FILES" />
+        <Separator Grid.Row="3"
+                   Grid.Column="0"
+                   Grid.ColumnSpan="3"
+                   Style="{StaticResource CustomSeparator}"
+                   Tag="PRE-CREATED BACKUP FILES" />
 
-        <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"
+        <TextBlock Grid.Row="4"
+                   Grid.Column="0"
+                   VerticalAlignment="Center"
                    Text="{Binding SelectedBackup.FileSize, Converter={x:Static converters:SizeToStringConverter.Instance}, FallbackValue='Backup', StringFormat={}Backup ({0})}" />
-        <ComboBox Grid.Row="4" Grid.Column="2" ItemsSource="{Binding BackupsView}" SelectedItem="{Binding SelectedBackup, Mode=TwoWay}"
+        <ComboBox Grid.Row="4"
+                  Grid.Column="2"
+                  ItemsSource="{Binding BackupsView}"
+                  SelectedItem="{Binding SelectedBackup, Mode=TwoWay}"
                   IsEnabled="{Binding BackupsView.Count, Converter={x:Static converters:IsNotZeroConverter.Instance}}">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding FileName}" TextTrimming="CharacterEllipsis" />
+                    <TextBlock Text="{Binding FileName}"
+                               TextTrimming="CharacterEllipsis" />
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Content="Download" Click="OnDownloadClick"
+        <Button Grid.Row="6"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Content="Download"
+                Click="OnDownloadClick"
                 IsEnabled="{Binding BackupsView.Count, Converter={x:Static converters:IsNotZeroConverter.Instance}}" />
     </Grid>
 </Window>

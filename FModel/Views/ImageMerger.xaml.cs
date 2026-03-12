@@ -138,69 +138,72 @@ public partial class ImageMerger : Window
 
     private async void ModifyItemInList(object sender, RoutedEventArgs e)
     {
-        if (ImagesListBox.Items.Count <= 0 || ImagesListBox.SelectedItems.Count <= 0) return;
+        if (ImagesListBox.Items.Count <= 0 || ImagesListBox.SelectedItems.Count <= 0)
+            return;
         var indices = ImagesListBox.SelectedItems.Cast<ListBoxItem>().Select(i => ImagesListBox.Items.IndexOf(i)).ToArray();
         var reloadImage = false;
 
         switch (((Button) sender).Name)
         {
             case "UpButton":
-            {
-                if (indices.Length > 0 && indices[0] > 0)
                 {
-                    for (var i = 0; i < ImagesListBox.Items.Count; i++)
+                    if (indices.Length > 0 && indices[0] > 0)
                     {
-                        if (!indices.Contains(i)) continue;
-                        var item = (ListBoxItem) ImagesListBox.Items[i];
-                        ImagesListBox.Items.Remove(item);
-                        ImagesListBox.Items.Insert(i - 1, item);
-                        item.IsSelected = true;
-                        reloadImage = true;
+                        for (var i = 0; i < ImagesListBox.Items.Count; i++)
+                        {
+                            if (!indices.Contains(i))
+                                continue;
+                            var item = (ListBoxItem) ImagesListBox.Items[i];
+                            ImagesListBox.Items.Remove(item);
+                            ImagesListBox.Items.Insert(i - 1, item);
+                            item.IsSelected = true;
+                            reloadImage = true;
+                        }
                     }
-                }
 
-                ImagesListBox.SelectedItems.Add(indices);
-                if (reloadImage)
-                {
-                    await DrawPreview().ConfigureAwait(false);
-                }
+                    ImagesListBox.SelectedItems.Add(indices);
+                    if (reloadImage)
+                    {
+                        await DrawPreview().ConfigureAwait(false);
+                    }
 
-                break;
-            }
+                    break;
+                }
             case "DownButton":
-            {
-                if (indices.Length > 0 && indices[^1] < ImagesListBox.Items.Count - 1)
                 {
-                    for (var i = ImagesListBox.Items.Count - 1; i > -1; --i)
+                    if (indices.Length > 0 && indices[^1] < ImagesListBox.Items.Count - 1)
                     {
-                        if (!indices.Contains(i)) continue;
-                        var item = (ListBoxItem) ImagesListBox.Items[i];
-                        ImagesListBox.Items.Remove(item);
-                        ImagesListBox.Items.Insert(i + 1, item);
-                        item.IsSelected = true;
-                        reloadImage = true;
+                        for (var i = ImagesListBox.Items.Count - 1; i > -1; --i)
+                        {
+                            if (!indices.Contains(i))
+                                continue;
+                            var item = (ListBoxItem) ImagesListBox.Items[i];
+                            ImagesListBox.Items.Remove(item);
+                            ImagesListBox.Items.Insert(i + 1, item);
+                            item.IsSelected = true;
+                            reloadImage = true;
+                        }
                     }
-                }
 
-                if (reloadImage)
-                {
-                    await DrawPreview().ConfigureAwait(false);
-                }
+                    if (reloadImage)
+                    {
+                        await DrawPreview().ConfigureAwait(false);
+                    }
 
-                break;
-            }
+                    break;
+                }
             case "DeleteButton":
-            {
-                if (ImagesListBox.Items.Count > 0 && ImagesListBox.SelectedItems.Count > 0)
                 {
-                    for (var i = ImagesListBox.SelectedItems.Count - 1; i >= 0; --i)
-                        ImagesListBox.Items.Remove(ImagesListBox.SelectedItems[i]);
+                    if (ImagesListBox.Items.Count > 0 && ImagesListBox.SelectedItems.Count > 0)
+                    {
+                        for (var i = ImagesListBox.SelectedItems.Count - 1; i >= 0; --i)
+                            ImagesListBox.Items.Remove(ImagesListBox.SelectedItems[i]);
+                    }
+
+                    await DrawPreview().ConfigureAwait(false);
+
+                    break;
                 }
-
-                await DrawPreview().ConfigureAwait(false);
-
-                break;
-            }
         }
     }
 
@@ -212,7 +215,8 @@ public partial class ImageMerger : Window
 
     private void OnOpenImage(object sender, RoutedEventArgs e)
     {
-        if (ImagePreview.Source == null) return;
+        if (ImagePreview.Source == null)
+            return;
         Helper.OpenWindow<Window>("Merged Image", () =>
         {
             new ImagePopout

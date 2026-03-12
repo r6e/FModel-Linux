@@ -1,24 +1,36 @@
 ﻿<Window x:Class="FModel.Views.CustomDir"
         xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        WindowStartupLocation="CenterScreen" CanResize="False" SizeToContent="Height"
-        MinHeight="216" Width="480"
+        WindowStartupLocation="CenterScreen"
+        CanResize="False"
+        SizeToContent="Height"
+        MinHeight="216"
+        Width="480"
         Title="Custom Directory">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Vertical" Margin="10 5 10 10">
-            <TextBlock Text="What is this?" HorizontalAlignment="Center" FontSize="20" FontWeight="SemiBold" />
-            <TextBlock TextAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Center"
+        <StackPanel Grid.Row="0"
+                    Orientation="Vertical"
+                    Margin="10 5 10 10">
+            <TextBlock Text="What is this?"
+                       HorizontalAlignment="Center"
+                       FontSize="20"
+                       FontWeight="SemiBold" />
+            <TextBlock TextAlignment="Center"
+                       TextWrapping="Wrap"
+                       HorizontalAlignment="Center"
                        Text="Bored of opening folders? Save custom directories to quickly jump to your favorite folder. They are saved according to your current set game, so don't freak out too fast." />
         </StackPanel>
-        
-        <GroupBox Grid.Row="1" Margin="10 10 10 18"
-                  Padding="0" Background="Transparent">
+
+        <GroupBox Grid.Row="1"
+                  Margin="10 10 10 18"
+                  Padding="0"
+                  Background="Transparent">
             <Grid Margin="0 5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -31,25 +43,45 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Header" VerticalAlignment="Center" />
-                <TextBox x:Name="WpfSuckMyDick" Grid.Row="0" Grid.Column="2" Text="{Binding Header, Mode=TwoWay}" />
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="Directory" VerticalAlignment="Center" />
-                <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding DirectoryPath, Mode=TwoWay}" />
+                <TextBlock Grid.Row="0"
+                           Grid.Column="0"
+                           Text="Header"
+                           VerticalAlignment="Center" />
+                <TextBox x:Name="WpfSuckMyDick"
+                         Grid.Row="0"
+                         Grid.Column="2"
+                         Text="{Binding Header, Mode=TwoWay}" />
+                <TextBlock Grid.Row="2"
+                           Grid.Column="0"
+                           Text="Directory"
+                           VerticalAlignment="Center" />
+                <TextBox Grid.Row="2"
+                         Grid.Column="2"
+                         Text="{Binding DirectoryPath, Mode=TwoWay}" />
             </Grid>
         </GroupBox>
 
         <Border Grid.Row="2">
             <Grid Margin="30, 12, 6, 12">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="1" MinWidth="78" Margin="0 0 12 0"
-                        HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="OK" Click="OnClick" />
-                <Button Grid.Column="2" MinWidth="78" Margin="0 0 12 0"
-                        HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="Cancel" />
+                <Button Grid.Column="1"
+                        MinWidth="78"
+                        Margin="0 0 12 0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Content="OK"
+                        Click="OnClick" />
+                <Button Grid.Column="2"
+                        MinWidth="78"
+                        Margin="0 0 12 0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Content="Cancel" />
             </Grid>
         </Border>
     </Grid>

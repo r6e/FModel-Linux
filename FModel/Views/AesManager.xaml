@@ -3,32 +3,49 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:FModel"
         xmlns:converters="clr-namespace:FModel.Views.Resources.Converters"
-        WindowStartupLocation="CenterScreen" CanResize="False" SizeToContent="WidthAndHeight" Closing="OnClosing"
-        MinHeight="216" Width="576"
+        WindowStartupLocation="CenterScreen"
+        CanResize="False"
+        SizeToContent="WidthAndHeight"
+        Closing="OnClosing"
+        MinHeight="216"
+        Width="576"
         Title="AES Manager">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Vertical" Margin="10 5 10 10">
-            <TextBlock Text="Instruction" HorizontalAlignment="Center" FontSize="20" FontWeight="SemiBold" />
-            <TextBlock TextAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Center" MaxWidth="576"
+        <StackPanel Grid.Row="0"
+                    Orientation="Vertical"
+                    Margin="10 5 10 10">
+            <TextBlock Text="Instruction"
+                       HorizontalAlignment="Center"
+                       FontSize="20"
+                       FontWeight="SemiBold" />
+            <TextBlock TextAlignment="Center"
+                       TextWrapping="Wrap"
+                       HorizontalAlignment="Center"
+                       MaxWidth="576"
                        Text="In order to decipher archives' information, an AES key, in most cases, is needed. Here you can set the key for your static and dynamic archives. If you don't know what key to use for your set game, simply Google it. Keys must start with &quot;0x&quot; and contains 64 more characters." />
         </StackPanel>
 
-        <GroupBox Grid.Row="1" Margin="10 10 10 18"
-                  Padding="0" Background="Transparent">
+        <GroupBox Grid.Row="1"
+                  Margin="10 10 10 18"
+                  Padding="0"
+                  Background="Transparent">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition SharedSizeGroup="Name" Width="Auto" />
-                    <ColumnDefinition SharedSizeGroup="Key" Width="*" />
+                    <ColumnDefinition SharedSizeGroup="Name"
+                                      Width="Auto" />
+                    <ColumnDefinition SharedSizeGroup="Key"
+                                      Width="*" />
                 </Grid.ColumnDefinitions>
 
                 <ScrollViewer MaxHeight="350">
-                    <ItemsControl Grid.IsSharedSizeScope="True" ItemsSource="{Binding AesManager.AesKeysView}">
+                    <ItemsControl Grid.IsSharedSizeScope="True"
+                                  ItemsSource="{Binding AesManager.AesKeysView}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Grid Margin="0 2.5 0 2.5">
@@ -38,10 +55,15 @@
                                         <ColumnDefinition SharedSizeGroup="Key" />
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBlock Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"
+                                    <TextBlock Grid.Column="0"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Right"
                                                Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
-                                    <TextBox Grid.Column="2" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch"
-                                             Text="{Binding Key, Mode=TwoWay}" MinWidth="450" />
+                                    <TextBox Grid.Column="2"
+                                             HorizontalContentAlignment="Left"
+                                             HorizontalAlignment="Stretch"
+                                             Text="{Binding Key, Mode=TwoWay}"
+                                             MinWidth="450" />
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -53,15 +75,25 @@
         <Border Grid.Row="2">
             <Grid Margin="30, 12, 6, 12">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="1" MinWidth="78" Margin="0 0 12 0"
-                        HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="OK" Click="OnClick" />
-                <Button Grid.Column="2" MinWidth="78" Margin="0 0 12 0"
-                        HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="Refresh" Click="OnRefreshAes"
+                <Button Grid.Column="1"
+                        MinWidth="78"
+                        Margin="0 0 12 0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Content="OK"
+                        Click="OnClick" />
+                <Button Grid.Column="2"
+                        MinWidth="78"
+                        Margin="0 0 12 0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Content="Refresh"
+                        Click="OnRefreshAes"
                         IsVisible="{Binding Converter={x:Static converters:EndpointToTypeConverter.Instance}, ConverterParameter={x:Static local:EEndpointType.Aes}}">
                 </Button>
             </Grid>

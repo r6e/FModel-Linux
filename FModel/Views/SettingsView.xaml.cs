@@ -27,7 +27,8 @@ public partial class SettingsView : Window
         var i = 0;
         foreach (var item in SettingsTree.Items)
         {
-            if (item is not TreeViewItem { IsVisible: true } treeItem) continue;
+            if (item is not TreeViewItem { IsVisible: true } treeItem)
+                continue;
             treeItem.IsSelected = i == UserSettings.Default.LastOpenedSettingTab;
             i++;
         }
@@ -63,9 +64,11 @@ public partial class SettingsView : Window
 
     private void OnBrowseOutput(object sender, RoutedEventArgs e)
     {
-        if (!TryBrowse(out var path)) return;
+        if (!TryBrowse(out var path))
+            return;
         UserSettings.Default.OutputDirectory = path;
-        if (_applicationView.SettingsView.UseCustomOutputFolders) return;
+        if (_applicationView.SettingsView.UseCustomOutputFolders)
+            return;
 
         path = Path.Combine(path, "Exports");
         UserSettings.Default.RawDataDirectory = path;
@@ -76,32 +79,38 @@ public partial class SettingsView : Window
 
     private void OnBrowseDirectories(object sender, RoutedEventArgs e)
     {
-        if (TryBrowse(out var path)) UserSettings.Default.GameDirectory = path;
+        if (TryBrowse(out var path))
+            UserSettings.Default.GameDirectory = path;
     }
 
     private void OnBrowseRawData(object sender, RoutedEventArgs e)
     {
-        if (TryBrowse(out var path)) UserSettings.Default.RawDataDirectory = path;
+        if (TryBrowse(out var path))
+            UserSettings.Default.RawDataDirectory = path;
     }
 
     private void OnBrowseProperties(object sender, RoutedEventArgs e)
     {
-        if (TryBrowse(out var path)) UserSettings.Default.PropertiesDirectory = path;
+        if (TryBrowse(out var path))
+            UserSettings.Default.PropertiesDirectory = path;
     }
 
     private void OnBrowseTexture(object sender, RoutedEventArgs e)
     {
-        if (TryBrowse(out var path)) UserSettings.Default.TextureDirectory = path;
+        if (TryBrowse(out var path))
+            UserSettings.Default.TextureDirectory = path;
     }
 
     private void OnBrowseAudio(object sender, RoutedEventArgs e)
     {
-        if (TryBrowse(out var path)) UserSettings.Default.AudioDirectory = path;
+        if (TryBrowse(out var path))
+            UserSettings.Default.AudioDirectory = path;
     }
 
     private void OnBrowseModels(object sender, RoutedEventArgs e)
     {
-        if (TryBrowse(out var path)) UserSettings.Default.ModelDirectory = path;
+        if (TryBrowse(out var path))
+            UserSettings.Default.ModelDirectory = path;
     }
 
     private void OnBrowseMappings(object sender, RoutedEventArgs e)

@@ -4,8 +4,11 @@
         xmlns:local="clr-namespace:FModel"
         xmlns:converters="clr-namespace:FModel.Views.Resources.Converters"
         xmlns:controls="clr-namespace:FModel.Views.Resources.Controls"
-        WindowStartupLocation="CenterScreen" Loaded="OnLoaded"
-        MinHeight="432" Width="672" Title="Releases">
+        WindowStartupLocation="CenterScreen"
+        Loaded="OnLoaded"
+        MinHeight="432"
+        Width="672"
+        Title="Releases">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -14,13 +17,21 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" Margin="10">
-            All releases listed below are available for download. They are sorted by date, with the latest release at the top.
-            We regularly remove old ones to keep the list clean and up to date with the latest UE releases.
-            If you wish to manually check for updates, this window is accessible via the Help > Releases menu.
+        <TextBlock Grid.Row="0"
+                   TextWrapping="Wrap"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   Margin="10">
+            All releases listed below are available for download. They are sorted by date, with the
+            latest release at the top.
+            We regularly remove old ones to keep the list clean and up to date with the latest UE
+            releases.
+            If you wish to manually check for updates, this window is accessible via the Help >
+            Releases menu.
         </TextBlock>
 
-        <Grid Grid.Row="1" HorizontalAlignment="Center">
+        <Grid Grid.Row="1"
+              HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="5" />
@@ -30,7 +41,8 @@
             <!--     <Style TargetType="Grid"> -->
             <!--         <Setter Property="Visibility" Value="Visible" /> -->
             <!--         <Style.Triggers> -->
-            <!--             <DataTrigger Binding="{Binding Title, RelativeSource={RelativeSource AncestorType=adonisControls:AdonisWindow}}" Value="Releases"> -->
+            <!--             <DataTrigger Binding="{Binding Title, RelativeSource={RelativeSource
+            AncestorType=adonisControls:AdonisWindow}}" Value="Releases"> -->
             <!--                 <Setter Property="Visibility" Value="Collapsed" /> -->
             <!--             </DataTrigger> -->
             <!--         </Style.Triggers> -->
@@ -38,28 +50,46 @@
             <!-- </Grid.Style> -->
 
             <Button Grid.Column="0"
-                    VerticalAlignment="Top" Height="{Binding ActualHeight, ElementName=RemindButton}"
+                    VerticalAlignment="Top"
+                    Height="{Binding ActualHeight, ElementName=RemindButton}"
                     Click="OnDownloadLatest">
                 Download Latest Release
             </Button>
             <StackPanel Grid.Column="2">
-                <SplitButton x:Name="RemindButton" Content="Remind Me Now ..." Command="{Binding RemindMeCommand}">
+                <SplitButton x:Name="RemindButton"
+                             Content="Remind Me Now ..."
+                             Command="{Binding RemindMeCommand}">
                     <SplitButton.Flyout>
                         <MenuFlyout>
-                            <MenuItem Header="In 3 Days" Command="{Binding RemindMeCommand}" CommandParameter="Days" />
-                            <MenuItem Header="Next Week" Command="{Binding RemindMeCommand}" CommandParameter="Week" />
-                            <MenuItem Header="Next Month" Command="{Binding RemindMeCommand}" CommandParameter="Month" />
-                            <MenuItem Header="Never" Command="{Binding RemindMeCommand}" CommandParameter="Never" />
+                            <MenuItem Header="In 3 Days"
+                                      Command="{Binding RemindMeCommand}"
+                                      CommandParameter="Days" />
+                            <MenuItem Header="Next Week"
+                                      Command="{Binding RemindMeCommand}"
+                                      CommandParameter="Week" />
+                            <MenuItem Header="Next Month"
+                                      Command="{Binding RemindMeCommand}"
+                                      CommandParameter="Month" />
+                            <MenuItem Header="Never"
+                                      Command="{Binding RemindMeCommand}"
+                                      CommandParameter="Never" />
                         </MenuFlyout>
                     </SplitButton.Flyout>
                 </SplitButton>
-                <TextBlock VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="10" Margin="0 2.5 0 0"
+                <TextBlock VerticalAlignment="Bottom"
+                           HorizontalAlignment="Right"
+                           FontSize="10"
+                           Margin="0 2.5 0 0"
                            Text="{Binding NextUpdateCheck, Source={x:Static local:Settings.UserSettings.Default}, StringFormat=Next Refresh: {0:MMM d, yyyy}}" />
             </StackPanel>
         </Grid>
 
-        <Separator Grid.Row="2" Style="{StaticResource CustomSeparator}" Tag="History" />
-        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Separator Grid.Row="2"
+                   Style="{StaticResource CustomSeparator}"
+                   Tag="History" />
+        <ScrollViewer Grid.Row="3"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
             <ItemsControl ItemsSource="{Binding CommitsView, IsAsync=True}">
                 <ItemsControl.GroupStyle>
                     <GroupStyle>
@@ -94,4 +124,3 @@
         </ScrollViewer>
     </Grid>
 </Window>
-
