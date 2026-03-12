@@ -19,7 +19,6 @@ public class FModelApiEndpoint : AbstractApiProvider
     private Game _game;
     private readonly IDictionary<string, CommunityDesign> _communityDesigns = new Dictionary<string, CommunityDesign>();
 #endif
-    private ApplicationViewModel _applicationView => ApplicationService.ApplicationView;
     private ApiEndpointViewModel _apiEndpointView => ApplicationService.ApiEndpointView;
 
     public FModelApiEndpoint(RestClient client) : base(client) { }

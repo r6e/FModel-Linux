@@ -9,6 +9,7 @@ This software includes material developed by the following third-party libraries
 - CUE4Parse (<https://github.com/FabianFG/CUE4Parse/blob/master/LICENSE>) - Copyright 2023 CUE4Parse Contributors. Licensed under the Apache License 2.0.
 - DiscordRichPresence (<https://github.com/Lachee/discord-rpc-csharp/blob/master/LICENSE>) - Copyright (c) 2021 Lachee. Licensed under the MIT License.
 - EpicManifestParser (<https://github.com/NotOfficer/EpicManifestParser/blob/master/LICENSE>) - Copyright (c) 2020 NotOfficer. Licensed under the MIT License.
+- EpicManifestParser.ZlibngDotNetDecompressor (<https://github.com/NotOfficer/EpicManifestParser/blob/master/LICENSE>) - Copyright (c) 2020 NotOfficer. Licensed under the MIT License.
 - K4os.Compression.LZ4 (<https://github.com/MiloszKrajewski/K4os.Compression.LZ4/blob/master/LICENSE>) - Copyright (c) 2017 Milosz Krajewski. Licensed under the MIT License.
 - Newtonsoft.Json (<https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md>) - Copyright (c) 2007 James Newton-King. Licensed under the MIT License.
 - NVorbis (<https://github.com/NVorbis/NVorbis/blob/master/LICENSE>) - Copyright (c) 2020 Andrew Ward. Licensed under the MIT License.
@@ -16,8 +17,11 @@ This software includes material developed by the following third-party libraries
 - OpenTK (<https://github.com/opentk/opentk/blob/master/LICENSE.md>) - Copyright (c) 2006-2019 Stefanos Apostolopoulos for the Open Toolkit project. Licensed under the MIT License.
 - RestSharp (<https://github.com/restsharp/RestSharp/blob/dev/LICENSE.txt>) - Copyright (c) .NET Foundation and Contributors. Licensed under the Apache License 2.0.
 - Serilog (<https://github.com/serilog/serilog/blob/dev/LICENSE>) - Copyright 2013-2015 Serilog Contributors. Licensed under the Apache License 2.0.
+- Serilog.Sinks.Console (<https://github.com/serilog/serilog-sinks-console/blob/dev/LICENSE>) - Copyright 2013-2016 Serilog Contributors. Licensed under the Apache License 2.0.
+- Serilog.Sinks.File (<https://github.com/serilog/serilog-sinks-file/blob/dev/LICENSE>) - Copyright 2013-2016 Serilog Contributors. Licensed under the Apache License 2.0.
 - SixLabors.ImageSharp (<https://github.com/SixLabors/ImageSharp/blob/main/LICENSE>) - Copyright (c) Six Labors. Licensed under the Apache License 2.0.
 - SkiaSharp (<https://github.com/mono/SkiaSharp/blob/main/LICENSE.md>) - Copyright (c) 2015-2016 Xamarin, Inc. & 2017-2018 Microsoft Corporation. Licensed under the MIT License.
+- SkiaSharp.HarfBuzz (<https://github.com/mono/SkiaSharp/blob/main/LICENSE.md>) - Copyright (c) 2015-2016 Xamarin, Inc. & 2017-2018 Microsoft Corporation. Licensed under the MIT License.
 - Svg.Skia (<https://github.com/wieslawsoltes/Svg.Skia/blob/master/LICENSE.TXT>) - Copyright (c) Wiesław Šoltés. Licensed under the MIT License.
 - Twizzle.ImGui-Bundle.NET (<https://github.com/Twizzle/ImGui-Bundle.NET>) - Licensed under the MIT License.
 
