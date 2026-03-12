@@ -1,10 +1,11 @@
-using System.Windows;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
 using FModel.ViewModels;
 using FModel.Views.Resources.Controls;
 
 namespace FModel.Views;
 
-public partial class UpdateView
+public partial class UpdateView : Window
 {
     public UpdateView()
     {

@@ -2,18 +2,18 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
 using FModel.Services;
 using FModel.Settings;
 using FModel.ViewModels;
 using FModel.Views.Resources.Controls;
-using Microsoft.Win32;
-using Ookii.Dialogs.Wpf;
+// using Microsoft.Win32; // TODO(P4-004): OpenFileDialog not available on Linux
+// using Ookii.Dialogs.Wpf; // TODO(P4-004): VistaFolderBrowserDialog not available on Linux
 
 namespace FModel.Views;
 
-public partial class SettingsView
+public partial class SettingsView : Window
 {
     private ApplicationViewModel _applicationView => ApplicationService.ApplicationView;
 
@@ -27,7 +27,7 @@ public partial class SettingsView
         var i = 0;
         foreach (var item in SettingsTree.Items)
         {
-            if (item is not TreeViewItem { Visibility: Visibility.Visible } treeItem) continue;
+            if (item is not TreeViewItem { IsVisible: true } treeItem) continue;
             treeItem.IsSelected = i == UserSettings.Default.LastOpenedSettingTab;
             i++;
         }
@@ -106,38 +106,23 @@ public partial class SettingsView
 
     private void OnBrowseMappings(object sender, RoutedEventArgs e)
     {
-        var openFileDialog = new OpenFileDialog
-        {
-            Title = "Select a mapping file",
-            InitialDirectory = Path.Combine(UserSettings.Default.OutputDirectory, ".data"),
-            Filter = "USMAP Files (*.usmap)|*.usmap|All Files (*.*)|*.*"
-        };
-
-        if (!openFileDialog.ShowDialog().GetValueOrDefault())
-            return;
-
-        _applicationView.SettingsView.MappingEndpoint.FilePath = openFileDialog.FileName;
+        // TODO(P4-004): OpenFileDialog not available on Linux — use StorageProvider.OpenFilePickerAsync
     }
 
     private bool TryBrowse(out string path)
     {
-        var folderBrowser = new VistaFolderBrowserDialog { ShowNewFolderButton = false };
-        if (folderBrowser.ShowDialog() == true)
-        {
-            path = folderBrowser.SelectedPath;
-            return true;
-        }
-
+        // TODO(P4-004): VistaFolderBrowserDialog not available on Linux
+        // Use StorageProvider.OpenFolderPickerAsync in a proper async context
         path = string.Empty;
         return false;
     }
 
-    private void OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+    private void OnSelectedItemChanged(object sender, SelectionChangedEventArgs e)
     {
         var i = 0;
         foreach (var item in SettingsTree.Items)
         {
-            if (item is not TreeViewItem { Visibility: Visibility.Visible } treeItem)
+            if (item is not TreeViewItem { IsVisible: true } treeItem)
                 continue;
             if (!treeItem.IsSelected)
             {

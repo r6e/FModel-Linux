@@ -1,19 +1,11 @@
-﻿<adonisControls:AdonisWindow x:Class="FModel.Views.ImageMerger"
-                             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                             xmlns:local="clr-namespace:FModel"
-                             xmlns:converters="clr-namespace:FModel.Views.Resources.Converters"
-                             xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
-                             xmlns:adonisControls="clr-namespace:AdonisUI.Controls;assembly=AdonisUI"
-                             xmlns:adonisExtensions="clr-namespace:AdonisUI.Extensions;assembly=AdonisUI"
-                             WindowStartupLocation="CenterScreen" IconVisibility="Collapsed"
-                             Height="{Binding Source={x:Static SystemParameters.MaximizedPrimaryScreenHeight}, Converter={converters:RatioConverter}, ConverterParameter='0.65'}"
-                             Width="{Binding Source={x:Static SystemParameters.MaximizedPrimaryScreenWidth}, Converter={converters:RatioConverter}, ConverterParameter='0.55'}">
-    <adonisControls:AdonisWindow.Style>
-        <Style TargetType="adonisControls:AdonisWindow" BasedOn="{StaticResource {x:Type adonisControls:AdonisWindow}}">
-            <Setter Property="Title" Value="Image Merger"/>
-        </Style>
-    </adonisControls:AdonisWindow.Style>
+﻿<Window x:Class="FModel.Views.ImageMerger"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:FModel"
+        xmlns:converters="clr-namespace:FModel.Views.Resources.Converters"
+        WindowStartupLocation="CenterScreen"
+        Height="702" Width="1056"
+        Title="Image Merger">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -21,8 +13,8 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <GroupBox Grid.Column="0" adonisExtensions:LayerExtension.Layer="2"
-                  Padding="{adonisUi:Space 0}" Background="Transparent">
+        <GroupBox Grid.Column="0"
+                  Padding="0" Background="Transparent">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -46,11 +38,11 @@
 
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Images Per Row" VerticalAlignment="Center" Margin="0 0 10 0" />
                     <Slider x:Name="SizeSlider" Grid.Row="0" Grid.Column="1" TickPlacement="None" AutoToolTipPlacement="BottomRight"
-                            IsMoveToPointEnabled="True" Minimum="1" Maximum="20" TickFrequency="1" MouseUp="Click_DrawPreview" Thumb.DragCompleted="DrawPreview"/>
+                            IsMoveToPointEnabled="True" Minimum="1" Maximum="20" TickFrequency="1" PointerReleased="Click_DrawPreview" />
                     <TextBlock Grid.Row="2" Grid.Column="0" Text="Margin Between Images" VerticalAlignment="Center" Margin="0 0 10 0" />
                     <Slider Grid.Row="2" Grid.Column="1" Value="{Binding ImageMergerMargin, Source={x:Static local:Settings.UserSettings.Default}, Mode=TwoWay}"
                             TickPlacement="None" AutoToolTipPlacement="BottomRight" IsMoveToPointEnabled="True" Minimum="0" Maximum="50" TickFrequency="1"
-                            MouseUp="Click_DrawPreview" Thumb.DragCompleted="DrawPreview" />
+                            PointerReleased="Click_DrawPreview" />
                 </Grid>
                 <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button x:Name="AddButton" Content="Add" MinWidth="80" Padding="1,3,1,3" Click="OnImageAdd"/>
@@ -78,7 +70,7 @@
                                 <MenuItem.Icon>
                                     <Viewbox Width="16" Height="16">
                                         <Canvas Width="24" Height="24">
-                                            <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" Data="{StaticResource CopyIcon}" />
+                                            <Path Fill="White" Data="{StaticResource CopyIcon}" />
                                         </Canvas>
                                     </Viewbox>
                                 </MenuItem.Icon>
@@ -87,7 +79,7 @@
                                 <MenuItem.Icon>
                                     <Viewbox Width="16" Height="16">
                                         <Canvas Width="24" Height="24">
-                                            <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" Data="{StaticResource SaveIcon}" />
+                                            <Path Fill="White" Data="{StaticResource SaveIcon}" />
                                         </Canvas>
                                     </Viewbox>
                                 </MenuItem.Icon>
@@ -98,4 +90,4 @@
             </Border>
         </Grid>
     </Grid>
-</adonisControls:AdonisWindow>
+</Window>

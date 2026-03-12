@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
+using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using CUE4Parse.FileProvider.Objects;
 using FModel.Services;
 using FModel.ViewModels;
@@ -17,7 +17,7 @@ public enum ESearchViewTab
     RefView
 }
 
-public partial class SearchView
+public partial class SearchView : Window
 {
     private ThreadWorkerViewModel _threadWorkerView => ApplicationService.ThreadWorkerView;
     private ApplicationViewModel _applicationView => ApplicationService.ApplicationView;
@@ -68,7 +68,7 @@ public partial class SearchView
 
     private async void OnFindRefs(object sender, RoutedEventArgs e)
     {
-        if (CurrentListView?.SelectedItem is not GameFile entry)
+        if (CurrentDataGrid?.SelectedItem is not GameFile entry)
             return;
 
         await _threadWorkerView.Begin(_ => _applicationView.CUE4Parse.FindReferences(entry));
@@ -76,7 +76,7 @@ public partial class SearchView
 
     private void OnTabItemChange(object sender, SelectionChangedEventArgs e)
     {
-        if (e.OriginalSource is not TabControl tabControl)
+        if (e.Source is not TabControl tabControl)
             return;
 
         _currentTab = tabControl.SelectedIndex switch
@@ -105,10 +105,10 @@ public partial class SearchView
         _ => null
     };
 
-    private ListView CurrentListView => _currentTab switch
+    private DataGrid CurrentDataGrid => _currentTab switch
     {
-        ESearchViewTab.SearchView => SearchListView,
-        ESearchViewTab.RefView => RefListView,
+        ESearchViewTab.SearchView => SearchDataGrid,
+        ESearchViewTab.RefView => RefDataGrid,
         _ => null
     };
 
@@ -126,7 +126,7 @@ public partial class SearchView
 
     private async void OnAssetDoubleClick(object sender, RoutedEventArgs e)
     {
-        if (CurrentListView?.SelectedItem is not GameFile entry)
+        if (CurrentDataGrid?.SelectedItem is not GameFile entry)
             return;
 
         await NavigateToAssetAndSelect(entry);
@@ -169,7 +169,7 @@ public partial class SearchView
 
     private async void OnAssetExtract(object sender, RoutedEventArgs e)
     {
-        if (CurrentListView?.SelectedItem is not GameFile entry)
+        if (CurrentDataGrid?.SelectedItem is not GameFile entry)
             return;
 
         WindowState = WindowState.Minimized;

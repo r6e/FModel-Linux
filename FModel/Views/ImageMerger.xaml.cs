@@ -1,25 +1,25 @@
-using AdonisUI.Controls;
+using AvaloniaBitmap = Avalonia.Media.Imaging.Bitmap;
+using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using Avalonia.Input;
+using Avalonia.Interactivity;
+using Avalonia.Threading;
 using FModel.Extensions;
 using FModel.Settings;
 using FModel.Views.Resources.Controls;
-using Microsoft.Win32;
 using Serilog;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Input;
-using System.Windows.Media.Imaging;
+// TODO(P4-004): Microsoft.Win32.OpenFileDialog / SaveFileDialog not available on Linux — replace with StorageProvider
+// TODO(P4-010): System.Drawing.Imaging not available on Linux — SkiaSharp handles TIF natively
 
 namespace FModel.Views;
 
-public partial class ImageMerger
+public partial class ImageMerger : Window
 {
     private const string FILENAME = "Preview.png";
     private byte[] _imageBuffer;
@@ -29,13 +29,13 @@ public partial class ImageMerger
         InitializeComponent();
     }
 
-    private async void DrawPreview(object sender, DragCompletedEventArgs dragCompletedEventArgs)
+    private async void DrawPreview(object sender, VectorEventArgs dragCompletedEventArgs)
     {
         if (ImagePreview.Source != null)
             await DrawPreview().ConfigureAwait(false);
     }
 
-    private async void Click_DrawPreview(object sender, MouseButtonEventArgs e)
+    private async void Click_DrawPreview(object sender, PointerReleasedEventArgs e)
     {
         if (ImagePreview.Source != null)
             await DrawPreview().ConfigureAwait(false);
@@ -64,9 +64,8 @@ public partial class ImageMerger
 
             if (item.ContentStringFormat.EndsWith(".tif"))
             {
-                await using var tmp = new MemoryStream();
-                await stream.CopyToAsync(tmp);
-                System.Drawing.Image.FromStream(tmp).Save(ms, ImageFormat.Png);
+                // TODO(P4-010): Was converting TIF via System.Drawing to PNG; SkiaSharp decodes TIF natively
+                await stream.CopyToAsync(ms);
             }
             else
             {
@@ -115,15 +114,10 @@ public partial class ImageMerger
             }
 
             using var data = bmp.Encode(SKEncodedImageFormat.Png, 100);
-            using var stream = new MemoryStream(_imageBuffer = data.ToArray());
-            var photo = new BitmapImage();
-            photo.BeginInit();
-            photo.CacheOption = BitmapCacheOption.OnLoad;
-            photo.StreamSource = stream;
-            photo.EndInit();
-            photo.Freeze();
+            _imageBuffer = data.ToArray();
+            var photo = new AvaloniaBitmap(new MemoryStream(_imageBuffer));
 
-            Application.Current.Dispatcher.Invoke(delegate { ImagePreview.Source = photo; });
+            await Dispatcher.UIThread.InvokeAsync(() => { ImagePreview.Source = photo; });
         }).ContinueWith(t =>
         {
             AddButton.IsEnabled = true;
@@ -139,27 +133,7 @@ public partial class ImageMerger
 
     private async void OnImageAdd(object sender, RoutedEventArgs e)
     {
-        var fileBrowser = new OpenFileDialog
-        {
-            Title = "Add image(s)",
-            InitialDirectory = Path.Combine(UserSettings.Default.OutputDirectory, "Exports"),
-            Multiselect = true,
-            Filter = "Image Files (*.png,*.bmp,*.jpg,*.jpeg,*.jfif,*.jpe,*.tiff,*.tif)|*.png;*.bmp;*.jpg;*.jpeg;*.jfif;*.jpe;*.tiff;*.tif|All Files (*.*)|*.*"
-        };
-        var result = fileBrowser.ShowDialog();
-        if (!result.HasValue || !result.Value) return;
-
-        foreach (var file in fileBrowser.FileNames)
-        {
-            ImagesListBox.Items.Add(new ListBoxItem
-            {
-                ContentStringFormat = file,
-                Content = Path.GetFileNameWithoutExtension(file)
-            });
-        }
-
-        SizeSlider.Value = Math.Min(ImagesListBox.Items.Count, Math.Round(Math.Sqrt(ImagesListBox.Items.Count)));
-        await DrawPreview().ConfigureAwait(false);
+        // TODO(P4-004): OpenFileDialog not available on Linux — replace with StorageProvider.OpenFilePickerAsync
     }
 
     private async void ModifyItemInList(object sender, RoutedEventArgs e)
@@ -239,14 +213,14 @@ public partial class ImageMerger
     private void OnOpenImage(object sender, RoutedEventArgs e)
     {
         if (ImagePreview.Source == null) return;
-        Helper.OpenWindow<AdonisWindow>("Merged Image", () =>
+        Helper.OpenWindow<Window>("Merged Image", () =>
         {
             new ImagePopout
             {
                 Title = "Merged Image",
-                Width = ImagePreview.Source.Width,
-                Height = ImagePreview.Source.Height,
-                WindowState = ImagePreview.Source.Height > 1000 ? WindowState.Maximized : WindowState.Normal,
+                Width = ImagePreview.Source.Size.Width,
+                Height = ImagePreview.Source.Size.Height,
+                WindowState = ImagePreview.Source.Size.Height > 1000 ? WindowState.Maximized : WindowState.Normal,
                 ImageCtrl = { Source = ImagePreview.Source }
             }.Show();
         });
@@ -254,26 +228,7 @@ public partial class ImageMerger
 
     private void OnSaveImage(object sender, RoutedEventArgs e)
     {
-        Application.Current.Dispatcher.Invoke(delegate
-        {
-            if (ImagePreview.Source == null) return;
-            var saveFileDialog = new SaveFileDialog
-            {
-                Title = "Save Image",
-                FileName = FILENAME,
-                InitialDirectory = UserSettings.Default.OutputDirectory,
-                Filter = "Png Files (*.png)|*.png|All Files (*.*)|*.*"
-            };
-            var result = saveFileDialog.ShowDialog();
-            if (!result.HasValue || !result.Value) return;
-
-            using (var fs = new FileStream(saveFileDialog.FileName, FileMode.Create, FileAccess.Write, FileShare.Read))
-            {
-                fs.Write(_imageBuffer, 0, _imageBuffer.Length);
-            }
-
-            SaveCheck(saveFileDialog.FileName, Path.GetFileName(saveFileDialog.FileName));
-        });
+        // TODO(P4-004): SaveFileDialog not available on Linux — replace with StorageProvider.SaveFilePickerAsync
     }
 
     private static void SaveCheck(string path, string fileName)

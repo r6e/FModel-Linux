@@ -1,28 +1,20 @@
-﻿<adonisControls:AdonisWindow x:Class="FModel.Views.AudioPlayer"
-         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-         xmlns:local="clr-namespace:FModel"
-         xmlns:audioControls="clr-namespace:FModel.Views.Resources.Controls.Aup"
-         xmlns:converters="clr-namespace:FModel.Views.Resources.Converters"
-         xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
-         xmlns:adonisControls="clr-namespace:AdonisUI.Controls;assembly=AdonisUI"
-         xmlns:adonisExtensions="clr-namespace:AdonisUI.Extensions;assembly=AdonisUI"
-         WindowStartupLocation="CenterScreen" IconVisibility="Collapsed"
-         Closing="OnClosing" PreviewKeyDown="OnPreviewKeyDown" Activated="OnActivatedDeactivated" Deactivated="OnActivatedDeactivated"
-         Height="{Binding Source={x:Static SystemParameters.MaximizedPrimaryScreenHeight}, Converter={converters:RatioConverter}, ConverterParameter='0.50'}"
-         Width="{Binding Source={x:Static SystemParameters.MaximizedPrimaryScreenWidth}, Converter={converters:RatioConverter}, ConverterParameter='0.55'}">
-    <adonisControls:AdonisWindow.Style>
-        <Style TargetType="adonisControls:AdonisWindow" BasedOn="{StaticResource {x:Type adonisControls:AdonisWindow}}" >
-            <Setter Property="Title" Value="Audio Player" />
-        </Style>
-    </adonisControls:AdonisWindow.Style>
+﻿<Window x:Class="FModel.Views.AudioPlayer"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:FModel"
+        xmlns:audioControls="clr-namespace:FModel.Views.Resources.Controls.Aup"
+        xmlns:converters="clr-namespace:FModel.Views.Resources.Converters"
+        WindowStartupLocation="CenterScreen"
+        Closing="OnClosing" KeyDown="OnPreviewKeyDown" Activated="OnActivatedDeactivated" Deactivated="OnActivatedDeactivated"
+        Height="540" Width="1056"
+        Title="Audio Player">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="350" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <GroupBox Grid.Column="0" Padding="{adonisUi:Space 0}" Background="Transparent">
+        <GroupBox Grid.Column="0" Padding="0" Background="Transparent">
             <DockPanel Margin="10">
                 <Grid DockPanel.Dock="Top">
                     <Grid.RowDefinitions>
@@ -78,16 +70,16 @@
                     </Grid>
                     <TextBox Grid.Column="0" Grid.ColumnSpan="2" AcceptsTab="False" AcceptsReturn="False"
                              Padding="25 0 0 0" HorizontalAlignment="Stretch" TextChanged="OnFilterTextChanged"
-                             adonisExtensions:WatermarkExtension.Watermark="Search by name..." />
+                             Watermark="Search by name..." />
                 </Grid>
-                <ListBox DockPanel.Dock="Top" Style="{StaticResource AudioFilesListBox}" PreviewMouseDoubleClick="OnAudioFileMouseDoubleClick">
+                <ListBox DockPanel.Dock="Top" Style="{StaticResource AudioFilesListBox}" DoubleTapped="OnAudioFileMouseDoubleClick">
                     <ListBox.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Play" Command="{Binding AudioPlayer.AudioCommand}" CommandParameter="ForcePlayPause">
                                 <MenuItem.Icon>
                                     <Viewbox Width="16" Height="16">
                                         <Canvas Width="24" Height="24">
-                                            <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" Data="{StaticResource PlayIcon}" />
+                                            <Path Fill="White" Data="{StaticResource PlayIcon}" />
                                         </Canvas>
                                     </Viewbox>
                                 </MenuItem.Icon>
@@ -96,7 +88,7 @@
                                 <MenuItem.Icon>
                                     <Viewbox Width="16" Height="16">
                                         <Canvas Width="24" Height="24">
-                                            <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" Data="{StaticResource RemoveIcon}" />
+                                            <Path Fill="White" Data="{StaticResource RemoveIcon}" />
                                         </Canvas>
                                     </Viewbox>
                                 </MenuItem.Icon>
@@ -105,7 +97,7 @@
                                 <MenuItem.Icon>
                                     <Viewbox Width="16" Height="16">
                                         <Canvas Width="24" Height="24">
-                                            <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" Data="{StaticResource SaveIcon}" />
+                                            <Path Fill="White" Data="{StaticResource SaveIcon}" />
                                         </Canvas>
                                     </Viewbox>
                                 </MenuItem.Icon>
@@ -114,7 +106,7 @@
                                 <MenuItem.Icon>
                                     <Viewbox Width="16" Height="16">
                                         <Canvas Width="24" Height="24">
-                                            <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" Data="{StaticResource SavePlaylistIcon}" />
+                                            <Path Fill="White" Data="{StaticResource SavePlaylistIcon}" />
                                         </Canvas>
                                     </Viewbox>
                                 </MenuItem.Icon>
@@ -135,7 +127,7 @@
             <audioControls:Timeclock Grid.Row="0" />
             <StackPanel Grid.Row="1" Margin="0 0 25 0"
                         HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Horizontal">
-                <Button Style="{DynamicResource {x:Static adonisUi:Styles.ToolbarButton}}" ToolTip="Previous"
+                <Button ToolTip="Previous"
                         Command="{Binding AudioPlayer.AudioCommand}" CommandParameter="Previous">
                     <Viewbox Width="16" Height="16">
                         <Canvas Width="24" Height="24">
@@ -145,7 +137,7 @@
                 </Button>
                 <Button Style="{StaticResource PlayPauseToolbarButton}"
                         Command="{Binding AudioPlayer.AudioCommand}" CommandParameter="PlayPause" />
-                <Button Style="{DynamicResource {x:Static adonisUi:Styles.ToolbarButton}}" ToolTip="Next"
+                <Button ToolTip="Next"
                         Command="{Binding AudioPlayer.AudioCommand}" CommandParameter="Next">
                     <Viewbox Width="16" Height="16">
                         <Canvas Width="24" Height="24">
@@ -158,4 +150,4 @@
             <audioControls:Timeline Grid.Row="2" />
         </Grid>
     </Grid>
-</adonisControls:AdonisWindow>
+</Window>
