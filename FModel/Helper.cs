@@ -53,7 +53,8 @@ public static class Helper
             action();
         }
 
-        var ret = (T) GetOpenedWindow<T>(windowName);
+        var ret = GetOpenedWindow<T>(windowName) as T
+            ?? throw new InvalidOperationException($"Window '{windowName}' was not registered after action.");
         ret.Focus();
         return ret;
     }

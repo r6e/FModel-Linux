@@ -81,7 +81,8 @@
                         Margin="0 0 12 0"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Bottom"
-                        Content="Cancel" />
+                        Content="Cancel"
+                        Click="OnCancelClick" />
             </Grid>
         </Border>
     </Grid>

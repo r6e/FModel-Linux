@@ -59,18 +59,10 @@ public partial class ImageMerger : Window
         for (var i = 0; i < images.Length; i++)
         {
             var item = (ListBoxItem) ImagesListBox.Items[i];
-            var ms = new MemoryStream();
-            var stream = new FileStream(item.ContentStringFormat, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-
-            if (item.ContentStringFormat.EndsWith(".tif"))
-            {
-                // TODO(P4-010): Was converting TIF via System.Drawing to PNG; SkiaSharp decodes TIF natively
-                await stream.CopyToAsync(ms);
-            }
-            else
-            {
-                await stream.CopyToAsync(ms);
-            }
+            await using var stream = new FileStream(item.ContentStringFormat, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var ms = new MemoryStream();
+            // TODO(P4-010): Was converting TIF via System.Drawing to PNG; SkiaSharp decodes TIF natively
+            await stream.CopyToAsync(ms);
 
             var image = SKBitmap.Decode(ms.ToArray());
             positions[i] = new SKPoint(curW, curH);
@@ -100,7 +92,7 @@ public partial class ImageMerger : Window
             num++;
         }
 
-        await Task.Run(() =>
+        await Task.Run(async () =>
         {
             using var bmp = new SKBitmap(maxWidth - margin, maxHeight - margin, SKColorType.Rgba8888, SKAlphaType.Premul);
             using var canvas = new SKCanvas(bmp);

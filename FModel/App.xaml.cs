@@ -149,6 +149,12 @@ public partial class App : Application
             ShowErrorDialog(e.Exception);
         };
 
+        TaskScheduler.UnobservedTaskException += (_, e) =>
+        {
+            Log.Error("{Exception}", e.Exception);
+            e.SetObserved();
+        };
+
         base.OnFrameworkInitializationCompleted();
     }
 
@@ -157,71 +163,77 @@ public partial class App : Application
         Log.Information("––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––");
         Log.CloseAndFlush();
         UserSettings.Save();
-        Environment.Exit(0);
     }
 
     internal static void ShowErrorDialog(Exception ex)
     {
         Dispatcher.UIThread.InvokeAsync(async () =>
         {
-            var result = EErrorKind.Ignore;
-            var tcs = new TaskCompletionSource();
-
-            var resetBtn = new Button { Content = "Reset Settings" };
-            var restartBtn = new Button { Content = "Restart" };
-            var okBtn = new Button { Content = "OK" };
-
-            var dialog = new Window
+            try
             {
-                Title = "Fatal Error",
-                SizeToContent = SizeToContent.WidthAndHeight,
-                MinWidth = 420,
-                MaxWidth = 640,
-                WindowStartupLocation = WindowStartupLocation.CenterScreen,
-                Content = new StackPanel
+                var result = EErrorKind.Ignore;
+                var tcs = new TaskCompletionSource();
+
+                var resetBtn = new Button { Content = "Reset Settings" };
+                var restartBtn = new Button { Content = "Restart" };
+                var okBtn = new Button { Content = "OK" };
+
+                var dialog = new Window
                 {
-                    Margin = new Thickness(16),
-                    Spacing = 12,
-                    Children =
+                    Title = "Fatal Error",
+                    SizeToContent = SizeToContent.WidthAndHeight,
+                    MinWidth = 420,
+                    MaxWidth = 640,
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                    Content = new StackPanel
                     {
-                        new TextBlock
+                        Margin = new Thickness(16),
+                        Spacing = 12,
+                        Children =
                         {
-                            Text = $"An unhandled {ex.GetBaseException().GetType().Name} occurred:\n{ex.Message}",
-                            TextWrapping = TextWrapping.Wrap,
-                        },
-                        new StackPanel
-                        {
-                            Orientation = Orientation.Horizontal,
-                            Spacing = 8,
-                            HorizontalAlignment = HorizontalAlignment.Right,
-                            Children = { resetBtn, restartBtn, okBtn },
+                            new TextBlock
+                            {
+                                Text = $"An unhandled {ex.GetBaseException().GetType().Name} occurred:\n{ex.Message}",
+                                TextWrapping = TextWrapping.Wrap,
+                            },
+                            new StackPanel
+                            {
+                                Orientation = Orientation.Horizontal,
+                                Spacing = 8,
+                                HorizontalAlignment = HorizontalAlignment.Right,
+                                Children = { resetBtn, restartBtn, okBtn },
+                            },
                         },
                     },
-                },
-            };
+                };
 
-            resetBtn.Click += (_, _) => { result = EErrorKind.ResetSettings; dialog.Close(); };
-            restartBtn.Click += (_, _) => { result = EErrorKind.Restart; dialog.Close(); };
-            okBtn.Click += (_, _) => { result = EErrorKind.Ignore; dialog.Close(); };
-            dialog.Closed += (_, _) => tcs.TrySetResult();
+                resetBtn.Click += (_, _) => { result = EErrorKind.ResetSettings; dialog.Close(); };
+                restartBtn.Click += (_, _) => { result = EErrorKind.Restart; dialog.Close(); };
+                okBtn.Click += (_, _) => { result = EErrorKind.Ignore; dialog.Close(); };
+                dialog.Closed += (_, _) => tcs.TrySetResult();
 
-            var owner = (Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
-            if (owner != null)
-            {
-                await dialog.ShowDialog(owner);
+                var owner = (Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
+                if (owner != null)
+                {
+                    await dialog.ShowDialog(owner);
+                }
+                else
+                {
+                    try
+                    { dialog.Show(); }
+                    catch { return; }
+                    await tcs.Task;
+                }
+
+                if (result == EErrorKind.ResetSettings)
+                    UserSettings.Delete();
+                if (result != EErrorKind.Ignore)
+                    ApplicationService.ApplicationView.Restart();
             }
-            else
+            catch (Exception dialogEx)
             {
-                try
-                { dialog.Show(); }
-                catch { return; }
-                await tcs.Task;
+                Log.Error("{Exception}", dialogEx);
             }
-
-            if (result == EErrorKind.ResetSettings)
-                UserSettings.Delete();
-            if (result != EErrorKind.Ignore)
-                ApplicationService.ApplicationView.Restart();
         }).ContinueWith(
             t => Log.Error("{Exception}", t.Exception!.InnerException),
             TaskContinuationOptions.OnlyOnFaulted);

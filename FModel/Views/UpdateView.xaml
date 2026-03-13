@@ -90,37 +90,46 @@
         <ScrollViewer Grid.Row="3"
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Disabled">
-            <ItemsControl ItemsSource="{Binding CommitsView, IsAsync=True}">
-                <ItemsControl.GroupStyle>
-                    <GroupStyle>
-                        <GroupStyle.ContainerStyle>
-                            <Style TargetType="GroupItem">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="GroupItem">
-                                            <GroupBox Header="{Binding Name}"
-                                                      HeaderStringFormat="Commits on {0:MMM d, yyyy}"
-                                                      Margin="0 0 0 5">
-                                                <ItemsPresenter />
-                                            </GroupBox>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </GroupStyle.ContainerStyle>
-                        <GroupStyle.Panel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </GroupStyle.Panel>
-                    </GroupStyle>
-                </ItemsControl.GroupStyle>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <controls:CommitControl Margin="0 0 0 1" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <Grid>
+                <ItemsControl ItemsSource="{Binding CommitsView, IsAsync=True}">
+                    <ItemsControl.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.ContainerStyle>
+                                <Style TargetType="GroupItem">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="GroupItem">
+                                                <GroupBox Header="{Binding Name}"
+                                                          HeaderStringFormat="Commits on {0:MMM d, yyyy}"
+                                                          Margin="0 0 0 5">
+                                                    <ItemsPresenter />
+                                                </GroupBox>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </GroupStyle.ContainerStyle>
+                            <GroupStyle.Panel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical" />
+                                </ItemsPanelTemplate>
+                            </GroupStyle.Panel>
+                        </GroupStyle>
+                    </ItemsControl.GroupStyle>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <controls:CommitControl Margin="0 0 0 1" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <TextBlock Text="No commits found."
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Top"
+                           Margin="0 20"
+                           IsVisible="{Binding CommitsView.Count, FallbackValue=False,
+                           Converter={x:Static converters:IsNotZeroConverter.Instance},
+                           ConverterParameter=invert}" />
+            </Grid>
         </ScrollViewer>
     </Grid>
 </Window>

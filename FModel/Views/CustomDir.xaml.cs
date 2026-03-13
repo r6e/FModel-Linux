@@ -20,4 +20,9 @@ public partial class CustomDir : Window
     {
         Close(true);
     }
+
+    private void OnCancelClick(object sender, RoutedEventArgs e)
+    {
+        Close(false);
+    }
 }

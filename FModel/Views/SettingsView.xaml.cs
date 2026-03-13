@@ -2,8 +2,10 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Platform.Storage;
 using FModel.Services;
 using FModel.Settings;
 using FModel.ViewModels;
@@ -62,9 +64,10 @@ public partial class SettingsView : Window
         _applicationView.CUE4Parse.Provider.ReadShaderMaps = UserSettings.Default.ReadShaderMaps;
     }
 
-    private void OnBrowseOutput(object sender, RoutedEventArgs e)
+    private async void OnBrowseOutput(object sender, RoutedEventArgs e)
     {
-        if (!TryBrowse(out var path))
+        var path = await PickFolderAsync();
+        if (path is null)
             return;
         UserSettings.Default.OutputDirectory = path;
         if (_applicationView.SettingsView.UseCustomOutputFolders)
@@ -77,53 +80,75 @@ public partial class SettingsView : Window
         UserSettings.Default.AudioDirectory = path;
     }
 
-    private void OnBrowseDirectories(object sender, RoutedEventArgs e)
+    private async void OnBrowseDirectories(object sender, RoutedEventArgs e)
     {
-        if (TryBrowse(out var path))
+        var path = await PickFolderAsync();
+        if (path is not null)
             UserSettings.Default.GameDirectory = path;
     }
 
-    private void OnBrowseRawData(object sender, RoutedEventArgs e)
+    private async void OnBrowseRawData(object sender, RoutedEventArgs e)
     {
-        if (TryBrowse(out var path))
+        var path = await PickFolderAsync();
+        if (path is not null)
             UserSettings.Default.RawDataDirectory = path;
     }
 
-    private void OnBrowseProperties(object sender, RoutedEventArgs e)
+    private async void OnBrowseProperties(object sender, RoutedEventArgs e)
     {
-        if (TryBrowse(out var path))
+        var path = await PickFolderAsync();
+        if (path is not null)
             UserSettings.Default.PropertiesDirectory = path;
     }
 
-    private void OnBrowseTexture(object sender, RoutedEventArgs e)
+    private async void OnBrowseTexture(object sender, RoutedEventArgs e)
     {
-        if (TryBrowse(out var path))
+        var path = await PickFolderAsync();
+        if (path is not null)
             UserSettings.Default.TextureDirectory = path;
     }
 
-    private void OnBrowseAudio(object sender, RoutedEventArgs e)
+    private async void OnBrowseAudio(object sender, RoutedEventArgs e)
     {
-        if (TryBrowse(out var path))
+        var path = await PickFolderAsync();
+        if (path is not null)
             UserSettings.Default.AudioDirectory = path;
     }
 
-    private void OnBrowseModels(object sender, RoutedEventArgs e)
+    private async void OnBrowseModels(object sender, RoutedEventArgs e)
     {
-        if (TryBrowse(out var path))
+        var path = await PickFolderAsync();
+        if (path is not null)
             UserSettings.Default.ModelDirectory = path;
     }
 
-    private void OnBrowseMappings(object sender, RoutedEventArgs e)
+    private async void OnBrowseMappings(object sender, RoutedEventArgs e)
     {
-        // TODO(P4-004): OpenFileDialog not available on Linux — use StorageProvider.OpenFilePickerAsync
+        var topLevel = TopLevel.GetTopLevel(this);
+        if (topLevel is null)
+            return;
+        var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            AllowMultiple = false,
+            FileTypeFilter = new[]
+            {
+                new FilePickerFileType("USMAP Files") { Patterns = new[] { "*.usmap" } },
+                new FilePickerFileType("All Files") { Patterns = new[] { "*.*" } }
+            }
+        });
+        if (files.Count == 0)
+            return;
+        UserSettings.Default.MappingsPath = files[0].Path.LocalPath;
     }
 
-    private bool TryBrowse(out string path)
+    private async Task<string?> PickFolderAsync()
     {
-        // TODO(P4-004): VistaFolderBrowserDialog not available on Linux
-        // Use StorageProvider.OpenFolderPickerAsync in a proper async context
-        path = string.Empty;
-        return false;
+        var topLevel = TopLevel.GetTopLevel(this);
+        if (topLevel is null)
+            return null;
+        var folders = await topLevel.StorageProvider.OpenFolderPickerAsync(
+            new FolderPickerOpenOptions { AllowMultiple = false });
+        return folders.Count > 0 ? folders[0].Path.LocalPath : null;
     }
 
     private void OnSelectedItemChanged(object sender, SelectionChangedEventArgs e)

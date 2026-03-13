@@ -9,8 +9,10 @@ public class IsNotZeroConverter : IValueConverter
   public static readonly IsNotZeroConverter Instance = new();
 
   public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-      => value is int i ? i > 0 : value is not null;
-
+  {
+    var result = value is int i ? i > 0 : value is not null;
+    return parameter is "invert" ? !result : result;
+  }
   public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
       => throw new NotImplementedException();
 }

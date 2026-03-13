@@ -79,7 +79,10 @@ public partial class MainWindow : Window
     private void OnStatusKindChanged(object sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(FStatus.Kind))
+        {
             Dispatcher.UIThread.InvokeAsync(UpdateStatusBarColor);
+            Dispatcher.UIThread.InvokeAsync(UpdateStatusLabel);
+        }
         else if (e.PropertyName == nameof(FStatus.Label))
             Dispatcher.UIThread.InvokeAsync(UpdateStatusLabel);
     }
@@ -130,6 +133,9 @@ public partial class MainWindow : Window
 
     private void OnClosing(object sender, CancelEventArgs e)
     {
+        _applicationView.Status.PropertyChanged -= OnStatusKindChanged;
+        _threadWorkerView.PropertyChanged -= OnThreadWorkerPropertyChanged;
+        _applicationView.PropertyChanged -= OnApplicationViewPropertyChanged;
         _discordHandler.Dispose();
     }
 
@@ -140,8 +146,9 @@ public partial class MainWindow : Window
         var screen = Screens.Primary;
         if (screen != null)
         {
-            Width = screen.WorkingArea.Width * 0.90 / screen.PixelDensity;
-            Height = screen.WorkingArea.Height * 0.95 / screen.PixelDensity;
+            var dpi = screen.PixelDensity > 0 ? screen.PixelDensity : 1.0;
+            Width = screen.WorkingArea.Width * 0.90 / dpi;
+            Height = screen.WorkingArea.Height * 0.95 / dpi;
         }
 
         UpdateStatusBarColor();
@@ -208,7 +215,7 @@ public partial class MainWindow : Window
                 if (UserSettings.Default.DiscordRpc == EDiscordRpc.Always)
                     _discordHandler.Initialize(_applicationView.GameDisplayName);
             })
-        ).ConfigureAwait(false);
+        );
     }
 
     private void OnGridSplitterDoubleClick(object sender, TappedEventArgs e)
@@ -471,17 +478,28 @@ public partial class MainWindow : Window
     }
 
     // Hack to sync selection between packages tab and explorer
+    private bool _syncingSelection;
     private void SyncSelection(ListBox target, SelectionChangedEventArgs e)
     {
-        foreach (var added in e.AddedItems.OfType<GameFileViewModel>())
+        if (_syncingSelection)
+            return;
+        _syncingSelection = true;
+        try
         {
-            if (target.SelectedItems != null && !target.SelectedItems.Contains(added))
-                target.SelectedItems.Add(added);
-        }
+            foreach (var added in e.AddedItems.OfType<GameFileViewModel>())
+            {
+                if (target.SelectedItems != null && !target.SelectedItems.Contains(added))
+                    target.SelectedItems.Add(added);
+            }
 
-        foreach (var removed in e.RemovedItems.OfType<GameFileViewModel>())
+            foreach (var removed in e.RemovedItems.OfType<GameFileViewModel>())
+            {
+                target.SelectedItems?.Remove(removed);
+            }
+        }
+        finally
         {
-            target.SelectedItems?.Remove(removed);
+            _syncingSelection = false;
         }
     }
 }

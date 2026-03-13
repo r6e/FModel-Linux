@@ -26,6 +26,11 @@ public partial class DirectorySelector : Window
         Close(true);
     }
 
+    private void OnCancelClick(object sender, RoutedEventArgs e)
+    {
+        Close(false);
+    }
+
     private void OnBrowseDirectories(object sender, RoutedEventArgs e)
     {
         // TODO(P4-004): VistaFolderBrowserDialog not available on Linux
