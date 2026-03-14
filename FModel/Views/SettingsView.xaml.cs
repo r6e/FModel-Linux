@@ -202,6 +202,8 @@ public partial class SettingsView : Window
     private async void OpenAesEndpoint(object sender, RoutedEventArgs e)
     {
         // TODO(P2-016): EndpointEditor not yet migrated to Avalonia.
+        // Note: the original WPF code used ShowDialog() (modal). Preserve modal behaviour
+        // in the migration — use ShowDialog(this), not Show().
         // Once migrated, replace body with:
         //   var editor = new EndpointEditor(_applicationView.SettingsView.AesEndpoint, "Endpoint Configuration (AES)", EEndpointType.Aes);
         //   await editor.ShowDialog(this);
@@ -211,6 +213,8 @@ public partial class SettingsView : Window
     private async void OpenMappingEndpoint(object sender, RoutedEventArgs e)
     {
         // TODO(P2-016): EndpointEditor not yet migrated to Avalonia.
+        // Note: the original WPF code used ShowDialog() (modal). Preserve modal behaviour
+        // in the migration — use ShowDialog(this), not Show().
         // Once migrated, replace body with:
         //   var editor = new EndpointEditor(_applicationView.SettingsView.MappingEndpoint, "Endpoint Configuration (Mapping)", EEndpointType.Mapping);
         //   await editor.ShowDialog(this);

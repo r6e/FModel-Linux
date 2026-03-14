@@ -154,7 +154,10 @@ public partial class App : Application
             // SetObserved prevents the process from terminating on GC finalisation of faulted tasks.
             // Only surface the error dialog for unexpected faults; silently absorb cancellations.
             e.SetObserved();
-            if (e.Exception?.InnerException is OperationCanceledException)
+            // Check all InnerExceptions, not just InnerException[0], so that an AggregateException
+            // containing e.g. both an OperationCanceledException and an IOException is not silently
+            // absorbed when the cancellation happens to be first in the list.
+            if (e.Exception.InnerExceptions.All(ex => ex is OperationCanceledException))
                 return;
             Log.Error("{Exception}", e.Exception);
             ShowErrorDialog(e.Exception ?? new Exception("Unobserved task faulted"));

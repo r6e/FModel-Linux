@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Avalonia;
@@ -52,6 +53,10 @@ public static class Helper
         if (!IsWindowOpen<T>(windowName))
         {
             action();
+            // Avalonia's Show() is non-blocking; the window is registered with
+            // IClassicDesktopStyleApplicationLifetime.Windows on the next dispatcher
+            // cycle. Flush pending jobs so the lookup below always succeeds.
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
         }
 
         var ret = GetOpenedWindow<T>(windowName) as T
