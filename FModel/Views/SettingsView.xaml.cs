@@ -169,48 +169,52 @@ public partial class SettingsView : Window
         }
     }
 
-    private void OpenCustomVersions(object sender, RoutedEventArgs e)
+    private async void OpenCustomVersions(object sender, RoutedEventArgs e)
     {
-        var editor = new DictionaryEditor(_applicationView.SettingsView.SelectedCustomVersions, "Versioning Configuration (Custom Versions)");
-        var result = editor.ShowDialog();
-        if (!result.HasValue || !result.Value)
-            return;
-
-        _applicationView.SettingsView.SelectedCustomVersions = editor.CustomVersions;
+        // TODO(P2-016): DictionaryEditor not yet migrated to Avalonia.
+        // Once migrated, replace body with:
+        //   var editor = new DictionaryEditor(_applicationView.SettingsView.SelectedCustomVersions, "Versioning Configuration (Custom Versions)");
+        //   if (await editor.ShowDialog<bool?>(this) != true) return;
+        //   _applicationView.SettingsView.SelectedCustomVersions = editor.CustomVersions;
+        await Task.CompletedTask;
     }
 
-    private void OpenOptions(object sender, RoutedEventArgs e)
+    private async void OpenOptions(object sender, RoutedEventArgs e)
     {
-        var editor = new DictionaryEditor(_applicationView.SettingsView.SelectedOptions, "Versioning Configuration (Options)");
-        var result = editor.ShowDialog();
-        if (!result.HasValue || !result.Value)
-            return;
-
-        _applicationView.SettingsView.SelectedOptions = editor.Options;
+        // TODO(P2-016): DictionaryEditor not yet migrated to Avalonia.
+        // Once migrated, replace body with:
+        //   var editor = new DictionaryEditor(_applicationView.SettingsView.SelectedOptions, "Versioning Configuration (Options)");
+        //   if (await editor.ShowDialog<bool?>(this) != true) return;
+        //   _applicationView.SettingsView.SelectedOptions = editor.Options;
+        await Task.CompletedTask;
     }
 
-    private void OpenMapStructTypes(object sender, RoutedEventArgs e)
+    private async void OpenMapStructTypes(object sender, RoutedEventArgs e)
     {
-        var editor = new DictionaryEditor(_applicationView.SettingsView.SelectedMapStructTypes, "Versioning Configuration (MapStructTypes)");
-        var result = editor.ShowDialog();
-        if (!result.HasValue || !result.Value)
-            return;
-
-        _applicationView.SettingsView.SelectedMapStructTypes = editor.MapStructTypes;
+        // TODO(P2-016): DictionaryEditor not yet migrated to Avalonia.
+        // Once migrated, replace body with:
+        //   var editor = new DictionaryEditor(_applicationView.SettingsView.SelectedMapStructTypes, "Versioning Configuration (MapStructTypes)");
+        //   if (await editor.ShowDialog<bool?>(this) != true) return;
+        //   _applicationView.SettingsView.SelectedMapStructTypes = editor.MapStructTypes;
+        await Task.CompletedTask;
     }
 
-    private void OpenAesEndpoint(object sender, RoutedEventArgs e)
+    private async void OpenAesEndpoint(object sender, RoutedEventArgs e)
     {
-        var editor = new EndpointEditor(
-            _applicationView.SettingsView.AesEndpoint, "Endpoint Configuration (AES)", EEndpointType.Aes);
-        editor.ShowDialog();
+        // TODO(P2-016): EndpointEditor not yet migrated to Avalonia.
+        // Once migrated, replace body with:
+        //   var editor = new EndpointEditor(_applicationView.SettingsView.AesEndpoint, "Endpoint Configuration (AES)", EEndpointType.Aes);
+        //   await editor.ShowDialog(this);
+        await Task.CompletedTask;
     }
 
-    private void OpenMappingEndpoint(object sender, RoutedEventArgs e)
+    private async void OpenMappingEndpoint(object sender, RoutedEventArgs e)
     {
-        var editor = new EndpointEditor(
-            _applicationView.SettingsView.MappingEndpoint, "Endpoint Configuration (Mapping)", EEndpointType.Mapping);
-        editor.ShowDialog();
+        // TODO(P2-016): EndpointEditor not yet migrated to Avalonia.
+        // Once migrated, replace body with:
+        //   var editor = new EndpointEditor(_applicationView.SettingsView.MappingEndpoint, "Endpoint Configuration (Mapping)", EEndpointType.Mapping);
+        //   await editor.ShowDialog(this);
+        await Task.CompletedTask;
     }
 
     private void CriwareKeyBox_Loaded(object sender, RoutedEventArgs e)

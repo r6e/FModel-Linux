@@ -81,6 +81,9 @@ public partial class MainWindow : Window
         if (e.PropertyName == nameof(FStatus.Kind))
         {
             Dispatcher.UIThread.InvokeAsync(UpdateStatusBarColor);
+            // Also refresh the label text when Kind changes (e.g. Loading→Completed removes the "…").
+            // TODO(tech-debt): When Kind and Label change together this schedules UpdateStatusLabel
+            // twice in rapid succession. Consolidate into a single UpdateStatusUI() call.
             Dispatcher.UIThread.InvokeAsync(UpdateStatusLabel);
         }
         else if (e.PropertyName == nameof(FStatus.Label))

@@ -92,25 +92,29 @@ public partial class ImageMerger : Window
             num++;
         }
 
-        await Task.Run(async () =>
+        try
         {
-            using var bmp = new SKBitmap(maxWidth - margin, maxHeight - margin, SKColorType.Rgba8888, SKAlphaType.Premul);
-            using var canvas = new SKCanvas(bmp);
-
-            for (var i = 0; i < images.Length; i++)
+            await Task.Run(async () =>
             {
-                using (images[i])
+                using var bmp = new SKBitmap(maxWidth - margin, maxHeight - margin, SKColorType.Rgba8888, SKAlphaType.Premul);
+                using var canvas = new SKCanvas(bmp);
+
+                for (var i = 0; i < images.Length; i++)
                 {
-                    canvas.DrawBitmap(images[i], positions[i], new SKPaint { FilterQuality = SKFilterQuality.High, IsAntialias = true });
+                    using (images[i])
+                    {
+                        canvas.DrawBitmap(images[i], positions[i], new SKPaint { FilterQuality = SKFilterQuality.High, IsAntialias = true });
+                    }
                 }
-            }
 
-            using var data = bmp.Encode(SKEncodedImageFormat.Png, 100);
-            _imageBuffer = data.ToArray();
-            var photo = new AvaloniaBitmap(new MemoryStream(_imageBuffer));
+                using var data = bmp.Encode(SKEncodedImageFormat.Png, 100);
+                _imageBuffer = data.ToArray();
+                var photo = new AvaloniaBitmap(new MemoryStream(_imageBuffer));
 
-            await Dispatcher.UIThread.InvokeAsync(() => { ImagePreview.Source = photo; });
-        }).ContinueWith(t =>
+                await Dispatcher.UIThread.InvokeAsync(() => { ImagePreview.Source = photo; });
+            });
+        }
+        finally
         {
             AddButton.IsEnabled = true;
             UpButton.IsEnabled = true;
@@ -120,7 +124,7 @@ public partial class ImageMerger : Window
             SizeSlider.IsEnabled = true;
             OpenImageButton.IsEnabled = true;
             SaveImageButton.IsEnabled = true;
-        }, TaskScheduler.FromCurrentSynchronizationContext());
+        }
     }
 
     private async void OnImageAdd(object sender, RoutedEventArgs e)

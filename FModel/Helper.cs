@@ -40,6 +40,7 @@ public static class Helper
         else
         {
             var w = GetOpenedWindow<T>(windowName);
+            if (w is null) return; // window deregistered between IsWindowOpen and here
             if (windowName == "Search For Packages")
                 w.WindowState = WindowState.Normal;
             w.Focus();

@@ -151,8 +151,13 @@ public partial class App : Application
 
         TaskScheduler.UnobservedTaskException += (_, e) =>
         {
-            Log.Error("{Exception}", e.Exception);
+            // SetObserved prevents the process from terminating on GC finalisation of faulted tasks.
+            // Only surface the error dialog for unexpected faults; silently absorb cancellations.
             e.SetObserved();
+            if (e.Exception?.InnerException is OperationCanceledException)
+                return;
+            Log.Error("{Exception}", e.Exception);
+            ShowErrorDialog(e.Exception ?? new Exception("Unobserved task faulted"));
         };
 
         base.OnFrameworkInitializationCompleted();

@@ -12,7 +12,7 @@ public class EndpointToTypeConverter : IValueConverter
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (parameter is not EEndpointType type)
-            throw new NotImplementedException();
+            throw new ArgumentException($"Expected EEndpointType parameter, got: {parameter?.GetType().Name ?? "null"}");
         return UserSettings.IsEndpointValid(type, out _);
     }
 

@@ -128,7 +128,12 @@
                            Margin="0 20"
                            IsVisible="{Binding CommitsView.Count, FallbackValue=False,
                            Converter={x:Static converters:IsNotZeroConverter.Instance},
-                           ConverterParameter=invert}" />
+                           ConverterParameter=invert}">
+                    <!-- TODO(P3-UpdateVM): CommitsView is System.Windows.Data.ListCollectionView.
+                         Once UpdateViewModel is migrated to Avalonia, replace CommitsView.Count
+                         with a dedicated HasNoCommits bool property or bind against the
+                         ObservableCollection directly so Count changes trigger INPC. -->
+                </TextBlock>
             </Grid>
         </ScrollViewer>
     </Grid>
