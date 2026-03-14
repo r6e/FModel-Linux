@@ -2,6 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Data;
 
 namespace FModel.Views.Resources.Controls;
 
@@ -24,7 +25,8 @@ public static class CustomScrollViewer
             "VerticalOffset",
             typeof(CustomScrollViewer),
             defaultValue: double.NaN,
-            inherits: false);
+            inherits: false,
+            defaultBindingMode: BindingMode.TwoWay);
 
     public static double GetVerticalOffset(ScrollViewer viewer)
         => viewer.GetValue(VerticalOffsetProperty);
@@ -57,7 +59,7 @@ public static class CustomScrollViewer
         if (_subscribed.TryGetValue(viewer, out _))
             return;
 
-        _subscribed.Add(viewer, null!);
+        _subscribed.Add(viewer, null);
         viewer.ScrollChanged += (_, se) =>
         {
             if (se.OffsetDelta.Y == 0)

@@ -47,6 +47,7 @@ public static class FLogger
                 case ELog.Debug:       Text("[DBG] ", Constants.GREEN);  break;
             }
             job();
+            Logger?.ScrollToEnd();
         }, DispatcherPriority.Background);
     }
 
@@ -90,13 +91,11 @@ public static class FLogger
     public static void Text(string message, string color, bool newLine = false)
     {
         Logger?.AppendText(message, color, newLine);
-        Logger?.ScrollToEnd();
     }
 
     public static void Link(string message, string url, bool newLine = false)
     {
         Logger?.AppendLink(message, url, newLine);
-        Logger?.ScrollToEnd();
     }
 
     public static void ClearLogs() => Logger?.ClearLog();
@@ -202,7 +201,7 @@ public class CustomRichTextBox : TextEditor
     /// <summary>Scrolls to the last line.</summary>
     public new void ScrollToEnd()
     {
-        if (Document.LineCount > 0)
+        if (Document.TextLength > 0)
             ScrollTo(Document.LineCount, 0);
     }
 
