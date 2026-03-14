@@ -286,7 +286,6 @@ public class FilterableComboBox : ComboBox
     {
         private readonly TextBox _textBox;
         private readonly List<Key> _pressedKeys = [];
-        private string _lastText;
         private bool _isTextInput;
 
         public event EventHandler UserTextChanged;
@@ -294,7 +293,6 @@ public class FilterableComboBox : ComboBox
         public TextBoxUserChangeTracker(TextBox textBox)
         {
             _textBox = textBox;
-            _lastText = textBox.Text ?? "";
 
             textBox.TextInput += (_, _) => _isTextInput = true;
 
@@ -302,7 +300,6 @@ public class FilterableComboBox : ComboBox
             {
                 var isUserChange = _pressedKeys.Count > 0 || _isTextInput;
                 _isTextInput = false;
-                _lastText = _textBox.Text ?? "";
                 if (isUserChange)
                     UserTextChanged?.Invoke(this, e);
             };

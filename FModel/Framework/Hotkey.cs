@@ -16,7 +16,7 @@ public class Hotkey : ViewModel
     }
 
     // StringEnumConverter serialises KeyModifiers as a comma-separated string (e.g. "Control, Shift").
-    // Newtonsoft correctly round-trips [Flags] combinationsthrough the same format it produces on write.
+    // Newtonsoft correctly round-trips [Flags] combinations through the same format it produces on write.
     private KeyModifiers _modifiers;
     [JsonConverter(typeof(StringEnumConverter))]
     public KeyModifiers Modifiers
