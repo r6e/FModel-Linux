@@ -85,6 +85,14 @@ public class FilterableComboBox : ComboBox
             new TextBoxUserChangeTracker(_editableTextBox).UserTextChanged += OnUserTextChanged;
     }
 
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        // Unsubscribe so the source collection does not root this control instance.
+        if (_originalSource is INotifyCollectionChanged notify)
+            notify.CollectionChanged -= OnSourceCollectionChanged;
+    }
+
     // -----------------------------------------------------------------------
     // ItemsSource interception — capture original, rebuild filtered view
     // -----------------------------------------------------------------------
@@ -292,7 +300,7 @@ public class FilterableComboBox : ComboBox
 
             textBox.TextChanged += (_, e) =>
             {
-                var isUserChange = _pressedKeys.Count > 0 || _isTextInput || _lastText == (_textBox.Text ?? "");
+                var isUserChange = _pressedKeys.Count > 0 || _isTextInput;
                 _isTextInput = false;
                 _lastText = _textBox.Text ?? "";
                 if (isUserChange)
