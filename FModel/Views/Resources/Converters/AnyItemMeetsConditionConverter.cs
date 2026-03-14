@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
-using System.Windows.Data;
+using Avalonia.Data.Converters;
 using CUE4Parse.UE4.IO.Objects;
 using FModel.Extensions;
 using FModel.ViewModels;
