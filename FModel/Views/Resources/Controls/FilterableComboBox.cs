@@ -229,11 +229,14 @@ public class FilterableComboBox : ComboBox
         _isUpdatingItems = true;
         try
         {
-            ItemsSource = string.IsNullOrEmpty(_currentFilter)
+            var filtered = string.IsNullOrEmpty(_currentFilter)
                 ? _originalSource?.Cast<object>().ToList()
                 : _originalSource?.Cast<object>()
                                   .Where(x => x?.ToString()?.Contains(_currentFilter, StringComparison.OrdinalIgnoreCase) == true)
                                   .ToList();
+            // Use SetCurrentValue so the XAML binding on ItemsSource is preserved;
+            // a plain property assignment clears the binding at LocalValue priority.
+            SetCurrentValue(ItemsSourceProperty, (IEnumerable?)filtered);
         }
         finally
         {
