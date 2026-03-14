@@ -1,5 +1,5 @@
 using System.Text;
-using System.Windows.Input;
+using Avalonia.Input;
 
 namespace FModel.Framework;
 
@@ -12,35 +12,36 @@ public class Hotkey : ViewModel
         set => SetProperty(ref _key, value);
     }
 
-    private ModifierKeys _modifiers;
-    public ModifierKeys Modifiers
+    private KeyModifiers _modifiers;
+    public KeyModifiers Modifiers
     {
         get => _modifiers;
         set => SetProperty(ref _modifiers, value);
     }
 
-    public Hotkey(Key key, ModifierKeys modifiers = ModifierKeys.None)
+    public Hotkey(Key key, KeyModifiers modifiers = KeyModifiers.None)
     {
         Key = key;
         Modifiers = modifiers;
     }
 
-    public bool IsTriggered(Key e)
+    /// <summary>Returns true when <paramref name="key"/> and <paramref name="modifiers"/> match this hotkey.</summary>
+    public bool IsTriggered(Key key, KeyModifiers modifiers)
     {
-        return e == Key && Keyboard.Modifiers.HasFlag(Modifiers);
+        return key == Key && modifiers.HasFlag(Modifiers);
     }
 
     public override string ToString()
     {
         var str = new StringBuilder();
 
-        if (Modifiers.HasFlag(ModifierKeys.Control))
+        if (Modifiers.HasFlag(KeyModifiers.Control))
             str.Append("Ctrl + ");
-        if (Modifiers.HasFlag(ModifierKeys.Shift))
+        if (Modifiers.HasFlag(KeyModifiers.Shift))
             str.Append("Shift + ");
-        if (Modifiers.HasFlag(ModifierKeys.Alt))
+        if (Modifiers.HasFlag(KeyModifiers.Alt))
             str.Append("Alt + ");
-        if (Modifiers.HasFlag(ModifierKeys.Windows))
+        if (Modifiers.HasFlag(KeyModifiers.Meta))
             str.Append("Win + ");
 
         str.Append(Key);
