@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -37,19 +38,33 @@ public partial class SearchView : Window
         InitializeComponent();
 
         // Restore WPF DataTrigger behavior: watermark changes when regex mode is toggled.
-        _searchViewModel.PropertyChanged += (_, args) =>
+        // Use named local functions captured in Closed so the long-lived singleton ViewModels
+        // don't hold a strong reference to this window after it is closed.
+        void OnSearchRegexChanged(object? _, PropertyChangedEventArgs args)
         {
             if (args.PropertyName != nameof(SearchViewModel.HasRegexEnabled)) return;
             SearchTextBox.Watermark = _searchViewModel.HasRegexEnabled
                 ? "Write your regex pattern and press enter..."
                 : "Write your pattern and press enter...";
-        };
-        _refViewModel.PropertyChanged += (_, args) =>
+        }
+        void OnRefRegexChanged(object? _, PropertyChangedEventArgs args)
         {
             if (args.PropertyName != nameof(SearchViewModel.HasRegexEnabled)) return;
             RefSearchTextBox.Watermark = _refViewModel.HasRegexEnabled
                 ? "Write your regex pattern and press enter..."
                 : "Write your pattern and press enter...";
+        }
+
+        // Cache VM references at construction time so Closed can unsubscribe even if the
+        // application service accessor is no longer reachable at that point.
+        var searchVm = _searchViewModel;
+        var refVm = _refViewModel;
+        searchVm.PropertyChanged += OnSearchRegexChanged;
+        refVm.PropertyChanged += OnRefRegexChanged;
+        Closed += (_, _) =>
+        {
+            searchVm.PropertyChanged -= OnSearchRegexChanged;
+            refVm.PropertyChanged -= OnRefRegexChanged;
         };
 
         Activate();
