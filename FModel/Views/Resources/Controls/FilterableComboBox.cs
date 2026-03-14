@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
+using Avalonia.VisualTree;
 
 namespace FModel.Views.Resources.Controls;
 
@@ -50,12 +52,12 @@ public class FilterableComboBox : ComboBox
     // -----------------------------------------------------------------------
     // Private state
     // -----------------------------------------------------------------------
-    private IEnumerable  _originalSource;
-    private bool         _isUpdatingItems;
-    private string       _currentFilter    = string.Empty;
-    private bool         _textBoxFrozen;
-    private TextBox      _editableTextBox;
-    private bool         _shouldTriggerSelectedItemChanged;
+    private IEnumerable _originalSource;
+    private bool _isUpdatingItems;
+    private string _currentFilter = string.Empty;
+    private bool _textBoxFrozen;
+    private TextBox _editableTextBox;
+    private bool _shouldTriggerSelectedItemChanged;
 
     // Mirrors WPF UserChange<T>: wraps an action and tracks whether it is a programmatic change.
     private readonly UserChange<bool> _dropDownOpenUC;
@@ -66,7 +68,7 @@ public class FilterableComboBox : ComboBox
 
         IsEditable = true;
 
-        DropDownOpened   += OnDropDownOpened;
+        DropDownOpened += OnDropDownOpened;
         SelectionChanged += (_, _) => _shouldTriggerSelectedItemChanged = true;
         SelectionEffectivelyChanged += (_, o) => EffectivelySelectedItem = o;
     }
@@ -92,17 +94,23 @@ public class FilterableComboBox : ComboBox
 
         if (change.Property == ItemsSourceProperty && !_isUpdatingItems)
         {
+            if (_originalSource is INotifyCollectionChanged old)
+                old.CollectionChanged -= OnSourceCollectionChanged;
             _originalSource = change.GetNewValue<IEnumerable>();
-            AttachSourceFilter(_originalSource);
+            AttachSourceFilter();
         }
     }
 
-    private void AttachSourceFilter(IEnumerable source)
+    private void AttachSourceFilter()
     {
-        // No-op: we copy to a new list on demand in RefreshFilter.
-        // Rebind to a fresh list so the control starts unfiltered.
+        if (_originalSource is INotifyCollectionChanged notify)
+            notify.CollectionChanged += OnSourceCollectionChanged;
+        _currentFilter = string.Empty;
         ApplyFilter();
     }
+
+    private void OnSourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        => ApplyFilter();
 
     // -----------------------------------------------------------------------
     // Key handling
@@ -136,10 +144,9 @@ public class FilterableComboBox : ComboBox
     {
         base.OnLostFocus(e);
 
-        // Only commit when focus truly leaves the ComboBox AND its editable part.
-        var focused = TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement();
-        if (focused == null || (focused != (Avalonia.Input.IInputElement)this &&
-                                focused != (Avalonia.Input.IInputElement)_editableTextBox))
+        // Only commit when focus truly leaves the ComboBox subtree (covers all template parts).
+        var focused = TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement() as Visual;
+        if (focused == null || !this.IsVisualAncestorOf(focused))
         {
             CheckSelectedItem();
             TriggerSelectedItemChanged();
@@ -157,29 +164,34 @@ public class FilterableComboBox : ComboBox
 
     private void OnUserTextChanged(object sender, EventArgs e)
     {
-        if (_textBoxFrozen) return;
+        if (_textBoxFrozen)
+            return;
 
         var tb = _editableTextBox;
-        if (tb == null) return;
+        if (tb == null)
+            return;
 
+        var text = tb.Text ?? string.Empty;
         var selLen = tb.SelectionEnd - tb.SelectionStart;
-        _currentFilter = (tb.SelectionStart + selLen == tb.Text.Length)
-            ? tb.Text.Substring(0, tb.SelectionStart).ToLower()
-            : tb.Text.ToLower();
+        _currentFilter = (tb.SelectionStart + selLen == text.Length)
+            ? text.Substring(0, tb.SelectionStart)
+            : text;
 
         RefreshFilter();
     }
 
     public void ClearFilter()
     {
-        if (string.IsNullOrEmpty(_currentFilter)) return;
+        if (string.IsNullOrEmpty(_currentFilter))
+            return;
         _currentFilter = "";
         ApplyFilter();
     }
 
     private void RefreshFilter()
     {
-        if (_originalSource == null) return;
+        if (_originalSource == null)
+            return;
 
         FreezeTextBoxState(() =>
         {
@@ -212,7 +224,7 @@ public class FilterableComboBox : ComboBox
             ItemsSource = string.IsNullOrEmpty(_currentFilter)
                 ? _originalSource?.Cast<object>().ToList()
                 : _originalSource?.Cast<object>()
-                                  .Where(x => x?.ToString()?.ToLower().Contains(_currentFilter) == true)
+                                  .Where(x => x?.ToString()?.Contains(_currentFilter, StringComparison.OrdinalIgnoreCase) == true)
                                   .ToList();
         }
         finally
@@ -224,14 +236,21 @@ public class FilterableComboBox : ComboBox
     private void FreezeTextBoxState(Action action)
     {
         _textBoxFrozen = true;
-        var tb       = _editableTextBox;
-        var text     = Text;
+        var tb = _editableTextBox;
+        var text = Text;
         var selStart = tb?.SelectionStart ?? 0;
-        var selEnd   = tb?.SelectionEnd   ?? 0;
-        action();
-        Text = text;
-        if (tb != null) { tb.SelectionStart = selStart; tb.SelectionEnd = selEnd; }
-        _textBoxFrozen = false;
+        var selEnd = tb?.SelectionEnd ?? 0;
+        try
+        {
+            action();
+        }
+        finally
+        {
+            Text = text;
+            if (tb != null)
+            { tb.SelectionStart = selStart; tb.SelectionEnd = selEnd; }
+            _textBoxFrozen = false;
+        }
     }
 
     private void CheckSelectedItem()
@@ -240,16 +259,10 @@ public class FilterableComboBox : ComboBox
             Text = SelectedItem?.ToString() ?? "";
     }
 
-    private bool FilterItem(object value)
-    {
-        if (value == null) return false;
-        if (_currentFilter.Length == 0) return true;
-        return value.ToString()!.ToLower().Contains(_currentFilter);
-    }
-
     private void TriggerSelectedItemChanged()
     {
-        if (!_shouldTriggerSelectedItemChanged) return;
+        if (!_shouldTriggerSelectedItemChanged)
+            return;
         SelectionEffectivelyChanged?.Invoke(this, SelectedItem);
         _shouldTriggerSelectedItemChanged = false;
     }
@@ -263,16 +276,16 @@ public class FilterableComboBox : ComboBox
     /// </summary>
     private sealed class TextBoxUserChangeTracker
     {
-        private readonly TextBox      _textBox;
-        private readonly List<Key>    _pressedKeys = [];
-        private          string       _lastText;
-        private          bool         _isTextInput;
+        private readonly TextBox _textBox;
+        private readonly List<Key> _pressedKeys = [];
+        private string _lastText;
+        private bool _isTextInput;
 
         public event EventHandler UserTextChanged;
 
         public TextBoxUserChangeTracker(TextBox textBox)
         {
-            _textBox  = textBox;
+            _textBox = textBox;
             _lastText = textBox.Text ?? "";
 
             textBox.TextInput += (_, _) => _isTextInput = true;
@@ -281,7 +294,7 @@ public class FilterableComboBox : ComboBox
             {
                 var isUserChange = _pressedKeys.Count > 0 || _isTextInput || _lastText == (_textBox.Text ?? "");
                 _isTextInput = false;
-                _lastText    = _textBox.Text ?? "";
+                _lastText = _textBox.Text ?? "";
                 if (isUserChange)
                     UserTextChanged?.Invoke(this, e);
             };
@@ -326,7 +339,8 @@ public class FilterableComboBox : ComboBox
 
         public void Set(T val)
         {
-            try   { IsUserChange = false; _action(val); }
+            try
+            { IsUserChange = false; _action(val); }
             finally { IsUserChange = true; }
         }
     }

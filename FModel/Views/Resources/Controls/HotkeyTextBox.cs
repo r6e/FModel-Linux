@@ -38,26 +38,8 @@ public class HotkeyTextBox : TextBox
         Text = HotKey.ToString();
     }
 
-    private static bool HasKeyChar(Key key) =>
-        // A – Z
-        key is >= Key.A and <= Key.Z or
-        // 0 – 9
-        Key.D0 and <= Key.D9 or
-        // Numpad 0 – 9
-        Key.NumPad0 and <= Key.NumPad9 or
-        // Punctuation / symbols
-        Key.OemQuestion or Key.OemQuotes or Key.OemPlus or
-        Key.OemOpenBrackets or Key.OemCloseBrackets or Key.OemMinus or
-        Key.Oem1 or Key.Oem5 or Key.Oem7 or
-        Key.OemPeriod or Key.OemComma or
-        Key.Add or Key.Divide or Key.Multiply or Key.Subtract or Key.Decimal or
-        Key.Oem102;
-
     protected override void OnKeyDown(KeyEventArgs e)
     {
-        // Swallow every key press — this control only captures, never inputs text.
-        e.Handled = true;
-
         var modifiers = e.KeyModifiers;
         var key = e.Key;
 
@@ -69,8 +51,9 @@ public class HotkeyTextBox : TextBox
             // Delete / Backspace / Escape without modifiers → clear the hotkey.
             case Key.Delete or Key.Back or Key.Escape when modifiers == KeyModifiers.None:
                 HotKey = new Hotkey(Key.None);
+                e.Handled = true;
                 return;
-            // Modifier-only key presses are not valid hotkeys.
+            // Modifier-only key presses are not valid hotkeys — let them propagate.
             case Key.LeftCtrl:
             case Key.RightCtrl:
             case Key.LeftAlt:
@@ -81,11 +64,12 @@ public class HotkeyTextBox : TextBox
             case Key.RWin:
             case Key.Clear:
             case Key.Apps:
-            // Enter / Space / Tab without modifiers — ignore.
+            // Enter / Space / Tab without modifiers — let them propagate (Tab focus navigation, etc.).
             case Key.Enter or Key.Space or Key.Tab when modifiers == KeyModifiers.None:
                 return;
             default:
                 HotKey = new Hotkey(key, modifiers);
+                e.Handled = true;
                 break;
         }
     }

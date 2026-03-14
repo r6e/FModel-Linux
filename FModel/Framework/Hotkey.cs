@@ -1,11 +1,14 @@
 using System.Text;
 using Avalonia.Input;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace FModel.Framework;
 
 public class Hotkey : ViewModel
 {
     private Key _key;
+    [JsonConverter(typeof(StringEnumConverter))]
     public Key Key
     {
         get => _key;
@@ -13,6 +16,7 @@ public class Hotkey : ViewModel
     }
 
     private KeyModifiers _modifiers;
+    [JsonConverter(typeof(StringEnumConverter))]
     public KeyModifiers Modifiers
     {
         get => _modifiers;
@@ -28,7 +32,7 @@ public class Hotkey : ViewModel
     /// <summary>Returns true when <paramref name="key"/> and <paramref name="modifiers"/> match this hotkey.</summary>
     public bool IsTriggered(Key key, KeyModifiers modifiers)
     {
-        return key == Key && modifiers.HasFlag(Modifiers);
+        return key == Key && modifiers == Modifiers;
     }
 
     public override string ToString()
