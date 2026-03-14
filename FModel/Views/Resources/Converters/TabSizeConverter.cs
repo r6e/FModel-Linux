@@ -17,9 +17,11 @@ public class TabSizeConverter : IMultiValueConverter
 
         // Avalonia uses Bounds.Width instead of WPF's ActualWidth.
         var hasDivider = parameter is string;
-        var width = tabControl.Bounds.Width / (hasDivider
-            ? double.Parse(parameter!.ToString() ?? "6")
-            : tabControl.ItemCount);
+        double divisor = hasDivider
+            ? double.Parse(parameter!.ToString()!, CultureInfo.InvariantCulture)
+            : tabControl.ItemCount;
+        if (divisor <= 0) return 0;
+        var width = tabControl.Bounds.Width / divisor;
         return width <= 1 ? 0 : width - (hasDivider ? 8 : 0);
     }
 }

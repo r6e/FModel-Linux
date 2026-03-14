@@ -8,7 +8,7 @@ public class RelativeDateTimeConverter : IValueConverter
 {
     public static readonly RelativeDateTimeConverter Instance = new();
 
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is DateTime dateTime)
         {
@@ -58,7 +58,7 @@ public class RelativeDateTimeConverter : IValueConverter
         return value;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }

@@ -8,7 +8,7 @@ public class TrimRightToLeftConverter : IValueConverter
 {
     public static readonly TrimRightToLeftConverter Instance = new();
 
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value == null) return null;
 
@@ -25,7 +25,7 @@ public class TrimRightToLeftConverter : IValueConverter
         return did ? $"...{path}" : path;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }

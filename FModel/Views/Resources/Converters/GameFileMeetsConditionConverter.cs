@@ -17,7 +17,7 @@ public class GameFileMeetsConditionConverter : IValueConverter
 {
     public Collection<IGameFileCondition> Conditions { get; } = [];
 
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         var gameFile = value switch
         {
@@ -30,7 +30,7 @@ public class GameFileMeetsConditionConverter : IValueConverter
         return Conditions.All(c => c.Matches(gameFile));
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }

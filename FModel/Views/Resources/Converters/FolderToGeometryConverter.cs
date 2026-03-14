@@ -47,7 +47,6 @@ public class FolderToGeometryConverter : IValueConverter
         };
 
         if (targetType == typeof(Geometry) && geometry != null)
-        if (targetType == typeof(Geometry) && geometry != null)
         {
             Application.Current!.TryGetResource(geometry, null, out var geomRes);
             return geomRes as Geometry;

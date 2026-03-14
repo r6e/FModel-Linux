@@ -10,7 +10,7 @@ public class BoolToRenderModeConverter : IValueConverter
     public static readonly BoolToRenderModeConverter Instance = new();
 
     public BitmapInterpolationMode Convert(bool value)
-        => (BitmapInterpolationMode) Convert(value, typeof(BitmapInterpolationMode), null, null)!;
+        => value ? BitmapInterpolationMode.None : BitmapInterpolationMode.HighQuality;
 
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
