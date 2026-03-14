@@ -91,31 +91,11 @@
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Disabled">
             <Grid>
+                <!-- TODO(P3-UpdateVM): GroupStyle/GroupItem/HeaderStringFormat are WPF-only APIs not
+                     supported by Avalonia ItemsControl. Date grouping will be re-implemented once
+                     CommitsView is migrated from System.Windows.Data.ListCollectionView to an
+                     Avalonia-compatible collection (see TODO on CommitsView property). -->
                 <ItemsControl ItemsSource="{Binding CommitsView, IsAsync=True}">
-                    <ItemsControl.GroupStyle>
-                        <GroupStyle>
-                            <GroupStyle.ContainerStyle>
-                                <Style TargetType="GroupItem">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="GroupItem">
-                                                <GroupBox Header="{Binding Name}"
-                                                          HeaderStringFormat="Commits on {0:MMM d, yyyy}"
-                                                          Margin="0 0 0 5">
-                                                    <ItemsPresenter />
-                                                </GroupBox>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </GroupStyle.ContainerStyle>
-                            <GroupStyle.Panel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Vertical" />
-                                </ItemsPanelTemplate>
-                            </GroupStyle.Panel>
-                        </GroupStyle>
-                    </ItemsControl.GroupStyle>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <controls:CommitControl Margin="0 0 0 1" />
@@ -126,7 +106,7 @@
                            HorizontalAlignment="Center"
                            VerticalAlignment="Top"
                            Margin="0 20"
-                           IsVisible="{Binding CommitsView.Count, FallbackValue=False,
+                           IsVisible="{Binding CommitsView.Count, FallbackValue=0,
                            Converter={x:Static converters:IsNotZeroConverter.Instance},
                            ConverterParameter=invert}">
                     <!-- TODO(P3-UpdateVM): CommitsView is System.Windows.Data.ListCollectionView.

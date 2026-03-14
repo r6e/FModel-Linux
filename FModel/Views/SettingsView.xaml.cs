@@ -138,7 +138,7 @@ public partial class SettingsView : Window
         });
         if (files.Count == 0)
             return;
-        UserSettings.Default.MappingsPath = files[0].Path.LocalPath;
+        _applicationView.SettingsView.MappingEndpoint.FilePath = files[0].Path.LocalPath;
     }
 
     private async Task<string?> PickFolderAsync()

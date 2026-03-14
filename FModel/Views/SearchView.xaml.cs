@@ -36,6 +36,22 @@ public partial class SearchView : Window
         };
         InitializeComponent();
 
+        // Restore WPF DataTrigger behavior: watermark changes when regex mode is toggled.
+        _searchViewModel.PropertyChanged += (_, args) =>
+        {
+            if (args.PropertyName != nameof(SearchViewModel.HasRegexEnabled)) return;
+            SearchTextBox.Watermark = _searchViewModel.HasRegexEnabled
+                ? "Write your regex pattern and press enter..."
+                : "Write your pattern and press enter...";
+        };
+        _refViewModel.PropertyChanged += (_, args) =>
+        {
+            if (args.PropertyName != nameof(SearchViewModel.HasRegexEnabled)) return;
+            RefSearchTextBox.Watermark = _refViewModel.HasRegexEnabled
+                ? "Write your regex pattern and press enter..."
+                : "Write your pattern and press enter...";
+        };
+
         Activate();
         SearchTextBox.Focus();
         SearchTextBox.SelectAll();

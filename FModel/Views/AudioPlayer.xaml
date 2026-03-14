@@ -120,7 +120,7 @@
                                  Height="16">
                             <Canvas Width="24"
                                     Height="24">
-                                <Path Fill="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"
+                                <Path Fill="White"
                                       Data="{StaticResource SearchIcon}" />
                             </Canvas>
                         </Viewbox>

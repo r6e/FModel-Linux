@@ -157,7 +157,6 @@ public partial class ImageMerger : Window
                         }
                     }
 
-                    ImagesListBox.SelectedItems.Add(indices);
                     if (reloadImage)
                     {
                         await DrawPreview().ConfigureAwait(false);

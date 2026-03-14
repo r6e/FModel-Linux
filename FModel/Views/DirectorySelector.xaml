@@ -167,8 +167,7 @@
                                 Grid.Column="6"
                                 Padding="0"
                                 Click="OnAddDirectory"
-                                ToolTip="Add Game"
-                                Width="{Binding ActualWidth, ElementName=OkGuysButWhoFuckingAsked}">
+                                ToolTip="Add Game">
                             <Viewbox Width="16"
                                      Height="16"
                                      HorizontalAlignment="Center">
