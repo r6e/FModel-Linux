@@ -77,9 +77,13 @@ public class MagnifierManager
             _element.PointerReleased -= ElementOnPointerReleased;
             _element.PointerWheelChanged -= ElementOnPointerWheelChanged;
             _element.DetachedFromVisualTree -= OnElementDetached;
+
+            // Remove the adorner control from the AdornerLayer so it is not left
+            // as an invisible orphan child for the lifetime of the host window.
+            var layer = AdornerLayer.GetAdornerLayer(_element);
+            layer?.SetAdornment(_element, null);
         }
         _adorner?.Detach();
-        HideAdorner();
         _adorner = null;
         _element = null;
     }

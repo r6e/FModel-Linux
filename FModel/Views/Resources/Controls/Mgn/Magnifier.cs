@@ -115,8 +115,7 @@ public class Magnifier : Control
         {
             if (e.OldValue is Rect oldBounds && e.NewValue is Rect newBounds && oldBounds.Size == newBounds.Size)
                 return;
-            m.UpdateViewBox();
-            m.InvalidateVisual();
+            m.UpdateViewBox(); // UpdateViewBox already calls InvalidateVisual().
         });
     }
 
