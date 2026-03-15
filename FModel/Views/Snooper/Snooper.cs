@@ -9,6 +9,7 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Common.Input;
 using OpenTK.Windowing.Desktop;
+using Avalonia.Threading;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
@@ -62,7 +63,9 @@ public class Snooper : GameWindow
     {
         Renderer.Options.SwapMaterial(false);
         Renderer.Options.AnimateMesh(false);
-        Application.Current.Dispatcher.Invoke(delegate
+        // Post the game loop to the UI thread so the calling (background) thread
+        // is not blocked for the lifetime of the 3D viewer window.
+        Dispatcher.UIThread.Post(delegate
         {
             WindowShouldClose(false, false);
             base.Run();
