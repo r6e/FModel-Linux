@@ -108,10 +108,8 @@ public sealed class SpectrumAnalyzer : UserControl
         FrequencyBarCountProperty.Changed.AddClassHandler<SpectrumAnalyzer>((m, e) =>
         {
             var nv = (int) e.NewValue!;
-            if (nv < 1)
-                m.FrequencyBarCount = 1;
-            else if (nv > 100)
-                m.FrequencyBarCount = 100;
+            if (nv < 1) { m.FrequencyBarCount = 1; return; }
+            if (nv > 100) { m.FrequencyBarCount = 100; return; }
             m.CreateBars();
         });
 
@@ -120,6 +118,7 @@ public sealed class SpectrumAnalyzer : UserControl
             if (e.OldValue is Rect old && e.NewValue is Rect nw && old.Size != nw.Size)
                 m.UpdateFrequencyMapping();
         });
+        FrequencyBarBorderThicknessProperty.Changed.AddClassHandler<SpectrumAnalyzer>((m, _) => m.CreateBars());
     }
 
     public SpectrumAnalyzer()
@@ -156,6 +155,7 @@ public sealed class SpectrumAnalyzer : UserControl
             return;
         _spectrumProvider = Source?.Spectrum;
         UpdateFrequencyMapping();
+        CreateBars();
     }
 
     private void OnSourcePropertyChangedEvent(object? sender, SourcePropertyChangedEventArgs e)
@@ -255,6 +255,8 @@ public sealed class SpectrumAnalyzer : UserControl
 
     private void UpdateSpectrum(double maxValue, IReadOnlyList<float> fftBuffer)
     {
+        if (_bars.Length == 0)
+            return;
         var spectrumScalingStrategy = ScalingStrategy.Decibel;
         Dispatcher.UIThread.Invoke(() => spectrumScalingStrategy = SpectrumScalingStrategy);
 

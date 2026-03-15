@@ -11,11 +11,23 @@ namespace FModel.Views.Resources.Controls.Aup;
 public sealed class Timeline : UserControl
 {
     // Visual structure built directly in the constructor — no ControlTemplate needed.
+    private static readonly IBrush s_defaultProgressBrush = new LinearGradientBrush
+    {
+        StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
+        EndPoint = new RelativePoint(1, 1, RelativeUnit.Relative),
+        GradientStops = new GradientStops
+        {
+            new GradientStop(Color.FromRgb(0x45, 0xB6, 0x49), 0.0),
+            new GradientStop(Color.FromRgb(0xDC, 0xE3, 0x5B), 1.0)
+        }
+    };
+
     private readonly Grid _lengthGrid = new();
     private readonly Border _progressLine = new()
     {
         HorizontalAlignment = HorizontalAlignment.Left,
         VerticalAlignment = VerticalAlignment.Stretch,
+        BorderThickness = new Thickness(0, 0, 1, 0),
         Width = 0
     };
     private readonly Border _positionLine = new()
@@ -53,7 +65,8 @@ public sealed class Timeline : UserControl
     }
 
     public static readonly StyledProperty<IBrush?> TickBrushProperty =
-        AvaloniaProperty.Register<Timeline, IBrush?>(nameof(TickBrush), defaultValue: Brushes.Red);
+        AvaloniaProperty.Register<Timeline, IBrush?>(nameof(TickBrush),
+            defaultValue: new SolidColorBrush(Color.FromRgb(0x7F, 0x84, 0x8E)));
     public IBrush? TickBrush
     {
         get => GetValue(TickBrushProperty);
@@ -61,7 +74,8 @@ public sealed class Timeline : UserControl
     }
 
     public static readonly StyledProperty<IBrush?> TimeBrushProperty =
-        AvaloniaProperty.Register<Timeline, IBrush?>(nameof(TimeBrush), defaultValue: Brushes.Blue);
+        AvaloniaProperty.Register<Timeline, IBrush?>(nameof(TimeBrush),
+            defaultValue: new SolidColorBrush(Color.FromRgb(0xDA, 0xE5, 0xF2)));
     public IBrush? TimeBrush
     {
         get => GetValue(TimeBrushProperty);
@@ -69,7 +83,7 @@ public sealed class Timeline : UserControl
     }
 
     public static readonly StyledProperty<IBrush?> ProgressLineBrushProperty =
-        AvaloniaProperty.Register<Timeline, IBrush?>(nameof(ProgressLineBrush), defaultValue: Brushes.Violet);
+        AvaloniaProperty.Register<Timeline, IBrush?>(nameof(ProgressLineBrush), defaultValue: Brushes.Brown);
     public IBrush? ProgressLineBrush
     {
         get => GetValue(ProgressLineBrushProperty);
@@ -77,7 +91,7 @@ public sealed class Timeline : UserControl
     }
 
     public static readonly StyledProperty<IBrush?> ProgressBrushProperty =
-        AvaloniaProperty.Register<Timeline, IBrush?>(nameof(ProgressBrush), defaultValue: Brushes.DarkGreen);
+        AvaloniaProperty.Register<Timeline, IBrush?>(nameof(ProgressBrush), defaultValue: s_defaultProgressBrush);
     public IBrush? ProgressBrush
     {
         get => GetValue(ProgressBrushProperty);
@@ -107,6 +121,16 @@ public sealed class Timeline : UserControl
             m._progressLine.Background = e.GetNewValue<IBrush?>());
         MousePositionBrushProperty.Changed.AddClassHandler<Timeline>((m, e) =>
             m._positionLine.Background = e.GetNewValue<IBrush?>());
+        ProgressLineBrushProperty.Changed.AddClassHandler<Timeline>((m, e) =>
+            m._progressLine.BorderBrush = e.GetNewValue<IBrush?>());
+        PositionProperty.Changed.AddClassHandler<Timeline>((m, e) =>
+        {
+            var position = e.GetNewValue<TimeSpan>();
+            var totalMs = m._source?.PlayedFile?.Duration.TotalMilliseconds ?? 0;
+            m._progressLine.Width = totalMs > 0
+                ? position.TotalMilliseconds / totalMs * m._lengthGrid.Bounds.Width
+                : 0;
+        });
 
         // Replaces WPF OnRenderSizeChanged — re-draw ticks whenever our allocated size changes.
         BoundsProperty.Changed.AddClassHandler<Timeline>((m, e) =>
@@ -120,20 +144,33 @@ public sealed class Timeline : UserControl
     {
         // Initialise visual brushes from default property values.
         _progressLine.Background = ProgressBrush;
+        _progressLine.BorderBrush = ProgressLineBrush;
         _positionLine.Background = MousePositionBrush;
 
-        // Overlay grid: _lengthGrid (tick marks) + _progressLine + _positionLine share the same cell.
-        var overlay = new Grid();
-        overlay.Children.Add(_lengthGrid);
-        overlay.Children.Add(_progressLine);
-        overlay.Children.Add(_positionLine);
+        // Two-row layout faithful to the WPF PART_Timeline template:
+        //   Row 0 (20px): _lengthGrid (tick marks + time labels)
+        //   Row 1 (*):    _progressLine (playback progress fill + right-edge cursor border)
+        //   _positionLine (mouse cursor indicator) spans both rows.
+        var root = new Grid { ClipToBounds = true };
+        root.RowDefinitions.Add(new RowDefinition(20, GridUnitType.Pixel));
+        root.RowDefinitions.Add(new RowDefinition(1, GridUnitType.Star));
 
-        overlay.PointerEntered += (_, _) => _positionLine.IsVisible = true;
-        overlay.PointerExited += (_, _) => _positionLine.IsVisible = false;
-        overlay.PointerMoved += OnOverlayPointerMoved;
-        overlay.PointerPressed += OnOverlayPointerPressed;
+        _lengthGrid.ClipToBounds = true;
+        Grid.SetRow(_lengthGrid, 0);
+        Grid.SetRow(_positionLine, 0);
+        Grid.SetRowSpan(_positionLine, 2);
+        Grid.SetRow(_progressLine, 1);
 
-        Content = overlay;
+        root.Children.Add(_lengthGrid);
+        root.Children.Add(_positionLine);
+        root.Children.Add(_progressLine);
+
+        root.PointerEntered += (_, _) => _positionLine.IsVisible = true;
+        root.PointerExited += (_, _) => _positionLine.IsVisible = false;
+        root.PointerMoved += OnOverlayPointerMoved;
+        root.PointerPressed += OnOverlayPointerPressed;
+
+        Content = root;
     }
 
     // -----------------------------------------------------------------------
@@ -181,7 +218,7 @@ public sealed class Timeline : UserControl
         Dispatcher.UIThread.Post(UpdateTimeline);
     }
 
-    private void OnSourceEvent(object? sender, SourceEventArgs? e)
+    private void OnSourceEvent(object? sender, SourceEventArgs e)
     {
         if (Source == null)
             return;
@@ -193,15 +230,9 @@ public sealed class Timeline : UserControl
         if (e.Property != ESourceProperty.Position)
             return;
 
+        // Setting Position triggers PositionProperty.Changed which updates _progressLine.Width.
         var position = (TimeSpan) e.Value;
-        Dispatcher.UIThread.Post(() =>
-        {
-            Position = position;
-            var totalMs = _source?.PlayedFile?.Duration.TotalMilliseconds ?? 0;
-            _progressLine.Width = totalMs > 0
-                ? position.TotalMilliseconds / totalMs * _lengthGrid.Bounds.Width
-                : 0;
-        });
+        Dispatcher.UIThread.Post(() => Position = position);
     }
 
     // -----------------------------------------------------------------------
