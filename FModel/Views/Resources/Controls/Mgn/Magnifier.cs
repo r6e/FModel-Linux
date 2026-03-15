@@ -185,11 +185,16 @@ public class Magnifier : Control
 
     internal void UpdateViewBox()
     {
-        // Bounds.Width/Height are zero until the control is laid out.
-        if (Bounds.Width <= 0 || Bounds.Height <= 0)
+        // Prefer actual layout size; fall back to the Width/Height styled properties
+        // (default 100) so that ViewBox.Size is non-zero even before the first layout
+        // pass. This ensures CalculateViewBoxLocation() can center the viewport under
+        // the cursor on the very first PointerPressed before Bounds are measured.
+        var w = Bounds.Width > 0 ? Bounds.Width : Width;
+        var h = Bounds.Height > 0 ? Bounds.Height : Height;
+        if (w <= 0 || h <= 0)
             return;
 
-        ViewBox = new Rect(ViewBox.X, ViewBox.Y, Bounds.Width * ZoomFactor, Bounds.Height * ZoomFactor);
+        ViewBox = new Rect(ViewBox.X, ViewBox.Y, w * ZoomFactor, h * ZoomFactor);
         UpdateBrushViewBox();
         InvalidateVisual();
     }

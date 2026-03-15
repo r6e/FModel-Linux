@@ -86,8 +86,12 @@ public class MagnifierManager
 
     private void OnElementDetached(object? sender, VisualTreeAttachmentEventArgs e)
     {
-        _adorner?.Detach();
-        HideAdorner();
+        // Full teardown so that if the element is ever re-attached and SetMagnifier is
+        // called again, a fresh manager/adorner pair is created from scratch.
+        var element = _element;
+        Detach();
+        if (element != null)
+            _managers.Remove(element);
     }
 
     private void ElementOnPointerReleased(object? sender, PointerReleasedEventArgs e)
