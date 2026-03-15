@@ -1,7 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
-using Avalonia.Data;
 using Avalonia.Media;
 
 namespace FModel.Views.Resources.Controls;
@@ -80,17 +79,23 @@ public class Magnifier : TemplatedControl
         FrameTypeProperty.Changed.AddClassHandler<Magnifier>((m, _) => m.OnFrameTypeChanged());
         RadiusProperty.Changed.AddClassHandler<Magnifier>((m, _) => m.OnRadiusChanged());
         ZoomFactorProperty.Changed.AddClassHandler<Magnifier>((m, _) => m.UpdateViewBox());
+        // Rebuild the VisualBrush whenever the Target control changes.
+        TargetProperty.Changed.AddClassHandler<Magnifier>((m, _) => m.RebuildBrush());
 
         // Default Width / Height
         WidthProperty.OverrideDefaultValue<Magnifier>(DEFAULT_SIZE);
         HeightProperty.OverrideDefaultValue<Magnifier>(DEFAULT_SIZE);
+
+        // Class-level handler — must live in static ctor, not the instance ctor, to avoid
+        // registering N handlers for N instances (AddClassHandler is class-wide).
+        BoundsProperty.Changed.AddClassHandler<Magnifier>((m, _) =>
+        {
+            m.UpdateViewBox();
+            m.InvalidateVisual();
+        });
     }
 
-    public Magnifier()
-    {
-        // SizeChanged fires when Bounds change — update ViewBox accordingly.
-        BoundsProperty.Changed.AddClassHandler<Magnifier>((m, _) => m.UpdateViewBox());
-    }
+    public Magnifier() { }
 
     // -----------------------------------------------------------------------
     // Overrides

@@ -1,7 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.VisualTree;
 
 namespace FModel.Views.Resources.Controls;
 
@@ -14,6 +13,7 @@ public class MagnifierAdorner : Canvas
     private readonly Control _adornedElement;
     private readonly Magnifier _magnifier;
     private Point _currentPointerPosition;
+    private Point _currentElementPosition;
     private double _currentZoomFactor;
 
     public MagnifierAdorner(Control adornedElement, Magnifier magnifier)
@@ -28,18 +28,28 @@ public class MagnifierAdorner : Canvas
         Children.Add(_magnifier);
         UpdateViewBox();
 
-        // Subscribe to pointer-move on the adorned element to track cursor position.
-        _adornedElement.PointerMoved += OnAdornedElementPointerMoved;
+        // Subscribe to pointer events on the adorned element.
+        // PointerPressed fires first (manager handles ShowAdorner before this handler runs,
+        // so the adorner is already in the visual tree when we call e.GetPosition(this)).
+        _adornedElement.PointerPressed += OnAdornedElementPointerPressed;
+        _adornedElement.PointerMoved   += OnAdornedElementPointerMoved;
     }
 
     public void Detach()
     {
-        _adornedElement.PointerMoved -= OnAdornedElementPointerMoved;
+        _adornedElement.PointerPressed -= OnAdornedElementPointerPressed;
+        _adornedElement.PointerMoved   -= OnAdornedElementPointerMoved;
     }
 
+    private void OnAdornedElementPointerPressed(object? sender, PointerPressedEventArgs e)
+        => HandlePointerEvent(e);
+
     private void OnAdornedElementPointerMoved(object? sender, PointerEventArgs e)
+        => HandlePointerEvent(e);
+
+    private void HandlePointerEvent(PointerEventArgs e)
     {
-        // Position relative to this adorner canvas (same coordinate space as the adorner layer).
+        // Adorner-canvas-relative position (used for magnifier placement on the canvas).
         var pt = e.GetPosition(this);
 
         if (_currentPointerPosition == pt && _magnifier.ZoomFactor == _currentZoomFactor)
@@ -49,6 +59,8 @@ public class MagnifierAdorner : Canvas
             return;
 
         _currentPointerPosition = pt;
+        // Element-relative position (used for viewbox origin calculation — avoids PointToScreen round-trip).
+        _currentElementPosition = e.GetPosition(_adornedElement);
         _currentZoomFactor = _magnifier.ZoomFactor;
 
         UpdateViewBox();
@@ -64,13 +76,11 @@ public class MagnifierAdorner : Canvas
 
     private Point CalculateViewBoxLocation()
     {
-        // Position of the cursor relative to the adorner canvas.
-        var adornerPos = _currentPointerPosition;
-        // Position of the cursor relative to the adorned element.
-        var elementPos = _adornedElement.PointToClient(PointToScreen(adornerPos));
-
-        var offsetX = elementPos.X - adornerPos.X;
-        var offsetY = elementPos.Y - adornerPos.Y;
+        // offsetX/offsetY = coordinate delta between adorner-canvas space and adorned-element space.
+        // Both positions come from the same PointerEventArgs so they share the same root transform,
+        // making this DPI-safe without any PointToScreen / PointToClient round-trip.
+        var offsetX = _currentElementPosition.X - _currentPointerPosition.X;
+        var offsetY = _currentElementPosition.Y - _currentPointerPosition.Y;
 
         // Account for the target control's offset within its parent coordinate space.
         Point parentOffset = default;
