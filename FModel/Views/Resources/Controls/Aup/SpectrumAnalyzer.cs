@@ -264,10 +264,13 @@ public sealed class SpectrumAnalyzer : UserControl
 
     private void UpdateSpectrum(double maxValue, IReadOnlyList<float> fftBuffer)
     {
-        if (_bars.Length == 0)
+        // Snapshot the array reference — SilenceBars() may replace _bars on the UI thread
+        // concurrently; the snapshot keeps the closure and the loop bound in sync.
+        var bars = _bars;
+        if (bars.Length == 0)
             return;
-        var spectrumScalingStrategy = ScalingStrategy.Decibel;
-        Dispatcher.UIThread.Invoke(() => spectrumScalingStrategy = SpectrumScalingStrategy);
+        // SpectrumScalingStrategy is a value-type StyledProperty — safe to read from any thread.
+        var spectrumScalingStrategy = SpectrumScalingStrategy;
 
         var lastValue = 0D;
         var spectrumPointIndex = 0;
@@ -305,15 +308,18 @@ public sealed class SpectrumAnalyzer : UserControl
 
         Dispatcher.UIThread.Post(() =>
         {
-            var barCount = Math.Min(FrequencyBarCount, dataPoints.Count);
+            // Use the snapshotted array as the authoritative bar count so that
+            // FrequencyBarCount changes or a concurrent SilenceBars() call cannot
+            // cause the loop to index past the end of the array.
+            var barCount = Math.Min(bars.Length, dataPoints.Count);
             for (var i = 0; i < barCount; i++)
             {
-                var barSpacing = Bounds.Width / FrequencyBarCount;
+                var barSpacing = Bounds.Width / bars.Length;
                 var barWidth = barSpacing - FrequencyBarSpacing;
                 if (barWidth < .5)
                     barWidth = .5;
 
-                var b = _bars[i];
+                var b = bars[i];
                 b.Height = dataPoints[i] / 100 * Bounds.Height;
                 b.Width = barWidth;
                 b.Margin = new Thickness(i * barSpacing, 0, 0, 0);

@@ -125,11 +125,16 @@ public sealed class Timeline : UserControl
                 : 0;
         });
 
-        // Replaces WPF OnRenderSizeChanged — re-draw ticks whenever our allocated size changes.
+        // Replaces WPF OnRenderSizeChanged — re-draw ticks and recompute progress width when size changes.
         BoundsProperty.Changed.AddClassHandler<Timeline>((m, e) =>
         {
             if (e.OldValue is Rect old && e.NewValue is Rect nw && old.Size != nw.Size)
+            {
                 m.UpdateTimeline();
+                var totalMs = m._source?.PlayedFile?.Duration.TotalMilliseconds ?? 0;
+                if (totalMs > 0)
+                    m._progressLine.Width = m.Position.TotalMilliseconds / totalMs * nw.Width;
+            }
         });
     }
 
@@ -185,7 +190,8 @@ public sealed class Timeline : UserControl
         var overlayWidth = ((Control?) sender)?.Bounds.Width ?? 0;
         if (overlayWidth <= 0)
             return;
-        Source.SkipTo(e.GetPosition((Visual?) sender).X / overlayWidth);
+        var ratio = e.GetPosition((Visual?) sender).X / overlayWidth;
+        Source.SkipTo(Math.Clamp(ratio, 0.0, 1.0));
     }
 
     // -----------------------------------------------------------------------
