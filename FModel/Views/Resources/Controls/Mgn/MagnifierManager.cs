@@ -80,8 +80,8 @@ public class MagnifierManager
 
             // Remove the adorner control from the AdornerLayer so it is not left
             // as an invisible orphan child for the lifetime of the host window.
-            var layer = AdornerLayer.GetAdornerLayer(_element);
-            layer?.SetAdornment(_element, null);
+            // Use the static API to match the add path in VerifyAdornerLayer.
+            AdornerLayer.SetAdornment(_element, null);
         }
         _adorner?.Detach();
         _adorner = null;

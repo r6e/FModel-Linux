@@ -24,6 +24,9 @@ public class MagnifierAdorner : Canvas
 
         // The canvas must be transparent to hit-testing so pointer events reach the adorned control.
         IsHitTestVisible = false;
+        // Start hidden so the first ShowAdorner() call triggers IsVisible false→true,
+        // which fires OnPropertyChanged and subscribes PointerMoved correctly.
+        IsVisible = false;
 
         Children.Add(_magnifier);
         UpdateViewBox();
