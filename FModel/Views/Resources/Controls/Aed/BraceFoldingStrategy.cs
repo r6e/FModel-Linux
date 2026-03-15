@@ -13,7 +13,7 @@ public class JsonFoldingStrategies
     public JsonFoldingStrategies(TextEditor avalonEditor)
     {
         _foldingManager = FoldingManager.Install(avalonEditor.TextArea);
-        _strategy = new BraceFoldingStrategy(avalonEditor);
+        _strategy = new BraceFoldingStrategy();
     }
 
     public void UpdateFoldings(TextDocument document)
@@ -67,10 +67,8 @@ public class JsonFoldingStrategies
 
 public class BraceFoldingStrategy
 {
-    public BraceFoldingStrategy(TextEditor editor)
+    public BraceFoldingStrategy()
     {
-        // Initial folding installation is handled by JsonFoldingStrategies.UpdateFoldings;
-        // no eager parse needed here.
     }
 
     public IEnumerable<CustomNewFolding> UpdateFoldings(TextDocument document)
