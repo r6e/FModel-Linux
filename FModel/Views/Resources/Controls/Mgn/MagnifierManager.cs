@@ -3,7 +3,6 @@ using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Controls.Primitives;
 
 namespace FModel.Views.Resources.Controls;
 
@@ -60,7 +59,7 @@ public class MagnifierManager
     private void AttachToMagnifier(Control element, Magnifier magnifier)
     {
         _element = element;
-        _element.PointerPressed  += ElementOnPointerPressed;
+        _element.PointerPressed += ElementOnPointerPressed;
         _element.PointerReleased += ElementOnPointerReleased;
         _element.PointerWheelChanged += ElementOnPointerWheelChanged;
         _element.DetachedFromVisualTree += OnElementDetached;
@@ -74,7 +73,7 @@ public class MagnifierManager
     {
         if (_element != null)
         {
-            _element.PointerPressed  -= ElementOnPointerPressed;
+            _element.PointerPressed -= ElementOnPointerPressed;
             _element.PointerReleased -= ElementOnPointerReleased;
             _element.PointerWheelChanged -= ElementOnPointerWheelChanged;
             _element.DetachedFromVisualTree -= OnElementDetached;
@@ -93,6 +92,8 @@ public class MagnifierManager
 
     private void ElementOnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
+        if (e.GetCurrentPoint(null).Properties.PointerUpdateKind != PointerUpdateKind.LeftButtonReleased)
+            return;
         if (_element != null && GetMagnifier(_element) is { IsFrozen: true })
             return;
 
@@ -101,13 +102,16 @@ public class MagnifierManager
 
     private void ElementOnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        ShowAdorner();
+        if (e.GetCurrentPoint(null).Properties.PointerUpdateKind == PointerUpdateKind.LeftButtonPressed)
+            ShowAdorner();
     }
 
     private void ElementOnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
-        if (_element == null) return;
-        if (GetMagnifier(_element) is not { IsUsingZoomOnMouseWheel: true } magnifier) return;
+        if (_element == null)
+            return;
+        if (GetMagnifier(_element) is not { IsUsingZoomOnMouseWheel: true } magnifier)
+            return;
 
         // WPF Delta < 0 = scroll down = zoom out (larger viewbox); Delta > 0 = scroll up = zoom in.
         // Avalonia Delta.Y > 0 = scroll up.
@@ -129,15 +133,18 @@ public class MagnifierManager
 
     private void ShowAdorner()
     {
-        if (_adorner == null || _element == null) return;
+        if (_adorner == null || _element == null)
+            return;
         VerifyAdornerLayer();
         _adorner.IsVisible = true;
     }
 
     private void VerifyAdornerLayer()
     {
-        if (_adorner == null || _element == null) return;
-        if (_adorner.Parent != null) return;
+        if (_adorner == null || _element == null)
+            return;
+        if (_adorner.Parent != null)
+            return;
 
         var layer = AdornerLayer.GetAdornerLayer(_element);
         if (layer != null)

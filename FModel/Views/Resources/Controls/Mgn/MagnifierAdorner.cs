@@ -31,14 +31,26 @@ public class MagnifierAdorner : Canvas
         // Subscribe to pointer events on the adorned element.
         // PointerPressed fires first (manager handles ShowAdorner before this handler runs,
         // so the adorner is already in the visual tree when we call e.GetPosition(this)).
+        // PointerMoved is subscribed/unsubscribed dynamically via OnPropertyChanged(IsVisible).
         _adornedElement.PointerPressed += OnAdornedElementPointerPressed;
-        _adornedElement.PointerMoved   += OnAdornedElementPointerMoved;
     }
 
     public void Detach()
     {
         _adornedElement.PointerPressed -= OnAdornedElementPointerPressed;
-        _adornedElement.PointerMoved   -= OnAdornedElementPointerMoved;
+        _adornedElement.PointerMoved -= OnAdornedElementPointerMoved;
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == IsVisibleProperty)
+        {
+            if (change.GetNewValue<bool>())
+                _adornedElement.PointerMoved += OnAdornedElementPointerMoved;
+            else
+                _adornedElement.PointerMoved -= OnAdornedElementPointerMoved;
+        }
     }
 
     private void OnAdornedElementPointerPressed(object? sender, PointerPressedEventArgs e)
@@ -92,7 +104,7 @@ public class MagnifierAdorner : Canvas
         }
 
         var left = _currentPointerPosition.X - (_magnifier.ViewBox.Width / 2 + offsetX) + parentOffset.X;
-        var top  = _currentPointerPosition.Y - (_magnifier.ViewBox.Height / 2 + offsetY) + parentOffset.Y;
+        var top = _currentPointerPosition.Y - (_magnifier.ViewBox.Height / 2 + offsetY) + parentOffset.Y;
         return new Point(left, top);
     }
 

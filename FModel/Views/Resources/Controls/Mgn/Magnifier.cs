@@ -1,11 +1,10 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 
 namespace FModel.Views.Resources.Controls;
 
-public class Magnifier : TemplatedControl
+public class Magnifier : Control
 {
     private const double DEFAULT_SIZE = 100d;
 
@@ -63,6 +62,30 @@ public class Magnifier : TemplatedControl
         set => SetValue(ZoomFactorOnMouseWheelProperty, value);
     }
 
+    public static readonly StyledProperty<IBrush?> BackgroundProperty =
+        AvaloniaProperty.Register<Magnifier, IBrush?>(nameof(Background));
+    public IBrush? Background
+    {
+        get => GetValue(BackgroundProperty);
+        set => SetValue(BackgroundProperty, value);
+    }
+
+    public static readonly StyledProperty<IBrush?> BorderBrushProperty =
+        AvaloniaProperty.Register<Magnifier, IBrush?>(nameof(BorderBrush));
+    public IBrush? BorderBrush
+    {
+        get => GetValue(BorderBrushProperty);
+        set => SetValue(BorderBrushProperty, value);
+    }
+
+    public static readonly StyledProperty<Thickness> BorderThicknessProperty =
+        AvaloniaProperty.Register<Magnifier, Thickness>(nameof(BorderThickness));
+    public Thickness BorderThickness
+    {
+        get => GetValue(BorderThicknessProperty);
+        set => SetValue(BorderThicknessProperty, value);
+    }
+
     // ViewBox is not a styled property — it is driven programmatically by the adorner.
     public Rect ViewBox { get; set; }
 
@@ -88,8 +111,10 @@ public class Magnifier : TemplatedControl
 
         // Class-level handler — must live in static ctor, not the instance ctor, to avoid
         // registering N handlers for N instances (AddClassHandler is class-wide).
-        BoundsProperty.Changed.AddClassHandler<Magnifier>((m, _) =>
+        BoundsProperty.Changed.AddClassHandler<Magnifier>((m, e) =>
         {
+            if (e.OldValue is Rect oldBounds && e.NewValue is Rect newBounds && oldBounds.Size == newBounds.Size)
+                return;
             m.UpdateViewBox();
             m.InvalidateVisual();
         });
@@ -100,13 +125,6 @@ public class Magnifier : TemplatedControl
     // -----------------------------------------------------------------------
     // Overrides
     // -----------------------------------------------------------------------
-    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
-    {
-        base.OnApplyTemplate(e);
-        RebuildBrush();
-        UpdateViewBox();
-    }
-
     public override void Render(DrawingContext context)
     {
         if (_visualBrush == null || Bounds.Width <= 0 || Bounds.Height <= 0)
@@ -155,7 +173,8 @@ public class Magnifier : TemplatedControl
 
     private void UpdateSizeFromRadius()
     {
-        if (FrameType != EFrameType.Circle) return;
+        if (FrameType != EFrameType.Circle)
+            return;
 
         var newSize = Radius * 2;
         if (!Helper.AreVirtuallyEqual(Width, newSize))
@@ -187,7 +206,7 @@ public class Magnifier : TemplatedControl
         _visualBrush = new VisualBrush
         {
             SourceControl = Target,
-            Stretch = Stretch.None,
+            Stretch = Stretch.Fill,
             TileMode = TileMode.None,
             AlignmentX = AlignmentX.Left,
             AlignmentY = AlignmentY.Top,
@@ -199,7 +218,8 @@ public class Magnifier : TemplatedControl
 
     private void UpdateBrushViewBox()
     {
-        if (_visualBrush == null) return;
+        if (_visualBrush == null)
+            return;
         // SourceRect maps which region of Target is painted — the magnified "window".
         _visualBrush.SourceRect = new RelativeRect(ViewBox, RelativeUnit.Absolute);
     }
