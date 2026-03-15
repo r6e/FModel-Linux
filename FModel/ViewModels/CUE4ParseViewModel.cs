@@ -115,42 +115,52 @@ public class CUE4ParseViewModel : ViewModel
     }
 
     public bool IsSnooperOpen => _snooper is { Exists: true, IsVisible: true };
-    private Snooper _snooper;
+    private volatile Snooper _snooper;
+    private readonly object _snooperLock = new();
     public Snooper SnooperViewer
     {
         get
         {
+            // Fast path: no locking needed once the instance exists (volatile read).
             if (_snooper != null)
                 return _snooper;
 
-            // Create the OpenTK game window on the UI thread; use CheckAccess so that a
-            // UI-thread caller (e.g. MenuCommand) does not deadlock on InvokeAsync.
-            Snooper MakeSnooper()
+            // Slow path: guard against two background threads concurrently racing
+            // through the null check and each creating a Snooper instance.
+            lock (_snooperLock)
             {
-                var scale = ImGuiController.GetDpiScale();
-                var htz = Snooper.GetMaxRefreshFrequency();
-                return _snooper = new Snooper(
-                    new GameWindowSettings { UpdateFrequency = htz },
-                    new NativeWindowSettings
-                    {
-                        ClientSize = new OpenTK.Mathematics.Vector2i(
-                            Convert.ToInt32(SystemParameters.MaximizedPrimaryScreenWidth * .75 * scale),
-                            Convert.ToInt32(SystemParameters.MaximizedPrimaryScreenHeight * .85 * scale)),
-                        NumberOfSamples = Constants.SAMPLES_COUNT,
-                        WindowBorder = WindowBorder.Resizable,
-                        Flags = ContextFlags.ForwardCompatible,
-                        Profile = ContextProfile.Core,
-                        Vsync = VSyncMode.Adaptive,
-                        APIVersion = new Version(4, 6),
-                        StartVisible = false,
-                        StartFocused = false,
-                        Title = "3D Viewer"
-                    });
-            }
+                if (_snooper != null)
+                    return _snooper;
 
-            return Dispatcher.UIThread.CheckAccess()
-                ? MakeSnooper()
-                : Dispatcher.UIThread.InvokeAsync(MakeSnooper).GetAwaiter().GetResult();
+                // Create the OpenTK game window on the UI thread; use CheckAccess so that a
+                // UI-thread caller (e.g. MenuCommand) does not deadlock on InvokeAsync.
+                Snooper MakeSnooper()
+                {
+                    var scale = ImGuiController.GetDpiScale();
+                    var htz = Snooper.GetMaxRefreshFrequency();
+                    return _snooper = new Snooper(
+                        new GameWindowSettings { UpdateFrequency = htz },
+                        new NativeWindowSettings
+                        {
+                            ClientSize = new OpenTK.Mathematics.Vector2i(
+                                Convert.ToInt32(SystemParameters.MaximizedPrimaryScreenWidth * .75 * scale),
+                                Convert.ToInt32(SystemParameters.MaximizedPrimaryScreenHeight * .85 * scale)),
+                            NumberOfSamples = Constants.SAMPLES_COUNT,
+                            WindowBorder = WindowBorder.Resizable,
+                            Flags = ContextFlags.ForwardCompatible,
+                            Profile = ContextProfile.Core,
+                            Vsync = VSyncMode.Adaptive,
+                            APIVersion = new Version(4, 6),
+                            StartVisible = false,
+                            StartFocused = false,
+                            Title = "3D Viewer"
+                        });
+                }
+
+                return Dispatcher.UIThread.CheckAccess()
+                    ? MakeSnooper()
+                    : Dispatcher.UIThread.InvokeAsync(MakeSnooper).GetAwaiter().GetResult();
+            }
         }
     }
 

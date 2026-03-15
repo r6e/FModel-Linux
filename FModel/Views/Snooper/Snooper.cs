@@ -63,13 +63,20 @@ public class Snooper : GameWindow
     {
         Renderer.Options.SwapMaterial(false);
         Renderer.Options.AnimateMesh(false);
-        // Post the game loop to the UI thread so the calling (background) thread
-        // is not blocked for the lifetime of the 3D viewer window.
-        Dispatcher.UIThread.Post(delegate
-        {
-            WindowShouldClose(false, false);
-            base.Run();
-        });
+
+        // GLFW.SetWindowShouldClose is documented as callable from any thread.
+        unsafe
+        { GLFW.SetWindowShouldClose(WindowPtr, false); }
+
+        // glfwShowWindow must be called from the GLFW main thread (the thread that
+        // created the window, which is the Avalonia UI thread).
+        Dispatcher.UIThread.Post(() => IsVisible = true);
+
+        // Run the blocking GLFW game loop on a dedicated background thread so that
+        // neither the calling thread nor the Avalonia UI event loop is blocked for
+        // the lifetime of the 3D viewer window. OpenTK transfers the GL context to
+        // this thread via Context.MakeCurrent() at the start of base.Run().
+        new Thread(() => base.Run()) { IsBackground = true, Name = "Snooper-GameLoop" }.Start();
     }
 
     private unsafe void LoadWindowIcon()

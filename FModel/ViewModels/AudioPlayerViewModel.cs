@@ -217,25 +217,25 @@ public class AudioPlayerViewModel : ViewModel, ISource, IDisposable
 
     public void Load()
     {
-        Dispatcher.UIThread.Post(() =>
-        {
-            if (!ConvertIfNeeded())
-                return;
+        // All callers are already on the UI thread (command handlers, key handlers, or an
+        // enclosing Post lambda), so there is no need to defer — running synchronously
+        // ensures LoadSoundOut() has finished before the caller invokes Play().
+        if (!ConvertIfNeeded())
+            return;
 
-            _waveSource = new CustomCodecFactory().GetCodec(SelectedAudioFile.Data, SelectedAudioFile.Extension);
-            if (_waveSource == null)
-                return;
+        _waveSource = new CustomCodecFactory().GetCodec(SelectedAudioFile.Data, SelectedAudioFile.Extension);
+        if (_waveSource == null)
+            return;
 
-            PlayedFile = new AudioFile(SelectedAudioFile, _waveSource);
-            Spectrum = new SpectrumProvider(_waveSource.WaveFormat.Channels, _waveSource.WaveFormat.SampleRate, FftSize.Fft4096);
+        PlayedFile = new AudioFile(SelectedAudioFile, _waveSource);
+        Spectrum = new SpectrumProvider(_waveSource.WaveFormat.Channels, _waveSource.WaveFormat.SampleRate, FftSize.Fft4096);
 
-            var notificationSource = new SingleBlockNotificationStream(_waveSource.ToSampleSource());
-            notificationSource.SingleBlockRead += (s, a) => Spectrum.Add(a.Left, a.Right);
-            _waveSource = notificationSource.ToWaveSource(16);
+        var notificationSource = new SingleBlockNotificationStream(_waveSource.ToSampleSource());
+        notificationSource.SingleBlockRead += (s, a) => Spectrum.Add(a.Left, a.Right);
+        _waveSource = notificationSource.ToWaveSource(16);
 
-            RaiseSourceEvent(ESourceEventType.Loading);
-            LoadSoundOut();
-        });
+        RaiseSourceEvent(ESourceEventType.Loading);
+        LoadSoundOut();
     }
 
     public void AddToPlaylist(byte[] data, string filePath)
@@ -478,31 +478,32 @@ public class AudioPlayerViewModel : ViewModel, ISource, IDisposable
 
     public void Dispose()
     {
-        Dispatcher.UIThread.Post(() =>
+        // Stop the timer synchronously first to eliminate any window in which a
+        // threadpool tick could access _waveSource / _soundOut while they are
+        // being torn down (use-after-dispose race).
+        _sourceTimer.Change(Timeout.Infinite, Timeout.Infinite);
+
+        // Dispose() is invoked from OnClosing which fires on the UI thread, so all
+        // of the following runs inline without needing to be posted.
+        if (_waveSource != null)
         {
-            if (_waveSource != null)
-            {
-                _waveSource.Dispose();
-                _waveSource = null;
-            }
+            _waveSource.Dispose();
+            _waveSource = null;
+        }
 
-            if (_soundOut != null)
-            {
-                _soundOut.Dispose();
-                _soundOut = null;
-            }
+        if (_soundOut != null)
+        {
+            _soundOut.Dispose();
+            _soundOut = null;
+        }
 
-            if (Spectrum != null)
-                Spectrum = null;
+        Spectrum = null;
 
-            foreach (var a in _audioFiles)
-            {
-                a.Data = null;
-            }
+        foreach (var a in _audioFiles)
+            a.Data = null;
 
-            _audioFiles.Clear();
-            PlayedFile = new AudioFile(-1, "No audio file");
-        });
+        _audioFiles.Clear();
+        PlayedFile = new AudioFile(-1, "No audio file");
     }
 
     private void TimerTick(object state)
