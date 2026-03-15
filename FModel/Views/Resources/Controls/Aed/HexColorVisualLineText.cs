@@ -22,6 +22,8 @@ public class HexColorVisualLineText : VisualLineText
         var runLength = DocumentLength - (startVisualColumn - VisualColumn);
         if (runLength != 2)
             TextRunProperties.SetForegroundBrush(Brushes.PeachPuff);
+        else
+            TextRunProperties.SetForegroundBrush(null); // restore default for separator token
 
         return base.CreateTextRun(startVisualColumn, context);
     }

@@ -69,7 +69,8 @@ public class BraceFoldingStrategy
 {
     public BraceFoldingStrategy(TextEditor editor)
     {
-        UpdateFoldings(editor.Document);
+        // Initial folding installation is handled by JsonFoldingStrategies.UpdateFoldings;
+        // no eager parse needed here.
     }
 
     public IEnumerable<CustomNewFolding> UpdateFoldings(TextDocument document)

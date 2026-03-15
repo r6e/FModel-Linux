@@ -28,6 +28,8 @@ public class JumpVisualLineText : VisualLineText
         var runLength = DocumentLength - (startVisualColumn - VisualColumn);
         if (runLength != 2) // skip separator tokens
             TextRunProperties.SetForegroundBrush(Brushes.Plum);
+        else
+            TextRunProperties.SetForegroundBrush(null); // restore default for separator token
 
         return base.CreateTextRun(startVisualColumn, context);
     }

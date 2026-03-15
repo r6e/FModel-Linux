@@ -12,6 +12,7 @@ using FModel.Services;
 using FModel.ViewModels;
 using AvaloniaEdit;
 using SkiaSharp;
+using VmTabItem = FModel.ViewModels.TabItem;
 
 namespace FModel.Views.Resources.Controls;
 
@@ -25,6 +26,9 @@ public partial class AvalonEditor
     private readonly Regex _hexColorRegex = new("\"Hex\": \"(?'target'[0-9A-Fa-f]{3,8})\"$",
         RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
     private readonly Dictionary<string, NavigationList<int>> _savedCarets = new();
+    // Cached tooltip controls — reused across hover events to avoid per-hover allocations.
+    private readonly TextBlock _hoverText = new();
+    private readonly Border _hoverBorder;
     private NavigationList<int> _caretsOffsets
     {
         get => MyAvalonEditor.Document != null && MyAvalonEditor.Document.FileName != null
@@ -52,21 +56,29 @@ public partial class AvalonEditor
         MyAvalonEditor.AddHandler(InputElement.PointerWheelChangedEvent, OnPointerWheelChanged, RoutingStrategies.Tunnel);
         MyAvalonEditor.PointerReleased += OnPointerReleased;
 
+        _hoverBorder = new Border
+        {
+            BorderThickness = new Avalonia.Thickness(1),
+            Padding = new Avalonia.Thickness(6, 4),
+            Child = _hoverText
+        };
+        ToolTip.SetTip(MyAvalonEditor, _hoverBorder);
+
         ApplicationService.ApplicationView.CUE4Parse.TabControl.OnTabRemove += OnTabClose;
     }
 
-    private void OnPreviewKeyDown(object? sender, KeyEventArgs e)
+    private void OnKeyDown(object? sender, KeyEventArgs e)
     {
         switch (e.Key)
         {
             case Key.Escape:
-                ((TabItem) DataContext).HasSearchOpen = false;
+                ((VmTabItem) DataContext).HasSearchOpen = false;
                 break;
-            case Key.Enter when !e.KeyModifiers.HasFlag(KeyModifiers.Shift) && ((TabItem) DataContext).HasSearchOpen:
+            case Key.Enter when !e.KeyModifiers.HasFlag(KeyModifiers.Shift) && ((VmTabItem) DataContext).HasSearchOpen:
                 FindNext();
                 break;
-            case Key.Enter when e.KeyModifiers.HasFlag(KeyModifiers.Shift) && ((TabItem) DataContext).HasSearchOpen:
-                var dc = (TabItem) DataContext;
+            case Key.Enter when e.KeyModifiers.HasFlag(KeyModifiers.Shift) && ((VmTabItem) DataContext).HasSearchOpen:
+                var dc = (VmTabItem) DataContext;
                 var old = dc.SearchUp;
                 dc.SearchUp = true;
                 FindNext();
@@ -102,14 +114,10 @@ public partial class AvalonEditor
         var color = SKColor.Parse(g.Value);
         var bg = new SolidColorBrush(Color.FromArgb(color.Alpha, color.Red, color.Green, color.Blue));
         IBrush fg = PerceivedBrightness(color) > 130 ? Brushes.Black : Brushes.White;
-        ToolTip.SetTip(MyAvalonEditor, new Border
-        {
-            Background = bg,
-            BorderBrush = fg,
-            BorderThickness = new Avalonia.Thickness(1),
-            Padding = new Avalonia.Thickness(6, 4),
-            Child = new TextBlock { Text = $"#{g.Value}", Foreground = fg }
-        });
+        _hoverBorder.Background = bg;
+        _hoverBorder.BorderBrush = fg;
+        _hoverText.Text = $"#{g.Value}";
+        _hoverText.Foreground = fg;
         ToolTip.SetIsOpen(MyAvalonEditor, true);
         e.Handled = true;
     }
@@ -129,7 +137,7 @@ public partial class AvalonEditor
 
     private void OnTextChanged(object? sender, EventArgs e)
     {
-        if (sender is not TextEditor avalonEditor || DataContext is not TabItem tabItem ||
+        if (sender is not TextEditor avalonEditor || DataContext is not VmTabItem tabItem ||
             avalonEditor.Document == null || string.IsNullOrEmpty(avalonEditor.Document.Text))
             return;
         avalonEditor.Document.FileName = tabItem.Entry.PathWithoutExtension;
@@ -151,7 +159,7 @@ public partial class AvalonEditor
 
     private void OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
-        if (DataContext is not TabItem tabItem || !e.KeyModifiers.HasFlag(KeyModifiers.Control))
+        if (DataContext is not VmTabItem tabItem || !e.KeyModifiers.HasFlag(KeyModifiers.Control))
             return;
 
         var fontSize = tabItem.FontSize + e.Delta.Y * 2.4;
@@ -165,12 +173,12 @@ public partial class AvalonEditor
 
     private void OnDeleteSearchClick(object? sender, RoutedEventArgs e)
     {
-        ((TabItem) DataContext).TextToFind = string.Empty;
+        ((VmTabItem) DataContext).TextToFind = string.Empty;
     }
 
     private void FindNext(bool invertLeftRight = false)
     {
-        var viewModel = (TabItem) DataContext;
+        var viewModel = (VmTabItem) DataContext;
         if (viewModel.Document == null || string.IsNullOrEmpty(viewModel.TextToFind))
             return;
 
@@ -212,7 +220,7 @@ public partial class AvalonEditor
     {
         Regex r;
         var o = RegexOptions.None;
-        var viewModel = (TabItem) DataContext;
+        var viewModel = (VmTabItem) DataContext;
 
         if (viewModel.SearchUp && !forceLeftToRight)
             o |= RegexOptions.RightToLeft;
@@ -237,7 +245,7 @@ public partial class AvalonEditor
 
     private void OnCloseClick(object? sender, RoutedEventArgs e)
     {
-        ((TabItem) DataContext).HasSearchOpen = false;
+        ((VmTabItem) DataContext).HasSearchOpen = false;
     }
 
     private void OnTabClose(object sender, EventArgs eventArgs)
