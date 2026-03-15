@@ -108,8 +108,10 @@ public sealed class SpectrumAnalyzer : UserControl
         FrequencyBarCountProperty.Changed.AddClassHandler<SpectrumAnalyzer>((m, e) =>
         {
             var nv = (int) e.NewValue!;
-            if (nv < 1) { m.FrequencyBarCount = 1; return; }
-            if (nv > 100) { m.FrequencyBarCount = 100; return; }
+            if (nv < 1)
+            { m.FrequencyBarCount = 1; return; }
+            if (nv > 100)
+            { m.FrequencyBarCount = 100; return; }
             m.CreateBars();
         });
 
@@ -119,6 +121,9 @@ public sealed class SpectrumAnalyzer : UserControl
                 m.UpdateFrequencyMapping();
         });
         FrequencyBarBorderThicknessProperty.Changed.AddClassHandler<SpectrumAnalyzer>((m, _) => m.CreateBars());
+        FrequencyBarBrushProperty.Changed.AddClassHandler<SpectrumAnalyzer>((m, _) => m.CreateBars());
+        FrequencyBarBorderBrushProperty.Changed.AddClassHandler<SpectrumAnalyzer>((m, _) => m.CreateBars());
+        FrequencyBarCornerRadiusProperty.Changed.AddClassHandler<SpectrumAnalyzer>((m, _) => m.CreateBars());
     }
 
     public SpectrumAnalyzer()
@@ -226,7 +231,11 @@ public sealed class SpectrumAnalyzer : UserControl
 
     private void SilenceBars()
     {
-        Dispatcher.UIThread.Post(() => _spectrumGrid.Children.Clear(), DispatcherPriority.Render);
+        Dispatcher.UIThread.Post(() =>
+        {
+            _spectrumGrid.Children.Clear();
+            _bars = Array.Empty<Border>();
+        }, DispatcherPriority.Render);
     }
 
     private void UpdateFrequencyMapping()

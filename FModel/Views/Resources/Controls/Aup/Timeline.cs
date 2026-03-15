@@ -37,13 +37,6 @@ public sealed class Timeline : UserControl
         VerticalAlignment = VerticalAlignment.Stretch,
         IsVisible = false
     };
-    private readonly Border _bottomBorder = new()
-    {
-        Height = 1,
-        VerticalAlignment = VerticalAlignment.Bottom,
-        HorizontalAlignment = HorizontalAlignment.Stretch
-    };
-
     // -----------------------------------------------------------------------
     // Styled properties
     // -----------------------------------------------------------------------
@@ -114,8 +107,8 @@ public sealed class Timeline : UserControl
         SourceProperty.Changed.AddClassHandler<Timeline>((m, e) =>
             m.OnSourceChanged(e.GetOldValue<ISource?>(), e.GetNewValue<ISource?>()));
 
-        TickBrushProperty.Changed.AddClassHandler<Timeline>((m, _) => m.UpdateTimeline());
-        TimeBrushProperty.Changed.AddClassHandler<Timeline>((m, _) => m.UpdateTimeline());
+        TickBrushProperty.Changed.AddClassHandler<Timeline>((m, _) => Dispatcher.UIThread.Post(m.UpdateTimeline));
+        TimeBrushProperty.Changed.AddClassHandler<Timeline>((m, _) => Dispatcher.UIThread.Post(m.UpdateTimeline));
 
         ProgressBrushProperty.Changed.AddClassHandler<Timeline>((m, e) =>
             m._progressLine.Background = e.GetNewValue<IBrush?>());
@@ -162,8 +155,8 @@ public sealed class Timeline : UserControl
         Grid.SetRow(_progressLine, 1);
 
         root.Children.Add(_lengthGrid);
-        root.Children.Add(_positionLine);
         root.Children.Add(_progressLine);
+        root.Children.Add(_positionLine); // on top — must remain visible over the advancing progress fill
 
         root.PointerEntered += (_, _) => _positionLine.IsVisible = true;
         root.PointerExited += (_, _) => _positionLine.IsVisible = false;
@@ -255,8 +248,13 @@ public sealed class Timeline : UserControl
         var timeBrush = TimeBrush;
 
         // Bottom border line
-        _bottomBorder.Background = tickBrush;
-        _lengthGrid.Children.Add(_bottomBorder);
+        _lengthGrid.Children.Add(new Border
+        {
+            Height = 1,
+            VerticalAlignment = VerticalAlignment.Bottom,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Background = tickBrush
+        });
 
         var majorTickCount = Math.Floor(width / 100);
         var totalSeconds = _source.PlayedFile.Duration.TotalSeconds;
