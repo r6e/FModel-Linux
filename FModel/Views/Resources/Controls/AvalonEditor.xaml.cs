@@ -169,6 +169,7 @@ public partial class AvalonEditor
             > 200 => 200,
             _ => fontSize
         };
+        e.Handled = true; // prevent scroll-through to the document
     }
 
     private void OnDeleteSearchClick(object? sender, RoutedEventArgs e)

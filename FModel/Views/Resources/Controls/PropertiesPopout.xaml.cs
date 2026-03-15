@@ -91,6 +91,7 @@ public partial class PropertiesPopout
             > 200 => 200,
             _ => fontSize
         };
+        e.Handled = true; // prevent scroll-through to the document
     }
 
     private void OnKeyDown(object? sender, KeyEventArgs e)
