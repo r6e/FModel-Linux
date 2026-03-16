@@ -17,9 +17,9 @@ public partial class DictionaryEditor : Window
     private readonly Dictionary<string, bool> _defaultOptions;
     private readonly Dictionary<string, KeyValuePair<string, string>> _defaultMapStructTypes;
 
-    public List<FCustomVersion> CustomVersions { get; private set; }
-    public Dictionary<string, bool> Options { get; private set; }
-    public Dictionary<string, KeyValuePair<string, string>> MapStructTypes { get; private set; }
+    public List<FCustomVersion> CustomVersions { get; private set; } = new();
+    public Dictionary<string, bool> Options { get; private set; } = new();
+    public Dictionary<string, KeyValuePair<string, string>> MapStructTypes { get; private set; } = new();
 
     public DictionaryEditor(string title)
     {
@@ -64,17 +64,17 @@ public partial class DictionaryEditor : Window
             switch (Title)
             {
                 case "Versioning Configuration (Custom Versions)":
-                    CustomVersions = JsonConvert.DeserializeObject<List<FCustomVersion>>(MyAvalonEditor.Document.Text);
+                    CustomVersions = JsonConvert.DeserializeObject<List<FCustomVersion>>(MyAvalonEditor.Document.Text) ?? new();
                     // DialogResult = !CustomVersions.SequenceEqual(_defaultCustomVersions);
                     Close(true);
                     break;
                 case "Versioning Configuration (Options)":
-                    Options = JsonConvert.DeserializeObject<Dictionary<string, bool>>(MyAvalonEditor.Document.Text);
+                    Options = JsonConvert.DeserializeObject<Dictionary<string, bool>>(MyAvalonEditor.Document.Text) ?? new();
                     // DialogResult = !Options.SequenceEqual(_defaultOptions);
                     Close(true);
                     break;
                 case "Versioning Configuration (MapStructTypes)":
-                    MapStructTypes = JsonConvert.DeserializeObject<Dictionary<string, KeyValuePair<string, string>>>(MyAvalonEditor.Document.Text);
+                    MapStructTypes = JsonConvert.DeserializeObject<Dictionary<string, KeyValuePair<string, string>>>(MyAvalonEditor.Document.Text) ?? new();
                     // DialogResult = !Options.SequenceEqual(_defaultOptions);
                     Close(true);
                     break;

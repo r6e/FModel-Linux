@@ -12,6 +12,7 @@
             Value="True" />
         <Setter Property="local:SmoothScroll.Factor"
             Value="1.25" />
+        <!-- Avalonia Multiple = WPF Extended (Ctrl/Shift multi-select) -->
         <Setter Property="SelectionMode"
             Value="Multiple" />
         <Setter Property="ContextMenu"
@@ -136,6 +137,7 @@
        Selector="ListBox">
         <Setter Property="ItemsSource"
             Value="{Binding SelectedItem.AssetsList.AssetsView, ElementName=AssetsFolderName}" />
+        <!-- Avalonia Multiple = WPF Extended (Ctrl/Shift multi-select) -->
         <Setter Property="SelectionMode"
             Value="Multiple" />
         <Setter Property="ContextMenu"

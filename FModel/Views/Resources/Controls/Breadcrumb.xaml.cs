@@ -57,8 +57,10 @@ public partial class Breadcrumb
                 border.BorderBrush = Brushes.Transparent;
                 border.Background = Brushes.Transparent;
             };
-            border.PointerReleased += (_, _) =>
+            border.PointerReleased += (_, args) =>
             {
+                if (args.InitialPressMouseButton != Avalonia.Input.MouseButton.Left)
+                    return;
                 var directory = string.Join('/', capturedPath.Split('/').Take(capturedIndex));
                 if (capturedPath.Equals(directory))
                     return;

@@ -26,14 +26,18 @@ public class TypeDataTemplateSelector : IDataTemplate
 
         // Resolve context menu from visual-tree resources so x:Shared="False"
         // returns a fresh instance per folder control.
-        control.AttachedToVisualTree += (_, _) =>
+        // One-shot: unsubscribe after first successful resolution.
+        control.AttachedToVisualTree += OnAttached;
+
+        return control;
+
+        void OnAttached(object? sender, Avalonia.VisualTree.VisualTreeAttachmentEventArgs e)
         {
             if (control.TryFindResource("FolderContextMenu", out var res) && res is ContextMenu menu)
             {
                 control.ContextMenu = menu;
+                control.AttachedToVisualTree -= OnAttached;
             }
-        };
-
-        return control;
+        }
     }
 }
