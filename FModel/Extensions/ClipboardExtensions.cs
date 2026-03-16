@@ -49,8 +49,11 @@ public static class ClipboardExtensions
                 // Keep both MIME and generic bitmap formats for better cross-app paste compatibility.
                 dataObject.Set("image/png", pngBytes);
                 dataObject.Set("PNG", pngBytes);
-                using var ms = new MemoryStream(pngBytes);
-                using var bitmap = new Bitmap(ms);
+                // Do NOT dispose the MemoryStream/Bitmap here — on X11/Wayland the
+                // clipboard is lazy (deferred rendering), so the DataObject may be
+                // accessed after this lambda returns when another app pastes.
+                var ms = new MemoryStream(pngBytes);
+                var bitmap = new Bitmap(ms);
                 dataObject.Set(DataFormats.Bitmap, bitmap);
                 await clipboard.SetDataObjectAsync(dataObject);
             }

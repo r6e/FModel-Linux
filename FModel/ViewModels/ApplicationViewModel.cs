@@ -79,7 +79,9 @@ public class ApplicationViewModel : ViewModel
 
     public string InitialWindowTitle => $"FModel ({Constants.APP_SHORT_COMMIT_ID} - {Constants.APP_BUILD_DATE:MMM d, yyyy})";
     public string GameDisplayName => CUE4Parse?.Provider.GameDisplayName ?? "Unknown";
-    public string TitleExtra => $"({UserSettings.Default.CurrentDir.UeVersion}){(Build != EBuildKind.Release ? $" ({Build})" : "")}";
+    public string TitleExtra => UserSettings.Default.CurrentDir is { } dir
+        ? $"({dir.UeVersion}){(Build != EBuildKind.Release ? $" ({Build})" : "")}"
+        : Build != EBuildKind.Release ? $"({Build})" : string.Empty;
 
     public LoadingModesViewModel LoadingModes { get; }
     public CustomDirectoriesViewModel? CustomDirectories { get; private set; }

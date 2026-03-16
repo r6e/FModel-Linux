@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Numerics;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using FModel.Settings;
 using ImGuiNET;
@@ -68,7 +67,7 @@ public class ImGuiController : IDisposable
 
         // Platform-specific font probing: prefer Segoe UI on Windows,
         // fall back to common Linux fonts (DejaVu Sans, Liberation Sans).
-        var (normalPath, boldPath, semiBoldPath) = ResolveFontPaths();
+        var (normalPath, boldPath, semiBoldPath) = FontPaths.Value;
 
         if (normalPath != null && File.Exists(normalPath))
             FontNormal = io.Fonts.AddFontFromFileTTF(normalPath, 16 * DpiScale);
@@ -570,10 +569,14 @@ void main()
     }
 
     /// <summary>
+    /// Lazily-resolved platform font paths. Computed once and cached for the process lifetime.
+    /// </summary>
+    private static readonly Lazy<(string? normal, string? bold, string? semiBold)> FontPaths = new(ResolveFontPaths);
+
+    /// <summary>
     /// Resolves platform-appropriate font file paths.
     /// Returns (normal, bold, semiBold) — any element may be null if not found.
     /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static (string? normal, string? bold, string? semiBold) ResolveFontPaths()
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
