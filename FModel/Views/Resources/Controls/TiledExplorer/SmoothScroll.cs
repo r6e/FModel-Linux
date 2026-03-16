@@ -1,7 +1,9 @@
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
+using System;
+using System.Linq;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.VisualTree;
 
 namespace FModel.Views.Resources.Controls.TiledExplorer;
 
@@ -12,79 +14,82 @@ namespace FModel.Views.Resources.Controls.TiledExplorer;
 /// </summary>
 public static class SmoothScroll
 {
-    public static readonly DependencyProperty IsEnabledProperty = DependencyProperty.RegisterAttached(
-        "IsEnabled", typeof(bool), typeof(SmoothScroll), new PropertyMetadata(false, OnIsEnabledChanged));
+    public static readonly AttachedProperty<bool> IsEnabledProperty =
+        AvaloniaProperty.RegisterAttached<SmoothScroll, Control, bool>("IsEnabled");
 
-    public static readonly DependencyProperty FactorProperty = DependencyProperty.RegisterAttached(
-        "Factor", typeof(double), typeof(SmoothScroll), new PropertyMetadata(0.25));
+    public static readonly AttachedProperty<double> FactorProperty =
+        AvaloniaProperty.RegisterAttached<SmoothScroll, Control, double>("Factor", 0.25);
 
-    public static void SetIsEnabled(DependencyObject obj, bool value) => obj.SetValue(IsEnabledProperty, value);
-    public static bool GetIsEnabled(DependencyObject obj) => (bool)obj.GetValue(IsEnabledProperty);
-    public static void SetFactor(DependencyObject obj, double value) => obj.SetValue(FactorProperty, value);
-    public static double GetFactor(DependencyObject obj) => (double)obj.GetValue(FactorProperty);
+    public static void SetIsEnabled(Control obj, bool value) => obj.SetValue(IsEnabledProperty, value);
+    public static bool GetIsEnabled(Control obj) => obj.GetValue(IsEnabledProperty);
+    public static void SetFactor(Control obj, double value) => obj.SetValue(FactorProperty, value);
+    public static double GetFactor(Control obj) => obj.GetValue(FactorProperty);
 
-    private static void OnIsEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    static SmoothScroll()
     {
-        if (d is UIElement element)
-        {
-            if ((bool)e.NewValue)
-                element.PreviewMouseWheel += Element_PreviewMouseWheel;
-            else
-                element.PreviewMouseWheel -= Element_PreviewMouseWheel;
-        }
+        IsEnabledProperty.Changed.Subscribe(OnIsEnabledChanged);
     }
 
-    private static void Element_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+    private static void OnIsEnabledChanged(AvaloniaPropertyChangedEventArgs<bool> e)
     {
-        if (sender is not DependencyObject dep) return;
+        if (e.Sender is not Control element)
+            return;
 
-        var sv = FindScrollViewer(dep);
-        if (sv == null) return;
+        if (e.NewValue.GetValueOrDefault())
+            element.PointerWheelChanged += Element_PointerWheelChanged;
+        else
+            element.PointerWheelChanged -= Element_PointerWheelChanged;
+    }
 
-        double factor = GetFactor(dep);
-        if (double.IsNaN(factor) || factor <= 0) factor = 0.25;
+    private static void Element_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
+    {
+        if (sender is not Control control)
+            return;
 
-        // e.Delta is typically +/-120 per notch
-        double notches = e.Delta / 120.0;
+        var sv = FindScrollViewer(control);
+        if (sv == null)
+            return;
 
-        // Base pixels per notch (tweakable); smaller value gives smoother/less jumpy scroll
+        double factor = GetFactor(control);
+        if (double.IsNaN(factor) || factor <= 0)
+            factor = 0.25;
+
+        double notches = e.Delta.Y;
         const double basePixelsPerNotch = 50.0;
-
         double adjustedPixels = notches * basePixelsPerNotch * factor;
 
-        // Prefer vertical scrolling when possible
-        if (sv.ScrollableHeight > 0)
+        var scrollableHeight = Math.Max(0, sv.Extent.Height - sv.Viewport.Height);
+        var scrollableWidth = Math.Max(0, sv.Extent.Width - sv.Viewport.Width);
+
+        if (scrollableHeight > 0)
         {
-            double newOffset = sv.VerticalOffset - adjustedPixels;
-            if (newOffset < 0) newOffset = 0;
-            if (newOffset > sv.ScrollableHeight) newOffset = sv.ScrollableHeight;
-            sv.ScrollToVerticalOffset(newOffset);
+            double newOffset = sv.Offset.Y - adjustedPixels;
+            if (newOffset < 0)
+                newOffset = 0;
+            if (newOffset > scrollableHeight)
+                newOffset = scrollableHeight;
+            sv.Offset = sv.Offset.WithY(newOffset);
             e.Handled = true;
             return;
         }
 
-        if (sv.ScrollableWidth > 0)
+        if (scrollableWidth > 0)
         {
-            double newOffset = sv.HorizontalOffset - adjustedPixels;
-            if (newOffset < 0) newOffset = 0;
-            if (newOffset > sv.ScrollableWidth) newOffset = sv.ScrollableWidth;
-            sv.ScrollToHorizontalOffset(newOffset);
+            double newOffset = sv.Offset.X - adjustedPixels;
+            if (newOffset < 0)
+                newOffset = 0;
+            if (newOffset > scrollableWidth)
+                newOffset = scrollableWidth;
+            sv.Offset = sv.Offset.WithX(newOffset);
             e.Handled = true;
         }
     }
 
-    private static ScrollViewer FindScrollViewer(DependencyObject d)
+    private static ScrollViewer? FindScrollViewer(Control control)
     {
-        if (d == null) return null;
-        if (d is ScrollViewer sv) return sv;
+        if (control is ScrollViewer sv)
+            return sv;
 
-        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(d); i++)
-        {
-            var child = VisualTreeHelper.GetChild(d, i);
-            var result = FindScrollViewer(child);
-            if (result != null) return result;
-        }
-
-        return null;
+        return control.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
     }
 }

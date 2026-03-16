@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
-using AdonisUI.Controls;
+using Avalonia.Controls;
 using FModel.Extensions;
 using FModel.Framework;
 using FModel.Services;
@@ -23,13 +23,13 @@ public class MenuCommand : ViewModelCommand<ApplicationViewModel>
         switch (parameter)
         {
             case "Directory_Selector":
-                contextViewModel.AvoidEmptyGameDirectory(true);
+                await contextViewModel.AvoidEmptyGameDirectoryAsync(true, MainWindow.YesWeCats);
                 break;
             case "Directory_AES":
-                Helper.OpenWindow<AdonisWindow>("AES Manager", () => new AesManager().Show());
+                Helper.OpenWindow<Window>("AES Manager", () => new AesManager().Show());
                 break;
             case "Directory_Backup":
-                Helper.OpenWindow<AdonisWindow>("Backup Manager", () => new BackupManager(contextViewModel.CUE4Parse.Provider.ProjectName).Show());
+                Helper.OpenWindow<Window>("Backup Manager", () => new BackupManager(contextViewModel.CUE4Parse!.Provider.ProjectName).Show());
                 break;
             case "Directory_ArchivesInfo":
                 ApplicationService.ApplicationView.IsAssetsExplorerVisible = false;
@@ -41,22 +41,22 @@ public class MenuCommand : ViewModelCommand<ApplicationViewModel>
                 contextViewModel.CUE4Parse.SnooperViewer.Run();
                 break;
             case "Views_AudioPlayer":
-                Helper.OpenWindow<AdonisWindow>("Audio Player", () => new AudioPlayer().Show());
+                Helper.OpenWindow<Window>("Audio Player", () => new AudioPlayer().Show());
                 break;
             case "Views_ImageMerger":
-                Helper.OpenWindow<AdonisWindow>("Image Merger", () => new ImageMerger().Show());
+                Helper.OpenWindow<Window>("Image Merger", () => new ImageMerger().Show());
                 break;
             case "Settings":
-                Helper.OpenWindow<AdonisWindow>("Settings", () => new SettingsView().Show());
+                Helper.OpenWindow<Window>("Settings", () => new SettingsView().Show());
                 break;
             case "Help_About":
-                Helper.OpenWindow<AdonisWindow>("About", () => new About().Show());
+                Helper.OpenWindow<Window>("About", () => new About().Show());
                 break;
             case "Help_Donate":
                 Process.Start(new ProcessStartInfo { FileName = Constants.DONATE_LINK, UseShellExecute = true });
                 break;
             case "Help_Releases":
-                Helper.OpenWindow<AdonisWindow>("Releases", () => new UpdateView().Show());
+                Helper.OpenWindow<Window>("Releases", () => new UpdateView().Show());
                 break;
             case "Help_BugsReport":
                 Process.Start(new ProcessStartInfo { FileName = Constants.ISSUE_LINK, UseShellExecute = true });
@@ -117,7 +117,8 @@ public class MenuCommand : ViewModelCommand<ApplicationViewModel>
             current = current.Next;
         }
 
-        if (!expand) return;
+        if (!expand)
+            return;
 
         // Expand bottom-up (reduce layout updates)
         for (var node = nodes.Last; node != null; node = node.Previous)

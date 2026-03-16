@@ -165,6 +165,11 @@ public partial class SettingsView : Window
             }
 
             UserSettings.Default.LastOpenedSettingTab = i;
+
+            // Select the DataTemplate that matches the TreeViewItem's Tag.
+            if (treeItem.Tag is string tagKey && this.FindResource(tagKey) is Avalonia.Controls.Templates.IDataTemplate dt)
+                SettingsContentControl.ContentTemplate = dt;
+
             break;
         }
     }

@@ -4,8 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Numerics;
 using System.Runtime.InteropServices;
-using System.Windows;
-using System.Windows.Forms;
 using FModel.Settings;
 using ImGuiNET;
 using ImGuizmoNET;
@@ -64,12 +62,12 @@ public class ImGuiController : IDisposable
         unsafe
         {
             var iniFileNamePtr = Marshal.StringToCoTaskMemUTF8(Path.Combine(UserSettings.Default.OutputDirectory, ".data", "imgui.ini"));
-            io.NativePtr->IniFilename = (byte*)iniFileNamePtr;
+            io.NativePtr->IniFilename = (byte*) iniFileNamePtr;
         }
-        
+
         // If not found, Fallback to default ImGui Font
-        var normalPath   = @"C:\Windows\Fonts\segoeui.ttf";
-        var boldPath     = @"C:\Windows\Fonts\segoeuib.ttf";
+        var normalPath = @"C:\Windows\Fonts\segoeui.ttf";
+        var boldPath = @"C:\Windows\Fonts\segoeuib.ttf";
         var semiBoldPath = @"C:\Windows\Fonts\seguisb.ttf";
 
         if (File.Exists(normalPath))
@@ -192,7 +190,7 @@ void main()
         ImGuiIOPtr io = ImGui.GetIO();
         io.Fonts.GetTexDataAsRGBA32(out IntPtr pixels, out int width, out int height, out int bytesPerPixel);
 
-        int mips = (int)Math.Floor(Math.Log(Math.Max(width, height), 2));
+        int mips = (int) Math.Floor(Math.Log(Math.Max(width, height), 2));
 
         int prevActiveTexture = GL.GetInteger(GetPName.ActiveTexture);
         GL.ActiveTexture(TextureUnit.Texture0);
@@ -207,19 +205,19 @@ void main()
 
         GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
-        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
-        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int) TextureWrapMode.Repeat);
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int) TextureWrapMode.Repeat);
 
         GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMaxLevel, mips - 1);
 
-        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) TextureMagFilter.Linear);
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) TextureMinFilter.Linear);
 
         // Restore state
         GL.BindTexture(TextureTarget.Texture2D, prevTexture2D);
-        GL.ActiveTexture((TextureUnit)prevActiveTexture);
+        GL.ActiveTexture((TextureUnit) prevActiveTexture);
 
-        io.Fonts.SetTexID((IntPtr)_fontTexture);
+        io.Fonts.SetTexID((IntPtr) _fontTexture);
 
         io.Fonts.ClearTexData();
     }
@@ -288,7 +286,8 @@ void main()
 
         foreach (Keys key in Enum.GetValues<Keys>())
         {
-            if (key == Keys.Unknown) continue;
+            if (key == Keys.Unknown)
+                continue;
             io.AddKeyEvent(TranslateKey(key), kState.IsKeyDown(key));
         }
 
@@ -353,7 +352,7 @@ void main()
             int vertexSize = cmd_list.VtxBuffer.Size * Marshal.SizeOf<ImDrawVert>();
             if (vertexSize > _vertexBufferSize)
             {
-                int newSize = (int)Math.Max(_vertexBufferSize * 1.5f, vertexSize);
+                int newSize = (int) Math.Max(_vertexBufferSize * 1.5f, vertexSize);
 
                 GL.BufferData(BufferTarget.ArrayBuffer, newSize, IntPtr.Zero, BufferUsageHint.DynamicDraw);
                 _vertexBufferSize = newSize;
@@ -362,7 +361,7 @@ void main()
             int indexSize = cmd_list.IdxBuffer.Size * sizeof(ushort);
             if (indexSize > _indexBufferSize)
             {
-                int newSize = (int)Math.Max(_indexBufferSize * 1.5f, indexSize);
+                int newSize = (int) Math.Max(_indexBufferSize * 1.5f, indexSize);
                 GL.BufferData(BufferTarget.ElementArrayBuffer, newSize, IntPtr.Zero, BufferUsageHint.DynamicDraw);
                 _indexBufferSize = newSize;
             }
@@ -416,21 +415,21 @@ void main()
                 else
                 {
                     GL.ActiveTexture(TextureUnit.Texture0);
-                    GL.BindTexture(TextureTarget.Texture2D, (int)pcmd.TextureId);
+                    GL.BindTexture(TextureTarget.Texture2D, (int) pcmd.TextureId);
                     CheckGLError("Texture");
 
                     // We do _windowHeight - (int)clip.W instead of (int)clip.Y because gl has flipped Y when it comes to these coordinates
                     var clip = pcmd.ClipRect;
-                    GL.Scissor((int)clip.X, _windowHeight - (int)clip.W, (int)(clip.Z - clip.X), (int)(clip.W - clip.Y));
+                    GL.Scissor((int) clip.X, _windowHeight - (int) clip.W, (int) (clip.Z - clip.X), (int) (clip.W - clip.Y));
                     CheckGLError("Scissor");
 
                     if ((io.BackendFlags & ImGuiBackendFlags.RendererHasVtxOffset) != 0)
                     {
-                        GL.DrawElementsBaseVertex(PrimitiveType.Triangles, (int)pcmd.ElemCount, DrawElementsType.UnsignedShort, (IntPtr)(pcmd.IdxOffset * sizeof(ushort)), unchecked((int)pcmd.VtxOffset));
+                        GL.DrawElementsBaseVertex(PrimitiveType.Triangles, (int) pcmd.ElemCount, DrawElementsType.UnsignedShort, (IntPtr) (pcmd.IdxOffset * sizeof(ushort)), unchecked((int) pcmd.VtxOffset));
                     }
                     else
                     {
-                        GL.DrawElements(BeginMode.Triangles, (int)pcmd.ElemCount, DrawElementsType.UnsignedShort, (int)pcmd.IdxOffset * sizeof(ushort));
+                        GL.DrawElements(BeginMode.Triangles, (int) pcmd.ElemCount, DrawElementsType.UnsignedShort, (int) pcmd.IdxOffset * sizeof(ushort));
                     }
                     CheckGLError("Draw");
                 }
@@ -442,21 +441,33 @@ void main()
 
         // Reset state
         GL.BindTexture(TextureTarget.Texture2D, prevTexture2D);
-        GL.ActiveTexture((TextureUnit)prevActiveTexture);
+        GL.ActiveTexture((TextureUnit) prevActiveTexture);
         GL.UseProgram(prevProgram);
         GL.BindVertexArray(prevVAO);
         GL.Scissor(prevScissorBox[0], prevScissorBox[1], prevScissorBox[2], prevScissorBox[3]);
         GL.BindBuffer(BufferTarget.ArrayBuffer, prevArrayBuffer);
-        GL.BlendEquationSeparate((BlendEquationMode)prevBlendEquationRgb, (BlendEquationMode)prevBlendEquationAlpha);
+        GL.BlendEquationSeparate((BlendEquationMode) prevBlendEquationRgb, (BlendEquationMode) prevBlendEquationAlpha);
         GL.BlendFuncSeparate(
-            (BlendingFactorSrc)prevBlendFuncSrcRgb,
-            (BlendingFactorDest)prevBlendFuncDstRgb,
-            (BlendingFactorSrc)prevBlendFuncSrcAlpha,
-            (BlendingFactorDest)prevBlendFuncDstAlpha);
-        if (prevBlendEnabled) GL.Enable(EnableCap.Blend); else GL.Disable(EnableCap.Blend);
-        if (prevDepthTestEnabled) GL.Enable(EnableCap.DepthTest); else GL.Disable(EnableCap.DepthTest);
-        if (prevCullFaceEnabled) GL.Enable(EnableCap.CullFace); else GL.Disable(EnableCap.CullFace);
-        if (prevScissorTestEnabled) GL.Enable(EnableCap.ScissorTest); else GL.Disable(EnableCap.ScissorTest);
+            (BlendingFactorSrc) prevBlendFuncSrcRgb,
+            (BlendingFactorDest) prevBlendFuncDstRgb,
+            (BlendingFactorSrc) prevBlendFuncSrcAlpha,
+            (BlendingFactorDest) prevBlendFuncDstAlpha);
+        if (prevBlendEnabled)
+            GL.Enable(EnableCap.Blend);
+        else
+            GL.Disable(EnableCap.Blend);
+        if (prevDepthTestEnabled)
+            GL.Enable(EnableCap.DepthTest);
+        else
+            GL.Disable(EnableCap.DepthTest);
+        if (prevCullFaceEnabled)
+            GL.Enable(EnableCap.CullFace);
+        else
+            GL.Disable(EnableCap.CullFace);
+        if (prevScissorTestEnabled)
+            GL.Enable(EnableCap.ScissorTest);
+        else
+            GL.Disable(EnableCap.ScissorTest);
     }
 
     /// <summary>
@@ -484,7 +495,8 @@ void main()
         for (int i = 0; i < n; i++)
         {
             string extension = GL.GetString(StringNameIndexed.Extensions, i);
-            if (extension == name) return true;
+            if (extension == name)
+                return true;
         }
 
         return false;
@@ -549,7 +561,12 @@ void main()
 
     public static float GetDpiScale()
     {
-        return Math.Max((float)(Screen.PrimaryScreen.Bounds.Width / SystemParameters.PrimaryScreenWidth), (float)(Screen.PrimaryScreen.Bounds.Height / SystemParameters.PrimaryScreenHeight));
+        // Avalonia: use the primary screen's pixel density as the DPI scale factor.
+        // Screens.Primary is available on the UI thread once the platform is initialised.
+        var screen = Avalonia.Application.Current?.ApplicationLifetime is
+            Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop
+            ? desktop.MainWindow?.Screens?.Primary : null;
+        return screen is not null ? (float) screen.PixelDensity : 1.0f;
     }
 
     public static ImGuiKey TranslateKey(Keys key)

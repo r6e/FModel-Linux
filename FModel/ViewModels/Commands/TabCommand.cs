@@ -1,7 +1,7 @@
-using System.Windows;
-using AdonisUI.Controls;
+using Avalonia.Controls;
 using FModel.Framework;
 using FModel.Services;
+using FModel.Views;
 using FModel.Views.Resources.Controls;
 
 namespace FModel.ViewModels.Commands;
@@ -68,8 +68,9 @@ public class TabCommand : ViewModelCommand<TabItem>
                 });
                 break;
             case "Open_Properties":
-                if (tabViewModel.Header == "New Tab" || tabViewModel.Document == null) return;
-                Helper.OpenWindow<AdonisWindow>(tabViewModel.Header + " (Properties)", () =>
+                if (tabViewModel.Header == "New Tab" || tabViewModel.Document == null)
+                    return;
+                Helper.OpenWindow<Window>(tabViewModel.Header + " (Properties)", () =>
                 {
                     new PropertiesPopout(tabViewModel)
                     {
@@ -78,8 +79,16 @@ public class TabCommand : ViewModelCommand<TabItem>
                 });
                 break;
             case "Copy_Asset_Path":
-                Clipboard.SetText(tabViewModel.Entry.Path);
-                break;
+                {
+                    var clipboard = MainWindow.YesWeCats?.Clipboard;
+                    if (clipboard != null)
+                    {
+                        _ = clipboard.SetTextAsync(tabViewModel.Entry.Path).ContinueWith(t =>
+                            Serilog.Log.Error(t.Exception, "Failed to copy asset path to clipboard"),
+                            System.Threading.Tasks.TaskContinuationOptions.OnlyOnFaulted);
+                    }
+                    break;
+                }
         }
     }
 }

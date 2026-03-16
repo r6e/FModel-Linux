@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
 using FModel.Services;
 using FModel.Settings;
 using FModel.ViewModels;
+using FModel.Views;
 
 namespace FModel.Views.Resources.Controls.ContextMenus;
 
@@ -18,39 +18,39 @@ public partial class FolderContextMenuDictionary
         InitializeComponent();
     }
 
-    private void FolderContextMenu_OnOpened(object sender, RoutedEventArgs e)
+    private void FolderContextMenu_OnOpened(object? sender, RoutedEventArgs e)
     {
-        if (sender is not ContextMenu { PlacementTarget: FrameworkElement fe } menu)
+        if (sender is not ContextMenu { PlacementTarget: Control control } menu)
             return;
 
-        var listBox = FindAncestor<ListBox>(fe);
+        var listBox = FindAncestor<ListBox>(control);
         if (listBox != null)
         {
             menu.DataContext = listBox.DataContext;
-            menu.Tag = listBox.SelectedItems;
+            menu.Tag = listBox.SelectedItems?.Cast<object>().ToList() ?? [];
             return;
         }
 
-        var treeView = FindAncestor<TreeView>(fe);
+        var treeView = FindAncestor<TreeView>(control);
         if (treeView != null)
         {
             menu.DataContext = treeView.DataContext;
-            menu.Tag = new[] { treeView.SelectedItem }.ToList();
+            menu.Tag = treeView.SelectedItem is not null ? new[] { treeView.SelectedItem }.ToList() : [];
         }
     }
 
-    private static T FindAncestor<T>(DependencyObject current) where T : DependencyObject
+    private static T? FindAncestor<T>(Control? current) where T : class
     {
         while (current != null)
         {
             if (current is T t)
                 return t;
-            current = VisualTreeHelper.GetParent(current);
+            current = current.Parent as Control;
         }
         return null;
     }
 
-    private void OnFavoriteDirectoryClick(object sender, RoutedEventArgs e)
+    private void OnFavoriteDirectoryClick(object? sender, RoutedEventArgs e)
     {
         if (sender is not MenuItem { CommandParameter: IEnumerable<object> list } || list.FirstOrDefault() is not TreeItem folder)
             return;
@@ -60,11 +60,11 @@ public partial class FolderContextMenuDictionary
             FLogger.Text($"Successfully saved '{folder.PathAtThisPoint}' as a new favorite directory", Constants.WHITE, true));
     }
 
-    private void OnCopyDirectoryPathClick(object sender, RoutedEventArgs e)
+    private void OnCopyDirectoryPathClick(object? sender, RoutedEventArgs e)
     {
         if (sender is not MenuItem { CommandParameter: IEnumerable<object> list } || list.FirstOrDefault() is not TreeItem folder)
             return;
 
-        Clipboard.SetText(folder.PathAtThisPoint);
+        _ = MainWindow.YesWeCats?.Clipboard?.SetTextAsync(folder.PathAtThisPoint);
     }
 }
