@@ -15,24 +15,32 @@ public class AddEditDirectoryCommand : ViewModelCommand<CustomDirectoriesViewMod
 
     public override async void Execute(CustomDirectoriesViewModel contextViewModel, object parameter)
     {
-        if (parameter is not CustomDirectory customDir)
-            customDir = new CustomDirectory();
+        var sourceDir = parameter as CustomDirectory ?? new CustomDirectory();
+        var editableDir = new CustomDirectory(sourceDir.Header, sourceDir.DirectoryPath);
 
-        var index = contextViewModel.GetIndex(customDir);
-        var input = new CustomDir(customDir);
+        var index = contextViewModel.GetIndex(sourceDir);
+        var input = new CustomDir(editableDir);
         var owner = (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
 
         if (owner == null)
+        {
+            input.Closed += (_, _) => Apply(input.Result);
+            input.Show();
             return;
+        }
 
         var result = await input.ShowDialog<bool?>(owner);
+        Apply(result);
 
-        if (result is not true || string.IsNullOrEmpty(customDir.Header) && string.IsNullOrEmpty(customDir.DirectoryPath))
-            return;
+        void Apply(bool? dialogResult)
+        {
+            if (dialogResult is not true || string.IsNullOrEmpty(editableDir.Header) && string.IsNullOrEmpty(editableDir.DirectoryPath))
+                return;
 
-        if (index > 1)
-            contextViewModel.Edit(index, customDir);
-        else
-            contextViewModel.Add(customDir);
+            if (index > 1)
+                contextViewModel.Edit(index, editableDir);
+            else
+                contextViewModel.Add(editableDir);
+        }
     }
 }

@@ -1,10 +1,12 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using Avalonia.Media.Imaging;
 using FModel.Framework;
 using FModel.Settings;
 using Serilog;
 using J = Newtonsoft.Json.JsonPropertyAttribute;
+using JI = Newtonsoft.Json.JsonIgnoreAttribute;
 
 namespace FModel.ViewModels.ApiEndpoints.Models;
 
@@ -122,11 +124,20 @@ public class Commit
     [J("message")] public string Message { get; set; }
 }
 
-public class Author
+public class Author : ViewModel
 {
     [J("name")] public string Name { get; set; }
     [J("login")] public string Login { get; set; }
     [J("date")] public DateTime Date { get; set; }
     [J("avatar_url")] public string AvatarUrl { get; set; }
     [J("html_url")] public string HtmlUrl { get; set; }
+
+    private Bitmap? _avatarImage;
+
+    [JI]
+    public Bitmap? AvatarImage
+    {
+        get => _avatarImage;
+        set => SetProperty(ref _avatarImage, value);
+    }
 }

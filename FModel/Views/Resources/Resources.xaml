@@ -320,9 +320,17 @@
     <!-- Default Fluent theme styling is used; no override needed for AvaloniaEdit -->
 
     <!-- ==================== CustomRichTextBox ==================== -->
-    <!-- TODO: WPF RichTextBox/FlowDocument has no direct Avalonia equivalent.
-         This style is a stub; the log display needs to be reimplemented
-         using AvaloniaEdit TextEditor or a custom control. -->
+        <Style x:Key="CustomRichTextBox"
+           Selector="controls|CustomRichTextBox">
+        <Setter Property="Background"
+            Value="{DynamicResource SystemControlBackgroundBaseLowBrush}" />
+        <Setter Property="Foreground"
+            Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
+        <Setter Property="BorderBrush"
+            Value="{DynamicResource SystemControlForegroundBaseLowBrush}" />
+        <Setter Property="BorderThickness"
+            Value="1" />
+        </Style>
 
     <!-- ==================== Magnifier Templates ==================== -->
     <!-- TODO: Magnifier is a custom WPF control that needs port to Avalonia.
@@ -343,8 +351,7 @@
     </ControlTheme>
 
     <!-- ==================== PlayPauseToolbarButton ==================== -->
-    <!-- TODO: CSCore PlaybackState binding not available yet (deferred to audio migration).
-         Providing a simple play button theme. -->
+    <!-- Icon/tooltip are bound to AudioPlayer.PlayedFile.PlaybackState. -->
     <ControlTheme x:Key="PlayPauseToolbarButton"
                   TargetType="Button"
                   BasedOn="{StaticResource {x:Type Button}}">
@@ -354,7 +361,9 @@
                 <Canvas Width="24"
                         Height="24">
                     <Path Fill="{DynamicResource TextControlForeground}"
-                          Data="{StaticResource PlayIcon}" />
+                          Data="{Binding AudioPlayer.PlayedFile.PlaybackState,
+                          Converter={x:Static converters:PlaybackStateToPlayPauseConverter.Instance},
+                          ConverterParameter=Icon}" />
                 </Canvas>
             </Viewbox>
         </Setter>
@@ -367,7 +376,9 @@
         <Setter Property="Padding"
                 Value="2" />
         <Setter Property="ToolTip.Tip"
-                Value="Play" />
+            Value="{Binding AudioPlayer.PlayedFile.PlaybackState,
+            Converter={x:Static converters:PlaybackStateToPlayPauseConverter.Instance},
+            ConverterParameter=Tooltip}" />
     </ControlTheme>
 
     <!-- ==================== Audio Controls ==================== -->
