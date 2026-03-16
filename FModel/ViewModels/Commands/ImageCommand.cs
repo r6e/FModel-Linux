@@ -5,6 +5,7 @@ using FModel.Extensions;
 using FModel.Framework;
 using FModel.Views.Resources.Controls;
 using FModel.Views.Resources.Converters;
+using ImGuiController = FModel.Framework.ImGuiController;
 
 namespace FModel.ViewModels.Commands;
 
@@ -25,12 +26,15 @@ public class ImageCommand : ViewModelCommand<TabItem>
                 {
                     Helper.OpenWindow<Window>(tabViewModel.SelectedImage.ExportName + " (Image)", () =>
                     {
+                        var pixelWidth = tabViewModel.SelectedImage.Image.PixelSize.Width;
+                        var pixelHeight = tabViewModel.SelectedImage.Image.PixelSize.Height;
+                        var dpiScale = ImGuiController.GetDpiScale();
                         var popout = new ImagePopout
                         {
                             Title = tabViewModel.SelectedImage.ExportName + " (Image)",
-                            Width = tabViewModel.SelectedImage.Image.PixelSize.Width,
-                            Height = tabViewModel.SelectedImage.Image.PixelSize.Height,
-                            WindowState = tabViewModel.SelectedImage.Image.PixelSize.Height > 1000 ? WindowState.Maximized : WindowState.Normal,
+                            Width = pixelWidth / dpiScale,
+                            Height = pixelHeight / dpiScale,
+                            WindowState = pixelHeight > 1000 ? WindowState.Maximized : WindowState.Normal,
                         };
                         popout.ImageCtrl.Source = tabViewModel.SelectedImage.Image;
                         RenderOptions.SetBitmapInterpolationMode(popout.ImageCtrl, BoolToRenderModeConverter.Instance.Convert(tabViewModel.SelectedImage.RenderNearestNeighbor));

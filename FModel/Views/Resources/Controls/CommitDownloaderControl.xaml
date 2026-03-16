@@ -39,8 +39,8 @@
 
         <Button Grid.Column="2"
                 ToolTip.Tip="Download"
-                Height="{Binding $parent[Grid].Bounds.Height}"
-                Width="{Binding $self.Height}"
+                Width="32"
+                Height="32"
                 IsEnabled="{Binding IsCurrent, Converter={x:Static converters:InvertBooleanConverter.Instance}}"
                 Click="OnDownload">
             <Viewbox Width="16"

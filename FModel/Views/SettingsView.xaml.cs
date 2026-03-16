@@ -40,7 +40,7 @@ public partial class SettingsView : Window
     {
         var restart = _applicationView.SettingsView.Save(out var whatShouldIDo);
         if (restart)
-            await _applicationView.RestartWithWarningAsync();
+            await _applicationView.RestartWithWarningAsync(this);
 
         Close();
 

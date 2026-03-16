@@ -1,7 +1,7 @@
 using Avalonia.Controls;
+using FModel.Extensions;
 using FModel.Framework;
 using FModel.Services;
-using FModel.Views;
 using FModel.Views.Resources.Controls;
 
 namespace FModel.ViewModels.Commands;
@@ -79,16 +79,8 @@ public class TabCommand : ViewModelCommand<TabItem>
                 });
                 break;
             case "Copy_Asset_Path":
-                {
-                    var clipboard = MainWindow.YesWeCats?.Clipboard;
-                    if (clipboard != null)
-                    {
-                        _ = clipboard.SetTextAsync(tabViewModel.Entry.Path).ContinueWith(t =>
-                            Serilog.Log.Error(t.Exception, "Failed to copy asset path to clipboard"),
-                            System.Threading.Tasks.TaskContinuationOptions.OnlyOnFaulted);
-                    }
-                    break;
-                }
+                ClipboardExtensions.SetText(tabViewModel.Entry.Path);
+                break;
         }
     }
 }

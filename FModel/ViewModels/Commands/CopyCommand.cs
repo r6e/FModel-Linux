@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CUE4Parse.FileProvider.Objects;
+using FModel.Extensions;
 using FModel.Framework;
-using FModel.Views;
 
 namespace FModel.ViewModels.Commands;
 
@@ -56,12 +56,6 @@ public class CopyCommand : ViewModelCommand<ApplicationViewModel>
         }
 
         var text = sb.ToString().TrimEnd();
-        var clipboard = MainWindow.YesWeCats?.Clipboard;
-        if (clipboard != null)
-        {
-            _ = clipboard.SetTextAsync(text).ContinueWith(t =>
-                Serilog.Log.Error(t.Exception, "Failed to copy text to clipboard"),
-                System.Threading.Tasks.TaskContinuationOptions.OnlyOnFaulted);
-        }
+        ClipboardExtensions.SetText(text);
     }
 }

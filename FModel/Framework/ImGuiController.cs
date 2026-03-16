@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using FModel.Settings;
 using ImGuiNET;
@@ -65,16 +66,15 @@ public class ImGuiController : IDisposable
             io.NativePtr->IniFilename = (byte*) iniFileNamePtr;
         }
 
-        // If not found, Fallback to default ImGui Font
-        var normalPath = @"C:\Windows\Fonts\segoeui.ttf";
-        var boldPath = @"C:\Windows\Fonts\segoeuib.ttf";
-        var semiBoldPath = @"C:\Windows\Fonts\seguisb.ttf";
+        // Platform-specific font probing: prefer Segoe UI on Windows,
+        // fall back to common Linux fonts (DejaVu Sans, Liberation Sans).
+        var (normalPath, boldPath, semiBoldPath) = ResolveFontPaths();
 
-        if (File.Exists(normalPath))
+        if (normalPath != null && File.Exists(normalPath))
             FontNormal = io.Fonts.AddFontFromFileTTF(normalPath, 16 * DpiScale);
-        if (File.Exists(boldPath))
+        if (boldPath != null && File.Exists(boldPath))
             FontBold = io.Fonts.AddFontFromFileTTF(boldPath, 16 * DpiScale);
-        if (File.Exists(semiBoldPath))
+        if (semiBoldPath != null && File.Exists(semiBoldPath))
             FontSemiBold = io.Fonts.AddFontFromFileTTF(semiBoldPath, 16 * DpiScale);
 
         io.Fonts.AddFontDefault();
@@ -567,6 +567,77 @@ void main()
             Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop
             ? desktop.MainWindow?.Screens?.Primary : null;
         return screen is not null ? (float) screen.PixelDensity : 1.0f;
+    }
+
+    /// <summary>
+    /// Resolves platform-appropriate font file paths.
+    /// Returns (normal, bold, semiBold) — any element may be null if not found.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static (string? normal, string? bold, string? semiBold) ResolveFontPaths()
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return (
+                @"C:\Windows\Fonts\segoeui.ttf",
+                @"C:\Windows\Fonts\segoeuib.ttf",
+                @"C:\Windows\Fonts\seguisb.ttf"
+            );
+        }
+
+        // Linux / macOS: probe common directories for DejaVu Sans, Liberation Sans, or Noto Sans.
+        string[] searchDirs =
+        [
+            "/usr/share/fonts",
+            "/usr/local/share/fonts",
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".local/share/fonts")
+        ];
+
+        // Preferred font families in order. Each entry: (normal, bold, semibold-or-bold-fallback).
+        (string normal, string bold, string semiBold)[] fontFamilies =
+        [
+            ("DejaVuSans.ttf", "DejaVuSans-Bold.ttf", "DejaVuSans-Bold.ttf"),
+            ("LiberationSans-Regular.ttf", "LiberationSans-Bold.ttf", "LiberationSans-Bold.ttf"),
+            ("NotoSans-Regular.ttf", "NotoSans-Bold.ttf", "NotoSans-SemiBold.ttf"),
+        ];
+
+        foreach (var family in fontFamilies)
+        {
+            foreach (var dir in searchDirs)
+            {
+                if (!Directory.Exists(dir))
+                    continue;
+
+                var normalPath = FindFont(dir, family.normal);
+                if (normalPath == null)
+                    continue;
+
+                var boldPath = FindFont(dir, family.bold);
+                var semiBoldPath = FindFont(dir, family.semiBold) ?? boldPath;
+                return (normalPath, boldPath, semiBoldPath);
+            }
+        }
+
+        return (null, null, null);
+    }
+
+    private static string? FindFont(string directory, string fileName)
+    {
+        // Direct match in the directory.
+        var path = Path.Combine(directory, fileName);
+        if (File.Exists(path))
+            return path;
+
+        // Search subdirectories (fonts are often in type-specific subfolders).
+        try
+        {
+            var files = Directory.GetFiles(directory, fileName, SearchOption.AllDirectories);
+            return files.Length > 0 ? files[0] : null;
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     public static ImGuiKey TranslateKey(Keys key)

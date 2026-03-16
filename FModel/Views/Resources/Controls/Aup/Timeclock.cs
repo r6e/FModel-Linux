@@ -187,6 +187,10 @@ public sealed class Timeclock : UserControl
         });
     }
 
+    // NOTE: This handler may be called from a background (audio) thread.
+    // CalculateTime() reads Source.PlayedFile.Position/Duration before marshalling
+    // to the UI thread. This is safe because ISource properties are immutable value
+    // types (TimeSpan) and the audio engine guarantees coherent reads.
     private void OnSourcePropertyChangedEvent(object? sender, SourcePropertyChangedEventArgs e)
     {
         if (e.Property != ESourceProperty.Position)

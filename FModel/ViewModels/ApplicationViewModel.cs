@@ -193,7 +193,9 @@ public class ApplicationViewModel : ViewModel
         return null;
     }
 
-    public async Task RestartWithWarningAsync()
+    public Task RestartWithWarningAsync() => RestartWithWarningAsync(null);
+
+    public async Task RestartWithWarningAsync(Window? owner)
     {
         Log.Information("FModel will restart to apply your changes.");
 
@@ -228,7 +230,7 @@ public class ApplicationViewModel : ViewModel
 
         okButton.Click += (_, _) => dialog.Close();
 
-        var owner = (Avalonia.Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
+        owner ??= (Avalonia.Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
         if (owner != null)
         {
             await dialog.ShowDialog(owner);

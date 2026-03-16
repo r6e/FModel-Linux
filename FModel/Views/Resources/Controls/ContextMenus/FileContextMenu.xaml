@@ -1,10 +1,11 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:settings="clr-namespace:FModel.Settings"
-                    xmlns:converters="clr-namespace:FModel.Views.Resources.Converters">
+                    xmlns:converters="clr-namespace:FModel.Views.Resources.Converters"
+                    x:Class="FModel.Views.Resources.Controls.ContextMenus.FileContextMenuDictionary">
     <ContextMenu x:Key="FileContextMenu"
                  x:Shared="False"
-                 DataContext="{Binding $parent[Window].DataContext}">
+                 Opened="FileContextMenu_OnOpened">
         <MenuItem Header="Extract in New Tab"
                   Command="{Binding RightClickMenuCommand}">
             <MenuItem.CommandParameter>
