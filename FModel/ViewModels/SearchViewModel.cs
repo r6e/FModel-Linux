@@ -147,7 +147,7 @@ public class SearchViewModel : ViewModel
             var o = RegexOptions.None;
             if (!HasMatchCaseEnabled)
                 o |= RegexOptions.IgnoreCase;
-            _cachedFilterRegex = new Regex(FilterText, o);
+            _cachedFilterRegex = new Regex(FilterText, o, TimeSpan.FromSeconds(1));
             _cachedFilterText = FilterText;
             _cachedMatchCase = HasMatchCaseEnabled;
         }

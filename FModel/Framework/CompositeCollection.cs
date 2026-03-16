@@ -51,9 +51,10 @@ public class CompositeCollection : IEnumerable, INotifyCollectionChanged, IDispo
             {
                 if (source is ICollection c)
                     count += c.Count;
-                else
-                    foreach (var _ in source)
-                        count++;
+                else if (source is IReadOnlyCollection<object> rc)
+                    count += rc.Count;
+                // Non-ICollection sources are skipped for Count;
+                // all current callers pass ICollection-backed sources.
             }
             return count;
         }

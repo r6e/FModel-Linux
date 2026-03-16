@@ -88,8 +88,7 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         BorderBrush="#3fb950"
-                        Background="#0f3fb950"
-                        IsVisible="{Binding Asset.IsLatest, FallbackValue=False}">
+                        Background="#0f3fb950">
                     <TextBlock FontSize="9"
                                Text="Latest"
                                Foreground="#3fb950" />

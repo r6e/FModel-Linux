@@ -9,7 +9,7 @@
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Column="0"
-              ZIndex="1"
+              Panel.ZIndex="1"
               HorizontalAlignment="Left"
               Margin="5 2 0 0">
             <Viewbox Width="16"

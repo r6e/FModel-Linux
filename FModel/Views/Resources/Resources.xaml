@@ -57,7 +57,8 @@
                                Text="{TemplateBinding Tag}"
                                FontWeight="SemiBold"
                                FontSize="11"
-                               Margin="10 0" />
+                               Margin="10 0"
+                               IsVisible="{TemplateBinding Tag, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
                     <Separator Grid.Column="2"
                                VerticalAlignment="Center"
                                Margin="0" />
@@ -69,7 +70,7 @@
     <!-- ==================== CustomVerticalSeparator ==================== -->
     <ControlTheme x:Key="CustomVerticalSeparator"
                   TargetType="Separator"
-                  BasedOn="{StaticResource {x:Type Separator}}">
+                  BasedOn="{StaticResource CustomSeparator}">
         <Setter Property="Margin"
                 Value="8 0" />
         <Setter Property="RenderTransform">
@@ -413,7 +414,7 @@
 
     <!-- ==================== ShadowEffect ==================== -->
     <!-- TODO: Avalonia uses BoxShadows on Border, not DropShadowEffect.
-         This key is preserved but empty for compatibility. -->
+         The WPF DropShadowEffect resource was removed; no consumers reference it. -->
 
     <!-- ==================== ModernToggleButtonStyle ==================== -->
     <ControlTheme x:Key="ModernToggleButtonStyle"

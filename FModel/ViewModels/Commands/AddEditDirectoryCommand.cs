@@ -22,9 +22,10 @@ public class AddEditDirectoryCommand : ViewModelCommand<CustomDirectoriesViewMod
         var input = new CustomDir(customDir);
         var owner = (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
 
-        bool? result = null;
-        if (owner != null)
-            result = await input.ShowDialog<bool?>(owner);
+        if (owner == null)
+            return;
+
+        var result = await input.ShowDialog<bool?>(owner);
 
         if (result is not true || string.IsNullOrEmpty(customDir.Header) && string.IsNullOrEmpty(customDir.DirectoryPath))
             return;
