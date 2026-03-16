@@ -295,9 +295,15 @@ public class BaseIcon : UCreator
             if (flag.Equals("Cosmetics.UserFacingFlags.HasUpgradeQuests", StringComparison.OrdinalIgnoreCase))
             {
                 if (Object.ExportType.Equals("AthenaPetCarrierItemDefinition", StringComparison.OrdinalIgnoreCase))
-                    UserFacingFlags[flag] = SKBitmap.Decode(AssetLoader.Open(new Uri("avares://FModel/Resources/T-Icon-Pets-64.png")));
+                {
+                    using var stream = AssetLoader.Open(new Uri("avares://FModel/Resources/T-Icon-Pets-64.png"));
+                    UserFacingFlags[flag] = SKBitmap.Decode(stream);
+                }
                 else
-                    UserFacingFlags[flag] = SKBitmap.Decode(AssetLoader.Open(new Uri("avares://FModel/Resources/T-Icon-Quests-64.png")));
+                {
+                    using var stream = AssetLoader.Open(new Uri("avares://FModel/Resources/T-Icon-Quests-64.png"));
+                    UserFacingFlags[flag] = SKBitmap.Decode(stream);
+                }
             }
             else
             {

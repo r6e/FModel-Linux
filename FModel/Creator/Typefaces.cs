@@ -65,7 +65,8 @@ public class Typefaces
         _viewModel = viewModel;
         var language = UserSettings.Default.AssetLanguage;
 
-        Default = SKTypeface.FromStream(AssetLoader.Open(_BURBANK_BIG_CONDENSED_BOLD));
+        using var fontStream = AssetLoader.Open(_BURBANK_BIG_CONDENSED_BOLD);
+        Default = SKTypeface.FromStream(fontStream);
 
         switch (viewModel.Provider.ProjectName.ToUpperInvariant())
         {

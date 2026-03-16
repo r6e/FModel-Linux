@@ -71,7 +71,10 @@ public class BaseTandem : BaseIcon
 
     private new void DrawBackground(SKCanvas c)
     {
-        c.DrawBitmap(SKBitmap.Decode(AssetLoader.Open(new Uri("avares://FModel/Resources/npcleftside.png"))).Resize(Width, Height), 0, 0, new SKPaint { IsAntialias = false, FilterQuality = SKFilterQuality.None, ImageFilter = SKImageFilter.CreateBlur(0, 25) });
+        using var bgStream = AssetLoader.Open(new Uri("avares://FModel/Resources/npcleftside.png"));
+        using var decoded = SKBitmap.Decode(bgStream);
+        using var resized = decoded.Resize(Width, Height);
+        c.DrawBitmap(resized, 0, 0, new SKPaint { IsAntialias = false, FilterQuality = SKFilterQuality.None, ImageFilter = SKImageFilter.CreateBlur(0, 25) });
 
         using var rect1 = new SKPath { FillType = SKPathFillType.EvenOdd };
         _panelPaint.Color = SKColor.Parse("#002A8C");

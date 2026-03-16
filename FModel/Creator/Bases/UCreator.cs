@@ -27,7 +27,8 @@ public abstract class UCreator
 
     protected UCreator(UObject uObject, EIconStyle style)
     {
-        DefaultPreview = SKBitmap.Decode(AssetLoader.Open(new Uri("avares://FModel/Resources/T_Placeholder_Item_Image.png")));
+        using var placeholderStream = AssetLoader.Open(new Uri("avares://FModel/Resources/T_Placeholder_Item_Image.png"));
+        DefaultPreview = SKBitmap.Decode(placeholderStream);
         Background = new[] { SKColor.Parse("5BFD00"), SKColor.Parse("003700") };
         Border = new[] { SKColor.Parse("1E8500"), SKColor.Parse("5BFD00") };
         DisplayName = string.Empty;
