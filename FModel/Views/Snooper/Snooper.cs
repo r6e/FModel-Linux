@@ -49,14 +49,16 @@ public class Snooper : GameWindow
             Renderer.Save();
         }
 
+        // GLFW.SetWindowShouldClose is thread-safe; IsVisible (glfwShowWindow/
+        // glfwHideWindow) must be called from the GLFW main thread (UI thread).
         GLFW.SetWindowShouldClose(WindowPtr, value); // start / stop game loop
-        IsVisible = !value;
+        Dispatcher.UIThread.Post(() => IsVisible = !value);
     }
 
     public unsafe void WindowShouldFreeze(bool value)
     {
         GLFW.SetWindowShouldClose(WindowPtr, value); // start / stop game loop
-        IsVisible = true;
+        Dispatcher.UIThread.Post(() => IsVisible = true);
     }
 
     public override void Run()
