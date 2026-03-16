@@ -76,7 +76,7 @@ public class CustomDirectoriesViewModel : ViewModel
         yield return new MenuItem
         {
             Header = "Add Directory",
-            Icon = new Image { Source = new Bitmap(AssetLoader.Open(new Uri("avares://FModel/Resources/add_directory.png"))) },
+            Icon = new Image { Source = LoadIcon("add_directory.png") },
             HorizontalContentAlignment = HorizontalAlignment.Left,
             VerticalContentAlignment = VerticalAlignment.Center,
             Command = AddEditDirectoryCommand
@@ -99,12 +99,18 @@ public class CustomDirectoriesViewModel : ViewModel
         }
     }
 
+    private static Bitmap LoadIcon(string filename)
+    {
+        using var stream = AssetLoader.Open(new Uri($"avares://FModel/Resources/{filename}"));
+        return new Bitmap(stream);
+    }
+
     private IEnumerable<MenuItem> EnumerateCommands(CustomDirectory dir)
     {
         yield return new MenuItem
         {
             Header = "Go To",
-            Icon = new Image { Source = new Bitmap(AssetLoader.Open(new Uri("avares://FModel/Resources/go_to_directory.png"))) },
+            Icon = new Image { Source = LoadIcon("go_to_directory.png") },
             HorizontalContentAlignment = HorizontalAlignment.Left,
             VerticalContentAlignment = VerticalAlignment.Center,
             Command = GoToCommand,
@@ -113,7 +119,7 @@ public class CustomDirectoriesViewModel : ViewModel
         yield return new MenuItem
         {
             Header = "Edit Directory",
-            Icon = new Image { Source = new Bitmap(AssetLoader.Open(new Uri("avares://FModel/Resources/edit.png"))) },
+            Icon = new Image { Source = LoadIcon("edit.png") },
             HorizontalContentAlignment = HorizontalAlignment.Left,
             VerticalContentAlignment = VerticalAlignment.Center,
             Command = AddEditDirectoryCommand,
@@ -123,7 +129,7 @@ public class CustomDirectoriesViewModel : ViewModel
         {
             Header = "Delete Directory",
             StaysOpenOnClick = true,
-            Icon = new Image { Source = new Bitmap(AssetLoader.Open(new Uri("avares://FModel/Resources/delete.png"))) },
+            Icon = new Image { Source = LoadIcon("delete.png") },
             HorizontalContentAlignment = HorizontalAlignment.Left,
             VerticalContentAlignment = VerticalAlignment.Center,
             Command = DeleteDirectoryCommand,

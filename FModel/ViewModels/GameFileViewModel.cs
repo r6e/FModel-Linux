@@ -392,7 +392,7 @@ public class GameFileViewModel(GameFile asset) : ViewModel
             case "bmp":
             case "svg":
                 {
-                    Resolved |= ~EResolveCompute.Preview;
+                    Resolved &= ~EResolveCompute.Preview;
                     AssetCategory = EAssetCategory.Texture;
                     AssetActions = EBulkType.Textures;
                     if (!resolve.HasFlag(EResolveCompute.Preview))
@@ -452,7 +452,6 @@ public class GameFileViewModel(GameFile asset) : ViewModel
     private void SetPreviewImage(SKData data)
     {
         using var ms = new MemoryStream(data.ToArray());
-        ms.Position = 0;
 
         // Bitmap reads the stream to an internal buffer during construction;
         // it is safe to construct on a background thread and assign on the UI thread.
