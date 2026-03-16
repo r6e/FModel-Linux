@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media.Imaging;
+using Avalonia.Controls;
+using Avalonia.Layout;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using FModel.Framework;
 using FModel.Settings;
 using FModel.ViewModels.Commands;
@@ -43,7 +44,8 @@ public class CustomDirectoriesViewModel : ViewModel
 
     public void Edit(int index, CustomDirectory newDir)
     {
-        if (_directories.ElementAt(index) is not MenuItem dir) return;
+        if (_directories.ElementAt(index) is not MenuItem dir)
+            return;
 
         dir.Header = newDir.Header;
         dir.Tag = newDir.DirectoryPath;
@@ -61,7 +63,8 @@ public class CustomDirectoriesViewModel : ViewModel
         var directories = new List<CustomDirectory>();
         for (var i = 2; i < _directories.Count; i++)
         {
-            if (_directories[i] is not MenuItem m) continue;
+            if (_directories[i] is not MenuItem m)
+                continue;
             directories.Add(new CustomDirectory(m.Header.ToString(), m.Tag.ToString()));
         }
 
@@ -73,7 +76,7 @@ public class CustomDirectoriesViewModel : ViewModel
         yield return new MenuItem
         {
             Header = "Add Directory",
-            Icon = new Image { Source = new BitmapImage(new Uri("/FModel;component/Resources/add_directory.png", UriKind.Relative)) },
+            Icon = new Image { Source = new Bitmap(AssetLoader.Open(new Uri("avares://FModel/Resources/add_directory.png"))) },
             HorizontalContentAlignment = HorizontalAlignment.Left,
             VerticalContentAlignment = VerticalAlignment.Center,
             Command = AddEditDirectoryCommand
@@ -101,7 +104,7 @@ public class CustomDirectoriesViewModel : ViewModel
         yield return new MenuItem
         {
             Header = "Go To",
-            Icon = new Image { Source = new BitmapImage(new Uri("/FModel;component/Resources/go_to_directory.png", UriKind.Relative)) },
+            Icon = new Image { Source = new Bitmap(AssetLoader.Open(new Uri("avares://FModel/Resources/go_to_directory.png"))) },
             HorizontalContentAlignment = HorizontalAlignment.Left,
             VerticalContentAlignment = VerticalAlignment.Center,
             Command = GoToCommand,
@@ -110,7 +113,7 @@ public class CustomDirectoriesViewModel : ViewModel
         yield return new MenuItem
         {
             Header = "Edit Directory",
-            Icon = new Image { Source = new BitmapImage(new Uri("/FModel;component/Resources/edit.png", UriKind.Relative)) },
+            Icon = new Image { Source = new Bitmap(AssetLoader.Open(new Uri("avares://FModel/Resources/edit.png"))) },
             HorizontalContentAlignment = HorizontalAlignment.Left,
             VerticalContentAlignment = VerticalAlignment.Center,
             Command = AddEditDirectoryCommand,
@@ -120,7 +123,7 @@ public class CustomDirectoriesViewModel : ViewModel
         {
             Header = "Delete Directory",
             StaysOpenOnClick = true,
-            Icon = new Image { Source = new BitmapImage(new Uri("/FModel;component/Resources/delete.png", UriKind.Relative)) },
+            Icon = new Image { Source = new Bitmap(AssetLoader.Open(new Uri("avares://FModel/Resources/delete.png"))) },
             HorizontalContentAlignment = HorizontalAlignment.Left,
             VerticalContentAlignment = VerticalAlignment.Center,
             Command = DeleteDirectoryCommand,
