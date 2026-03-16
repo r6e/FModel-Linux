@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.VisualTree;
 using FModel.Services;
 using FModel.Settings;
 using FModel.ViewModels;
@@ -43,13 +44,13 @@ public partial class FolderContextMenuDictionary
 
     private static T? FindAncestor<T>(Control? current) where T : class
     {
-        while (current != null)
-        {
-            if (current is T t)
-                return t;
-            current = current.Parent as Control;
-        }
-        return null;
+        if (current is null)
+            return null;
+
+        if (current is T self)
+            return self;
+
+        return current.GetVisualAncestors().OfType<T>().FirstOrDefault();
     }
 
     private void OnFavoriteDirectoryClick(object? sender, RoutedEventArgs e)

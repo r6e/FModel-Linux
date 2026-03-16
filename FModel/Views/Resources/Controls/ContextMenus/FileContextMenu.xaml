@@ -19,7 +19,7 @@
                          Height="16">
                     <Canvas Width="24"
                             Height="24">
-                        <Path Fill="#DAE5F2"
+                        <Path Fill="{DynamicResource SystemColors.ControlTextBrushKey}"
                               Data="{StaticResource ExtractIcon}" />
                     </Canvas>
                 </Viewbox>
@@ -51,7 +51,7 @@
                          Height="16">
                     <Canvas Width="24"
                             Height="24">
-                        <Path Fill="#DAE5F2"
+                        <Path Fill="{DynamicResource SystemColors.ControlTextBrushKey}"
                               Data="{StaticResource InfoIcon}" />
                     </Canvas>
                 </Viewbox>
@@ -84,7 +84,7 @@
                          Height="16">
                     <Canvas Width="24"
                             Height="24">
-                        <Path Fill="#DAE5F2"
+                        <Path Fill="{DynamicResource SystemColors.ControlTextBrushKey}"
                               Data="{StaticResource SearchIcon}" />
                     </Canvas>
                 </Viewbox>
@@ -117,7 +117,7 @@
                          Height="16">
                     <Canvas Width="24"
                             Height="24">
-                        <Path Fill="#DAE5F2"
+                        <Path Fill="{DynamicResource SystemColors.ControlTextBrushKey}"
                               Data="{StaticResource CppIcon}" />
                     </Canvas>
                 </Viewbox>
@@ -144,7 +144,7 @@
                          Height="16">
                     <Canvas Width="24"
                             Height="24">
-                        <Path Fill="#DAE5F2"
+                        <Path Fill="{DynamicResource SystemColors.ControlTextBrushKey}"
                               Data="{StaticResource ExportIcon}" />
                     </Canvas>
                 </Viewbox>
@@ -164,7 +164,7 @@
                          Height="16">
                     <Canvas Width="24"
                             Height="24">
-                        <Path Fill="#DAE5F2"
+                        <Path Fill="{DynamicResource SystemColors.ControlTextBrushKey}"
                               Data="{StaticResource SaveIcon}" />
                     </Canvas>
                 </Viewbox>
@@ -196,7 +196,7 @@
                          Height="16">
                     <Canvas Width="24"
                             Height="24">
-                        <Path Fill="#DAE5F2"
+                        <Path Fill="{DynamicResource SystemColors.ControlTextBrushKey}"
                               Data="{StaticResource TextureIcon}" />
                     </Canvas>
                 </Viewbox>
@@ -228,7 +228,7 @@
                          Height="16">
                     <Canvas Width="24"
                             Height="24">
-                        <Path Fill="#DAE5F2"
+                        <Path Fill="{DynamicResource SystemColors.ControlTextBrushKey}"
                               Data="{StaticResource ModelIcon}" />
                     </Canvas>
                 </Viewbox>
@@ -260,7 +260,7 @@
                          Height="16">
                     <Canvas Width="24"
                             Height="24">
-                        <Path Fill="#DAE5F2"
+                        <Path Fill="{DynamicResource SystemColors.ControlTextBrushKey}"
                               Data="{StaticResource AnimationIcon}" />
                     </Canvas>
                 </Viewbox>
@@ -292,7 +292,7 @@
                          Height="16">
                     <Canvas Width="24"
                             Height="24">
-                        <Path Fill="#DAE5F2"
+                        <Path Fill="{DynamicResource SystemColors.ControlTextBrushKey}"
                               Data="{StaticResource AudioIcon}" />
                     </Canvas>
                 </Viewbox>
@@ -305,7 +305,7 @@
                          Height="16">
                     <Canvas Width="24"
                             Height="24">
-                        <Path Fill="#DAE5F2"
+                        <Path Fill="{DynamicResource SystemColors.ControlTextBrushKey}"
                               Data="{StaticResource CopyIcon}" />
                     </Canvas>
                 </Viewbox>

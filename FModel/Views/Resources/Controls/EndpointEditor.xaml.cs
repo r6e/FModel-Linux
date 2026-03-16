@@ -82,7 +82,7 @@ public partial class EndpointEditor : Window
         TargetResponse.Document.Text = JsonConvert.SerializeObject(response, Formatting.Indented);
     }
 
-    private void OnTextChanged(object? sender, EventArgs e)
+    private void OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         if (!_isInitialized ||
             sender is not TextBox ||

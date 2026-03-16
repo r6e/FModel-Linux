@@ -1,4 +1,3 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using FModel.ViewModels;
@@ -25,23 +24,15 @@ public class TypeDataTemplateSelector : IDataTemplate
     {
         var control = new FolderButton2 { DataContext = folder };
 
-        // Create a fresh ContextMenu per item — Application.TryGetResource bypasses
-        // x:Shared="False", so we must instantiate a new one each time.
-        if (Application.Current?.TryFindResource("FolderContextMenu", out var _) == true)
+        // Resolve context menu from visual-tree resources so x:Shared="False"
+        // returns a fresh instance per folder control.
+        control.AttachedToVisualTree += (_, _) =>
         {
-            // The ContextMenu will be resolved from the resource tree at open-time
-            // by the FolderContextMenu_OnOpened handler. Assigning a shared instance
-            // would cause DataContext contamination across folders.
-            control.AttachedToVisualTree += (_, _) =>
+            if (control.TryFindResource("FolderContextMenu", out var res) && res is ContextMenu menu)
             {
-                if (control.TryFindResource("FolderContextMenu", out var res) && res is ContextMenu menu)
-                {
-                    // Clone by re-resolving; Avalonia ResourceDictionary with x:Shared="False"
-                    // returns a new instance when resolved from the visual tree.
-                    control.ContextMenu = menu;
-                }
-            };
-        }
+                control.ContextMenu = menu;
+            }
+        };
 
         return control;
     }

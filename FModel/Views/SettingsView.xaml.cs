@@ -170,7 +170,14 @@ public partial class SettingsView : Window
             if (treeItem.Tag is string tagKey &&
                 this.TryFindResource(tagKey, out var resource) &&
                 resource is Avalonia.Controls.Templates.IDataTemplate dt)
+            {
                 SettingsContentControl.ContentTemplate = dt;
+            }
+            else
+            {
+                // Clear stale template if a tag key is missing or invalid.
+                SettingsContentControl.ContentTemplate = null;
+            }
 
             break;
         }
@@ -178,54 +185,44 @@ public partial class SettingsView : Window
 
     private async void OpenCustomVersions(object sender, RoutedEventArgs e)
     {
-        // TODO(P2-016): DictionaryEditor not yet migrated to Avalonia.
-        // Once migrated, replace body with:
-        //   var editor = new DictionaryEditor(_applicationView.SettingsView.SelectedCustomVersions, "Versioning Configuration (Custom Versions)");
-        //   if (await editor.ShowDialog<bool?>(this) != true) return;
-        //   _applicationView.SettingsView.SelectedCustomVersions = editor.CustomVersions;
-        await Task.CompletedTask;
+        var editor = new DictionaryEditor(_applicationView.SettingsView.SelectedCustomVersions, "Versioning Configuration (Custom Versions)");
+        if (await editor.ShowDialog<bool?>(this) != true)
+            return;
+
+        if (editor.CustomVersions != null)
+            _applicationView.SettingsView.SelectedCustomVersions = editor.CustomVersions;
     }
 
     private async void OpenOptions(object sender, RoutedEventArgs e)
     {
-        // TODO(P2-016): DictionaryEditor not yet migrated to Avalonia.
-        // Once migrated, replace body with:
-        //   var editor = new DictionaryEditor(_applicationView.SettingsView.SelectedOptions, "Versioning Configuration (Options)");
-        //   if (await editor.ShowDialog<bool?>(this) != true) return;
-        //   _applicationView.SettingsView.SelectedOptions = editor.Options;
-        await Task.CompletedTask;
+        var editor = new DictionaryEditor(_applicationView.SettingsView.SelectedOptions, "Versioning Configuration (Options)");
+        if (await editor.ShowDialog<bool?>(this) != true)
+            return;
+
+        if (editor.Options != null)
+            _applicationView.SettingsView.SelectedOptions = editor.Options;
     }
 
     private async void OpenMapStructTypes(object sender, RoutedEventArgs e)
     {
-        // TODO(P2-016): DictionaryEditor not yet migrated to Avalonia.
-        // Once migrated, replace body with:
-        //   var editor = new DictionaryEditor(_applicationView.SettingsView.SelectedMapStructTypes, "Versioning Configuration (MapStructTypes)");
-        //   if (await editor.ShowDialog<bool?>(this) != true) return;
-        //   _applicationView.SettingsView.SelectedMapStructTypes = editor.MapStructTypes;
-        await Task.CompletedTask;
+        var editor = new DictionaryEditor(_applicationView.SettingsView.SelectedMapStructTypes, "Versioning Configuration (MapStructTypes)");
+        if (await editor.ShowDialog<bool?>(this) != true)
+            return;
+
+        if (editor.MapStructTypes != null)
+            _applicationView.SettingsView.SelectedMapStructTypes = editor.MapStructTypes;
     }
 
     private async void OpenAesEndpoint(object sender, RoutedEventArgs e)
     {
-        // TODO(P2-016): EndpointEditor not yet migrated to Avalonia.
-        // Note: the original WPF code used ShowDialog() (modal). Preserve modal behaviour
-        // in the migration — use ShowDialog(this), not Show().
-        // Once migrated, replace body with:
-        //   var editor = new EndpointEditor(_applicationView.SettingsView.AesEndpoint, "Endpoint Configuration (AES)", EEndpointType.Aes);
-        //   await editor.ShowDialog(this);
-        await Task.CompletedTask;
+        var editor = new EndpointEditor(_applicationView.SettingsView.AesEndpoint, "Endpoint Configuration (AES)", EEndpointType.Aes);
+        await editor.ShowDialog<bool?>(this);
     }
 
     private async void OpenMappingEndpoint(object sender, RoutedEventArgs e)
     {
-        // TODO(P2-016): EndpointEditor not yet migrated to Avalonia.
-        // Note: the original WPF code used ShowDialog() (modal). Preserve modal behaviour
-        // in the migration — use ShowDialog(this), not Show().
-        // Once migrated, replace body with:
-        //   var editor = new EndpointEditor(_applicationView.SettingsView.MappingEndpoint, "Endpoint Configuration (Mapping)", EEndpointType.Mapping);
-        //   await editor.ShowDialog(this);
-        await Task.CompletedTask;
+        var editor = new EndpointEditor(_applicationView.SettingsView.MappingEndpoint, "Endpoint Configuration (Mapping)", EEndpointType.Mapping);
+        await editor.ShowDialog<bool?>(this);
     }
 
     private void CriwareKeyBox_Loaded(object sender, RoutedEventArgs e)

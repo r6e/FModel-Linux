@@ -197,6 +197,12 @@ public class ApplicationViewModel : ViewModel
     {
         Log.Information("FModel will restart to apply your changes.");
 
+        var okButton = new Avalonia.Controls.Button
+        {
+            Content = "OK",
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right
+        };
+
         var dialog = new Window
         {
             Title = "Uh oh, a restart is needed",
@@ -215,17 +221,12 @@ public class ApplicationViewModel : ViewModel
                         Text = "It looks like you just changed something.\nFModel will restart to apply your changes.",
                         TextWrapping = Avalonia.Media.TextWrapping.Wrap
                     },
-                    new Avalonia.Controls.Button
-                    {
-                        Content = "OK",
-                        HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right
-                    }
+                    okButton
                 }
             }
         };
 
-        var okBtn = ((Avalonia.Controls.StackPanel) dialog.Content).Children[1] as Avalonia.Controls.Button;
-        okBtn!.Click += (_, _) => dialog.Close();
+        okButton.Click += (_, _) => dialog.Close();
 
         var owner = (Avalonia.Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
         if (owner != null)

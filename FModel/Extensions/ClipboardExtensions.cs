@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using Avalonia.Input;
+using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using FModel.Views;
 using Serilog;
@@ -22,7 +24,10 @@ public static class ClipboardExtensions
                     return;
 
                 var dataObject = new DataObject();
+                // Keep both MIME and generic bitmap formats for better cross-app paste compatibility.
                 dataObject.Set("image/png", pngBytes);
+                dataObject.Set("PNG", pngBytes);
+                dataObject.Set(DataFormats.Bitmap, new Bitmap(new MemoryStream(pngBytes)));
                 await clipboard.SetDataObjectAsync(dataObject);
             }
             catch (Exception ex)
