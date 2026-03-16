@@ -13,6 +13,7 @@ using FModel.Settings;
 using FModel.ViewModels.ApiEndpoints.Models;
 using FModel.ViewModels.Commands;
 using FModel.Views.Resources.Converters;
+using Serilog;
 
 namespace FModel.ViewModels;
 
@@ -37,19 +38,19 @@ public partial class UpdateViewModel : ViewModel
 
     public RangeObservableCollection<GitHubCommit> Commits { get; }
     public RangeObservableCollection<CommitGroup> CommitGroups { get; }
-    public DataGridCollectionView CommitsView { get; }
     public bool HasNoCommits => CommitGroups.Count == 0;
+
+    private bool _suppressRegroup;
 
     public UpdateViewModel()
     {
         Commits = [];
         CommitGroups = [];
-        CommitsView = new DataGridCollectionView(Commits)
+        Commits.CollectionChanged += (_, _) =>
         {
-            // Grouping is rendered through CommitGroups because ItemsControl doesn't honor
-            // DataGridCollectionView.GroupDescriptions like WPF did for ListCollectionView.
+            if (!_suppressRegroup)
+                RebuildCommitGroups();
         };
-        Commits.CollectionChanged += (_, _) => RebuildCommitGroups();
 
         if (UserSettings.Default.NextUpdateCheck < DateTime.Now)
             RemindMeCommand.Execute(this, null);
@@ -66,8 +67,14 @@ public partial class UpdateViewModel : ViewModel
 
         try
         {
-            _ = LoadCoAuthors();
-            _ = LoadAssets();
+            _ = LoadCoAuthors().ContinueWith(t =>
+            {
+                if (t.IsFaulted) Log.Error(t.Exception, "Failed to load co-authors");
+            }, TaskScheduler.Default);
+            _ = LoadAssets().ContinueWith(t =>
+            {
+                if (t.IsFaulted) Log.Error(t.Exception, "Failed to load assets");
+            }, TaskScheduler.Default);
         }
         catch
         {
@@ -144,31 +151,40 @@ public partial class UpdateViewModel : ViewModel
         var qa = await _apiEndpointView.GitHubApi.GetReleaseAsync("qa");
         var assets = qa.Assets.OrderByDescending(x => x.CreatedAt).ToList();
 
-        for (var i = 0; i < assets.Count; i++)
+        _suppressRegroup = true;
+        try
         {
-            var asset = assets[i];
-            asset.IsLatest = i == 0;
+            for (var i = 0; i < assets.Count; i++)
+            {
+                var asset = assets[i];
+                asset.IsLatest = i == 0;
 
-            var commitSha = asset.Name.SubstringBeforeLast(".zip");
-            var commit = Commits.FirstOrDefault(x => x.Sha == commitSha);
-            if (commit != null)
-            {
-                commit.Asset = asset;
-            }
-            else
-            {
-                Commits.Add(new GitHubCommit
+                var commitSha = asset.Name.SubstringBeforeLast(".zip");
+                var commit = Commits.FirstOrDefault(x => x.Sha == commitSha);
+                if (commit != null)
                 {
-                    Sha = commitSha,
-                    Commit = new Commit
+                    commit.Asset = asset;
+                }
+                else
+                {
+                    Commits.Add(new GitHubCommit
                     {
-                        Message = $"FModel ({commitSha[..7]})",
-                        Author = new Author { Name = asset.Uploader.Login, Date = asset.CreatedAt }
-                    },
-                    Author = asset.Uploader,
-                    Asset = asset
-                });
+                        Sha = commitSha,
+                        Commit = new Commit
+                        {
+                            Message = $"FModel ({commitSha[..7]})",
+                            Author = new Author { Name = asset.Uploader.Login, Date = asset.CreatedAt }
+                        },
+                        Author = asset.Uploader,
+                        Asset = asset
+                    });
+                }
             }
+        }
+        finally
+        {
+            _suppressRegroup = false;
+            RebuildCommitGroups();
         }
 
         await LoadAvatars();

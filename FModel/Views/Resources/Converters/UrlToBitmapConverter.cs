@@ -41,11 +41,11 @@ public class UrlToBitmapConverter : IValueConverter
   }
 
   private static async Task<Bitmap?> DownloadAsync(string url)
-    {
+  {
     try
     {
       using var stream = await _http.GetStreamAsync(url);
-      var ms = new MemoryStream();
+      using var ms = new MemoryStream();
       await stream.CopyToAsync(ms);
       ms.Position = 0;
       var bitmap = new Bitmap(ms);

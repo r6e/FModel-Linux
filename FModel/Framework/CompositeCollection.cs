@@ -22,9 +22,6 @@ public class CompositeCollection : IEnumerable, INotifyCollectionChanged, IDispo
         _sources = sources;
         foreach (var source in _sources)
         {
-            if (source is not ICollection)
-                throw new ArgumentException("CompositeCollection sources must implement ICollection for O(1) Count.", nameof(sources));
-
             if (source is INotifyCollectionChanged ncc)
                 ncc.CollectionChanged += OnSourceCollectionChanged;
         }
@@ -52,7 +49,11 @@ public class CompositeCollection : IEnumerable, INotifyCollectionChanged, IDispo
             var count = 0;
             foreach (var source in _sources)
             {
-                count += ((ICollection) source).Count;
+                if (source is ICollection c)
+                    count += c.Count;
+                else
+                    foreach (var _ in source)
+                        count++;
             }
             return count;
         }

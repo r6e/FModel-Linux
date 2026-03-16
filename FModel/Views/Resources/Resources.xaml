@@ -10,7 +10,7 @@
                     xmlns:folding="clr-namespace:AvaloniaEdit.Folding;assembly=AvaloniaEdit">
 
     <!-- ==================== Converters ==================== -->
-    <converters:InvertBooleanConverter x:Key="BoolToVisibilityConverter" />
+    <converters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
 
     <!-- ==================== TabItemFillSpace ==================== -->
     <ControlTheme x:Key="TabItemFillSpace"
@@ -48,9 +48,10 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Separator Grid.Column="0"
-                               VerticalAlignment="Center"
-                               Margin="0" />
+                    <Border Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Height="1"
+                            Background="{DynamicResource SystemControlForegroundBaseMediumLowBrush}" />
                     <TextBlock x:Name="TagTextBlock"
                                Grid.Column="1"
                                VerticalAlignment="Center"
@@ -59,9 +60,10 @@
                                FontSize="11"
                                Margin="10 0"
                                IsVisible="{TemplateBinding Tag, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
-                    <Separator Grid.Column="2"
-                               VerticalAlignment="Center"
-                               Margin="0" />
+                    <Border Grid.Column="2"
+                            VerticalAlignment="Center"
+                            Height="1"
+                            Background="{DynamicResource SystemControlForegroundBaseMediumLowBrush}" />
                 </Grid>
             </ControlTemplate>
         </Setter>
@@ -84,6 +86,8 @@
                   BasedOn="{StaticResource {x:Type ListBox}}">
         <Setter Property="ItemsSource"
                 Value="{Binding CUE4Parse.GameDirectory.DirectoryFilesView, FallbackValue={x:Null}}" />
+        <Setter Property="SelectionMode"
+                Value="{Binding LoadingMode, Source={x:Static settings:UserSettings.Default}, Converter={x:Static converters:LoadingModeToSelectionModeConverter.Instance}}" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility"
                 Value="Disabled" />
         <Setter Property="ItemTemplate">
@@ -127,6 +131,8 @@
                   BasedOn="{StaticResource {x:Type ListBox}}">
         <Setter Property="ItemsSource"
                 Value="{Binding AudioPlayer.AudioFilesView, FallbackValue={x:Null}}" />
+        <Setter Property="SelectedItem"
+                Value="{Binding AudioPlayer.SelectedAudioFile, Mode=TwoWay}" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility"
                 Value="Disabled" />
         <Setter Property="ItemTemplate">
@@ -333,14 +339,9 @@
         </Style>
 
     <!-- ==================== Magnifier Templates ==================== -->
-    <!-- TODO: Magnifier is a custom WPF control that needs port to Avalonia.
-         CircleTemplate and RectangleTemplate stubs provided. -->
-    <ControlTemplate x:Key="CircleTemplate">
-        <Grid />
-    </ControlTemplate>
-    <ControlTemplate x:Key="RectangleTemplate">
-        <Grid />
-    </ControlTemplate>
+    <!-- Magnifier is implemented in Views/Resources/Controls/Mgn/Magnifier.cs.
+         CircleTemplate and RectangleTemplate are no longer used; the Avalonia
+         Magnifier paints directly via Render(DrawingContext). -->
 
     <!-- ==================== UComboBox ==================== -->
     <ControlTheme x:Key="UComboBox"
