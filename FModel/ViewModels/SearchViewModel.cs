@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows.Data;
+using Avalonia.Collections;
 using CUE4Parse.FileProvider.Objects;
 using CUE4Parse.UE4.VirtualFileSystem;
 using FModel.Framework;
@@ -62,12 +62,12 @@ public class SearchViewModel : ViewModel
     }
 
     public RangeObservableCollection<GameFile> SearchResults { get; }
-    public ListCollectionView SearchResultsView { get; }
+    public DataGridCollectionView SearchResultsView { get; }
 
     public SearchViewModel()
     {
         SearchResults = [];
-        SearchResultsView = new ListCollectionView(SearchResults)
+        SearchResultsView = new DataGridCollectionView(SearchResults)
         {
             Filter = e => ItemFilter(e, FilterText.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries)),
         };
@@ -139,7 +139,8 @@ public class SearchViewModel : ViewModel
             return filters.All(x => entry.Path.Contains(x, HasMatchCaseEnabled ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase));
 
         var o = RegexOptions.None;
-        if (!HasMatchCaseEnabled) o |= RegexOptions.IgnoreCase;
+        if (!HasMatchCaseEnabled)
+            o |= RegexOptions.IgnoreCase;
         return new Regex(FilterText, o).Match(entry.Path).Success;
     }
 }

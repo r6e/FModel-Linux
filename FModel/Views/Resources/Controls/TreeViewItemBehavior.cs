@@ -1,5 +1,5 @@
-using System.Windows;
-using System.Windows.Controls;
+using Avalonia;
+using Avalonia.Controls;
 
 namespace FModel.Views.Resources.Controls;
 
@@ -7,7 +7,7 @@ public sealed class TreeViewItemBehavior
 {
     public static bool GetIsBroughtIntoViewWhenSelected(TreeViewItem treeViewItem)
     {
-        return (bool) treeViewItem.GetValue(IsBroughtIntoViewWhenSelectedProperty);
+        return treeViewItem.GetValue(IsBroughtIntoViewWhenSelectedProperty);
     }
 
     public static void SetIsBroughtIntoViewWhenSelected(TreeViewItem treeViewItem, bool value)
@@ -15,27 +15,30 @@ public sealed class TreeViewItemBehavior
         treeViewItem.SetValue(IsBroughtIntoViewWhenSelectedProperty, value);
     }
 
-    public static readonly DependencyProperty IsBroughtIntoViewWhenSelectedProperty =
-        DependencyProperty.RegisterAttached("IsBroughtIntoViewWhenSelected", typeof(bool), typeof(TreeViewItemBehavior),
-            new UIPropertyMetadata(false, OnIsBroughtIntoViewWhenSelectedChanged));
+    public static readonly AttachedProperty<bool> IsBroughtIntoViewWhenSelectedProperty =
+        AvaloniaProperty.RegisterAttached<TreeViewItemBehavior, TreeViewItem, bool>("IsBroughtIntoViewWhenSelected");
 
-    private static void OnIsBroughtIntoViewWhenSelectedChanged(DependencyObject depObj, DependencyPropertyChangedEventArgs e)
+    static TreeViewItemBehavior()
     {
-        if (depObj is not TreeViewItem item)
-            return;
+        IsBroughtIntoViewWhenSelectedProperty.Changed.AddClassHandler<TreeViewItem>(OnIsBroughtIntoViewWhenSelectedChanged);
+    }
 
+    private static void OnIsBroughtIntoViewWhenSelectedChanged(TreeViewItem item, AvaloniaPropertyChangedEventArgs e)
+    {
         if (e.NewValue is not bool value)
             return;
 
         if (value)
-            item.Selected += OnTreeViewItemSelected;
+            item.PropertyChanged += OnTreeViewItemPropertyChanged;
         else
-            item.Selected -= OnTreeViewItemSelected;
+            item.PropertyChanged -= OnTreeViewItemPropertyChanged;
     }
 
-    private static void OnTreeViewItemSelected(object sender, RoutedEventArgs e)
+    private static void OnTreeViewItemPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
-        if (e.OriginalSource is TreeViewItem item)
+        if (e.Property == TreeViewItem.IsSelectedProperty && e.NewValue is true && sender is TreeViewItem item)
+        {
             item.BringIntoView();
+        }
     }
 }

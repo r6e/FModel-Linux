@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows.Data;
+using Avalonia.Collections;
 using CUE4Parse.Utils;
 using FModel.Framework;
 using FModel.Services;
@@ -23,14 +23,15 @@ public partial class UpdateViewModel : ViewModel
     public RemindMeCommand RemindMeCommand => _remindMeCommand ??= new RemindMeCommand(this);
 
     public RangeObservableCollection<GitHubCommit> Commits { get; }
-    public ICollectionView CommitsView { get; }
+    public DataGridCollectionView CommitsView { get; }
 
     public UpdateViewModel()
     {
         Commits = [];
-        CommitsView = new ListCollectionView(Commits)
+        CommitsView = new DataGridCollectionView(Commits)
         {
-            GroupDescriptions = { new PropertyGroupDescription("Commit.Author.Date", new DateTimeToDateConverter()) }
+            // TODO: Re-add date grouping once Avalonia grouping is implemented.
+            // WPF used: GroupDescriptions = { new PropertyGroupDescription("Commit.Author.Date", DateTimeToDateConverter) }
         };
 
         if (UserSettings.Default.NextUpdateCheck < DateTime.Now)
@@ -68,14 +69,16 @@ public partial class UpdateViewModel : ViewModel
 
                 var regex = GetCoAuthorRegex();
                 var matches = regex.Matches(commit.Commit.Message);
-                if (matches.Count == 0) continue;
+                if (matches.Count == 0)
+                    continue;
 
                 commit.Commit.Message = regex.Replace(commit.Commit.Message, string.Empty).Trim();
 
                 coAuthorMap[commit] = [];
                 foreach (Match match in matches)
                 {
-                    if (match.Groups.Count < 3) continue;
+                    if (match.Groups.Count < 3)
+                        continue;
 
                     var username = match.Groups[1].Value;
                     if (username.Equals("Asval", StringComparison.OrdinalIgnoreCase))
@@ -87,7 +90,8 @@ public partial class UpdateViewModel : ViewModel
                 }
             }
 
-            if (coAuthorMap.Count == 0) return;
+            if (coAuthorMap.Count == 0)
+                return;
 
             var uniqueUsernames = coAuthorMap.Values.SelectMany(x => x).Distinct().ToArray();
             var authorCache = new Dictionary<string, Author>();

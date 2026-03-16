@@ -13,9 +13,14 @@ public class CommitMessageConverter : IValueConverter
         if (value is string commitMessage)
         {
             var parts = commitMessage.Split("\n\n");
-            return parameter?.ToString() == "Title" ? parts[0] : parts.Length > 1 ? parts[1] : string.Empty;
+            var param = parameter?.ToString();
+            if (param == "Title")
+                return parts[0];
+            if (param == "HasDescription")
+                return parts.Length > 1 && !string.IsNullOrEmpty(parts[1]);
+            return parts.Length > 1 ? parts[1] : string.Empty;
         }
-        return value;
+        return parameter?.ToString() == "HasDescription" ? false : value;
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
