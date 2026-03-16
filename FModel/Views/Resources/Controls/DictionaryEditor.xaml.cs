@@ -108,4 +108,9 @@ public partial class DictionaryEditor : Window
             _ => throw new NotImplementedException()
         };
     }
+
+    private void OnCancel(object? sender, RoutedEventArgs e)
+    {
+        Close(false);
+    }
 }

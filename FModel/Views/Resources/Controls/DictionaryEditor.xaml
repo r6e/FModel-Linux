@@ -66,7 +66,8 @@
                         IsCancel="True"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Bottom"
-                        Content="Cancel" />
+                        Content="Cancel"
+                        Click="OnCancel" />
             </Grid>
         </Border>
     </Grid>
