@@ -186,7 +186,7 @@ public class ApplicationViewModel : ViewModel
             return null;
 
         UserSettings.Default.GameDirectory = gameLauncherViewModel.SelectedDirectory.GameDirectory;
-        if (!bAlreadyLaunched || UserSettings.Default.CurrentDir.Equals(gameLauncherViewModel.SelectedDirectory))
+        if (!bAlreadyLaunched || UserSettings.Default.CurrentDir?.Equals(gameLauncherViewModel.SelectedDirectory) == true)
             return gameLauncherViewModel.SelectedDirectory;
 
         // UserSettings.Save(); // ??? change key then change game, key saved correctly what?

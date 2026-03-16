@@ -87,7 +87,7 @@ public static class ListBoxItemBehavior
             case GameFileViewModel file:
                 ApplicationService.ApplicationView.SelectedLeftTabIndex = 2;
                 file.IsSelected = true;
-                file.ExtractAsync();
+                _ = file.ExtractAsync();
                 break;
             case TreeItem folder:
                 ApplicationService.ApplicationView.SelectedLeftTabIndex = 1;

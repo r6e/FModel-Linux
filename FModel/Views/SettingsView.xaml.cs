@@ -189,8 +189,7 @@ public partial class SettingsView : Window
         if (await editor.ShowDialog<bool?>(this) != true)
             return;
 
-        if (editor.CustomVersions != null)
-            _applicationView.SettingsView.SelectedCustomVersions = editor.CustomVersions;
+        _applicationView.SettingsView.SelectedCustomVersions = editor.CustomVersions;
     }
 
     private async void OpenOptions(object sender, RoutedEventArgs e)
@@ -199,8 +198,7 @@ public partial class SettingsView : Window
         if (await editor.ShowDialog<bool?>(this) != true)
             return;
 
-        if (editor.Options != null)
-            _applicationView.SettingsView.SelectedOptions = editor.Options;
+        _applicationView.SettingsView.SelectedOptions = editor.Options;
     }
 
     private async void OpenMapStructTypes(object sender, RoutedEventArgs e)
@@ -209,8 +207,7 @@ public partial class SettingsView : Window
         if (await editor.ShowDialog<bool?>(this) != true)
             return;
 
-        if (editor.MapStructTypes != null)
-            _applicationView.SettingsView.SelectedMapStructTypes = editor.MapStructTypes;
+        _applicationView.SettingsView.SelectedMapStructTypes = editor.MapStructTypes;
     }
 
     private async void OpenAesEndpoint(object sender, RoutedEventArgs e)
