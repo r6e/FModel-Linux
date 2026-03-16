@@ -1,5 +1,5 @@
 using System;
-using System.Windows;
+using Avalonia.Platform;
 using CUE4Parse.UE4.Assets.Exports;
 using CUE4Parse.UE4.Objects.Core.i18N;
 using CUE4Parse.UE4.Objects.UObject;
@@ -71,7 +71,7 @@ public class BaseTandem : BaseIcon
 
     private new void DrawBackground(SKCanvas c)
     {
-        c.DrawBitmap(SKBitmap.Decode(Application.GetResourceStream(new Uri("pack://application:,,,/Resources/npcleftside.png"))?.Stream).Resize(Width, Height), 0, 0, new SKPaint { IsAntialias = false, FilterQuality = SKFilterQuality.None, ImageFilter = SKImageFilter.CreateBlur(0, 25) });
+        c.DrawBitmap(SKBitmap.Decode(AssetLoader.Open(new Uri("avares://FModel/Resources/npcleftside.png"))).Resize(Width, Height), 0, 0, new SKPaint { IsAntialias = false, FilterQuality = SKFilterQuality.None, ImageFilter = SKImageFilter.CreateBlur(0, 25) });
 
         using var rect1 = new SKPath { FillType = SKPathFillType.EvenOdd };
         _panelPaint.Color = SKColor.Parse("#002A8C");
@@ -154,7 +154,8 @@ public class BaseTandem : BaseIcon
 
     private void DrawName(SKCanvas c)
     {
-        if (string.IsNullOrWhiteSpace(DisplayName)) return;
+        if (string.IsNullOrWhiteSpace(DisplayName))
+            return;
 
         DisplayNamePaint.TextSize = UserSettings.Default.AssetLanguage switch
         {
@@ -180,7 +181,8 @@ public class BaseTandem : BaseIcon
 
     private void DrawGeneralDescription(SKCanvas c)
     {
-        if (string.IsNullOrWhiteSpace(_generalDescription)) return;
+        if (string.IsNullOrWhiteSpace(_generalDescription))
+            return;
 
         DescriptionPaint.TextSize = UserSettings.Default.AssetLanguage switch
         {
@@ -204,7 +206,8 @@ public class BaseTandem : BaseIcon
 
     private void DrawAdditionalDescription(SKCanvas c)
     {
-        if (string.IsNullOrWhiteSpace(_additionalDescription)) return;
+        if (string.IsNullOrWhiteSpace(_additionalDescription))
+            return;
 
         DescriptionPaint.TextSize = UserSettings.Default.AssetLanguage switch
         {
