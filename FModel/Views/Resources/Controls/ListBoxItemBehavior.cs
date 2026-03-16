@@ -133,7 +133,7 @@ public static class ListBoxItemBehavior
 
         item.Focus();
 
-        if (listBox.FindResource("FileContextMenu") is ContextMenu contextMenu)
+        if (listBox.TryFindResource("FileContextMenu", out var resource) && resource is ContextMenu contextMenu)
         {
             listBox.ContextMenu = null;
             Dispatcher.UIThread.Post(() =>
@@ -143,9 +143,9 @@ public static class ListBoxItemBehavior
                 contextMenu.PlacementTarget = listBox;
                 contextMenu.Open(listBox);
             });
-        }
 
-        e.Handled = true;
+            e.Handled = true;
+        }
     }
 }
 

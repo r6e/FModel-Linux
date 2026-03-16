@@ -40,7 +40,7 @@ public partial class SettingsView : Window
     {
         var restart = _applicationView.SettingsView.Save(out var whatShouldIDo);
         if (restart)
-            _applicationView.RestartWithWarning();
+            await _applicationView.RestartWithWarningAsync();
 
         Close();
 
@@ -167,7 +167,9 @@ public partial class SettingsView : Window
             UserSettings.Default.LastOpenedSettingTab = i;
 
             // Select the DataTemplate that matches the TreeViewItem's Tag.
-            if (treeItem.Tag is string tagKey && this.FindResource(tagKey) is Avalonia.Controls.Templates.IDataTemplate dt)
+            if (treeItem.Tag is string tagKey &&
+                this.TryFindResource(tagKey, out var resource) &&
+                resource is Avalonia.Controls.Templates.IDataTemplate dt)
                 SettingsContentControl.ContentTemplate = dt;
 
             break;

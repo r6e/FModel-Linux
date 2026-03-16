@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -25,6 +26,8 @@ public static class SmoothScroll
     public static void SetFactor(Control obj, double value) => obj.SetValue(FactorProperty, value);
     public static double GetFactor(Control obj) => obj.GetValue(FactorProperty);
 
+    private static readonly ConditionalWeakTable<Control, ScrollViewer> _scrollViewerCache = new();
+
     static SmoothScroll()
     {
         IsEnabledProperty.Changed.Subscribe(OnIsEnabledChanged);
@@ -38,7 +41,10 @@ public static class SmoothScroll
         if (e.NewValue.GetValueOrDefault())
             element.PointerWheelChanged += Element_PointerWheelChanged;
         else
+        {
             element.PointerWheelChanged -= Element_PointerWheelChanged;
+            _scrollViewerCache.Remove(element);
+        }
     }
 
     private static void Element_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
@@ -90,6 +96,13 @@ public static class SmoothScroll
         if (control is ScrollViewer sv)
             return sv;
 
-        return control.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+        if (_scrollViewerCache.TryGetValue(control, out var cached))
+            return cached;
+
+        var found = control.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+        if (found != null)
+            _scrollViewerCache.AddOrUpdate(control, found);
+
+        return found;
     }
 }

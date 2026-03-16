@@ -186,13 +186,50 @@ public class ApplicationViewModel : ViewModel
 
         // UserSettings.Save(); // ??? change key then change game, key saved correctly what?
         UserSettings.Default.CurrentDir = gameLauncherViewModel.SelectedDirectory;
-        RestartWithWarning();
+        await RestartWithWarningAsync();
         return null;
     }
 
-    public void RestartWithWarning()
+    public async Task RestartWithWarningAsync()
     {
         Log.Information("FModel will restart to apply your changes.");
+
+        var dialog = new Window
+        {
+            Title = "Uh oh, a restart is needed",
+            Width = 420,
+            Height = 160,
+            CanResize = false,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            Content = new Avalonia.Controls.StackPanel
+            {
+                Margin = new Avalonia.Thickness(16),
+                Spacing = 12,
+                Children =
+                {
+                    new Avalonia.Controls.TextBlock
+                    {
+                        Text = "It looks like you just changed something.\nFModel will restart to apply your changes.",
+                        TextWrapping = Avalonia.Media.TextWrapping.Wrap
+                    },
+                    new Avalonia.Controls.Button
+                    {
+                        Content = "OK",
+                        HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right
+                    }
+                }
+            }
+        };
+
+        var okBtn = ((Avalonia.Controls.StackPanel) dialog.Content).Children[1] as Avalonia.Controls.Button;
+        okBtn!.Click += (_, _) => dialog.Close();
+
+        var owner = (Avalonia.Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
+        if (owner != null)
+            await dialog.ShowDialog(owner);
+        else
+            dialog.Show();
+
         Restart();
     }
 
@@ -237,6 +274,9 @@ public class ApplicationViewModel : ViewModel
 
     public async Task UpdateProvider(bool isLaunch)
     {
+        if (AesManager is null || CUE4Parse is null)
+            return;
+
         if (!isLaunch && !AesManager.HasChange)
             return;
 

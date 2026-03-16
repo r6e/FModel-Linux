@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using FModel.Services;
 using FModel.Settings;
 using FModel.ViewModels;
 using FModel.Views;
+using Serilog;
 
 namespace FModel.Views.Resources.Controls.ContextMenus;
 
@@ -65,6 +67,8 @@ public partial class FolderContextMenuDictionary
         if (sender is not MenuItem { CommandParameter: IEnumerable<object> list } || list.FirstOrDefault() is not TreeItem folder)
             return;
 
-        _ = MainWindow.YesWeCats?.Clipboard?.SetTextAsync(folder.PathAtThisPoint);
+        _ = MainWindow.YesWeCats?.Clipboard?.SetTextAsync(folder.PathAtThisPoint)
+            .ContinueWith(t => Log.Error(t.Exception, "Failed to copy directory path to clipboard"),
+                TaskContinuationOptions.OnlyOnFaulted);
     }
 }
