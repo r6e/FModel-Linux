@@ -173,10 +173,13 @@ public class ApplicationViewModel : ViewModel
 
         var gameLauncherViewModel = new GameSelectorViewModel(gameDirectory);
         var selector = new DirectorySelector(gameLauncherViewModel);
-        var ok = owner != null
-            ? await selector.ShowDialog<bool?>(owner)
-            : null;
 
+        // Fall back to MainWindow when no explicit owner is provided.
+        owner ??= (Avalonia.Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
+        if (owner == null)
+            return null;
+
+        var ok = await selector.ShowDialog<bool?>(owner);
         if (ok != true)
             return null;
 
@@ -226,9 +229,17 @@ public class ApplicationViewModel : ViewModel
 
         var owner = (Avalonia.Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
         if (owner != null)
+        {
             await dialog.ShowDialog(owner);
+        }
         else
+        {
+            // No owner available — show non-modal and wait for it to close.
+            var tcs = new TaskCompletionSource();
+            dialog.Closed += (_, _) => tcs.TrySetResult();
             dialog.Show();
+            await tcs.Task;
+        }
 
         Restart();
     }

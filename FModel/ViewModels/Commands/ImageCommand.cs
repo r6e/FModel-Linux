@@ -39,7 +39,7 @@ public class ImageCommand : ViewModelCommand<TabItem>
                     break;
                 }
             case "Copy":
-                ClipboardExtensions.SetImage(tabViewModel.SelectedImage.ImageBuffer, $"{tabViewModel.SelectedImage.ExportName}.png");
+                ClipboardExtensions.SetImage(tabViewModel.SelectedImage.ImageBuffer);
                 break;
             case "Save":
                 tabViewModel.SaveImage();

@@ -18,8 +18,8 @@
                     Height="128">
                 <Canvas.Resources>
                     <LinearGradientBrush x:Key="TabGradient"
-                                         StartPoint="0,0"
-                                         EndPoint="0,1">
+                                         StartPoint="0%,0%"
+                                         EndPoint="0%,100%">
                         <GradientStop Color="#c9975f"
                                       Offset="0" />
                         <GradientStop Color="#b28c53"
@@ -29,8 +29,8 @@
                     </LinearGradientBrush>
 
                     <LinearGradientBrush x:Key="BodyGradient"
-                                         StartPoint="0,0"
-                                         EndPoint="0,1">
+                                         StartPoint="0%,0%"
+                                         EndPoint="0%,100%">
                         <GradientStop Color="#d4ae75"
                                       Offset="0" />
                         <GradientStop Color="#c9a167"

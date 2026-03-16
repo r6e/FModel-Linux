@@ -216,6 +216,17 @@ public sealed class Timeclock : UserControl
         }
     }
 
+    protected override void OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+
+        if (Source is { } src)
+        {
+            src.SourceEvent -= OnSourceEvent;
+            src.SourcePropertyChangedEvent -= OnSourcePropertyChangedEvent;
+        }
+    }
+
     private void ZeroTime()
     {
         Dispatcher.UIThread.Post(() =>

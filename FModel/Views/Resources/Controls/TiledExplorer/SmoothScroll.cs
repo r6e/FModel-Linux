@@ -101,7 +101,7 @@ public static class SmoothScroll
 
         var found = control.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
         if (found != null)
-            _scrollViewerCache.AddOrUpdate(control, found);
+            _scrollViewerCache.Add(control, found);
 
         return found;
     }

@@ -11,7 +11,7 @@ public static class ClipboardExtensions
     /// <summary>
     /// Copies PNG image bytes to the system clipboard. Fire-and-forget; runs on the UI thread.
     /// </summary>
-    public static void SetImage(byte[] pngBytes, string? fileName = null)
+    public static void SetImage(byte[] pngBytes)
     {
         _ = Dispatcher.UIThread.InvokeAsync(async () =>
         {

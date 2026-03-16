@@ -15,6 +15,7 @@ public partial class EndpointEditor : Window
 {
     private readonly EEndpointType _type;
     private bool _isTested;
+    private bool _isInitialized;
 
     public EndpointEditor(EndpointSettings endpoint, string title, EEndpointType type)
     {
@@ -28,6 +29,7 @@ public partial class EndpointEditor : Window
         TargetResponse.SyntaxHighlighting =
             EndpointResponse.SyntaxHighlighting = AvalonExtensions.HighlighterSelector("json");
 
+        _isInitialized = true;
         InstructionBox.Text = type switch
         {
             EEndpointType.Aes =>
@@ -82,7 +84,8 @@ public partial class EndpointEditor : Window
 
     private void OnTextChanged(object? sender, EventArgs e)
     {
-        if (sender is not TextBox ||
+        if (!_isInitialized ||
+            sender is not TextBox ||
             DataContext is not EndpointSettings endpoint)
             return;
         endpoint.IsValid = false;
