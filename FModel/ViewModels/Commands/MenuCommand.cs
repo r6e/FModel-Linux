@@ -29,15 +29,18 @@ public class MenuCommand : ViewModelCommand<ApplicationViewModel>
                 Helper.OpenWindow<Window>("AES Manager", () => new AesManager().Show());
                 break;
             case "Directory_Backup":
-                Helper.OpenWindow<Window>("Backup Manager", () => new BackupManager(contextViewModel.CUE4Parse!.Provider.ProjectName).Show());
+                if (contextViewModel.CUE4Parse is null) return;
+                Helper.OpenWindow<Window>("Backup Manager", () => new BackupManager(contextViewModel.CUE4Parse.Provider.ProjectName).Show());
                 break;
             case "Directory_ArchivesInfo":
+                if (contextViewModel.CUE4Parse is null) return;
                 ApplicationService.ApplicationView.IsAssetsExplorerVisible = false;
                 contextViewModel.CUE4Parse.TabControl.AddTab("Archives Info");
                 contextViewModel.CUE4Parse.TabControl.SelectedTab.Highlighter = AvalonExtensions.HighlighterSelector("json");
                 contextViewModel.CUE4Parse.TabControl.SelectedTab.SetDocumentText(JsonConvert.SerializeObject(contextViewModel.CUE4Parse.GameDirectory.DirectoryFiles, Formatting.Indented), false, false);
                 break;
             case "Views_3dViewer":
+                if (contextViewModel.CUE4Parse is null) return;
                 contextViewModel.CUE4Parse.SnooperViewer.Run();
                 break;
             case "Views_AudioPlayer":
@@ -78,6 +81,7 @@ public class MenuCommand : ViewModelCommand<ApplicationViewModel>
             //     });
             //     break;
             case "ToolBox_Collapse_All":
+                if (contextViewModel.CUE4Parse is null) return;
                 await ApplicationService.ThreadWorkerView.Begin(cancellationToken =>
                 {
                     SetFoldersIsExpanded(contextViewModel.CUE4Parse.AssetsFolder, false, cancellationToken);

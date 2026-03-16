@@ -9,8 +9,7 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <Grid x:Name="InfoGrid"
-              Grid.Column="0"
+        <Grid Grid.Column="0"
               HorizontalAlignment="Center"
               VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
@@ -40,10 +39,8 @@
 
         <Button Grid.Column="2"
                 ToolTip.Tip="Download"
-                Height="{Binding #InfoGrid.Bounds.Height}"
-                Width="{Binding $self.Bounds.Height}"
-                MinWidth="32"
-                MinHeight="32"
+                Width="32"
+                Height="32"
                 IsEnabled="{Binding IsCurrent, Converter={x:Static converters:InvertBooleanConverter.Instance}}"
                 Click="OnDownload">
             <Viewbox Width="16"
