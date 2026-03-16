@@ -54,7 +54,7 @@ public class UrlToBitmapConverter : IValueConverter
     }
     catch
     {
-      _cache[url] = null;
+      _cache.TryRemove(url, out _);
       return null;
     }
     finally

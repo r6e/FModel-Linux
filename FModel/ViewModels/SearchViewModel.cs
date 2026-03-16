@@ -147,11 +147,23 @@ public class SearchViewModel : ViewModel
             var o = RegexOptions.None;
             if (!HasMatchCaseEnabled)
                 o |= RegexOptions.IgnoreCase;
-            _cachedFilterRegex = new Regex(FilterText, o, TimeSpan.FromSeconds(1));
+
+            try
+            {
+                _cachedFilterRegex = new Regex(FilterText, o, TimeSpan.FromSeconds(1));
+            }
+            catch (ArgumentException)
+            {
+                _cachedFilterRegex = null;
+                _cachedFilterText = FilterText;
+                _cachedMatchCase = HasMatchCaseEnabled;
+                return false;
+            }
+
             _cachedFilterText = FilterText;
             _cachedMatchCase = HasMatchCaseEnabled;
         }
 
-        return _cachedFilterRegex.Match(entry.Path).Success;
+        return _cachedFilterRegex?.Match(entry.Path).Success == true;
     }
 }

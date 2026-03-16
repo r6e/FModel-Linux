@@ -118,10 +118,21 @@ public class GitHubCommit : ViewModel
     }
 }
 
-public class Commit
+public class Commit : ViewModel
 {
-    [J("author")] public Author Author { get; set; }
-    [J("message")] public string Message { get; set; }
+    private Author _author;
+    [J("author")] public Author Author
+    {
+        get => _author;
+        set => SetProperty(ref _author, value);
+    }
+
+    private string _message;
+    [J("message")] public string Message
+    {
+        get => _message;
+        set => SetProperty(ref _message, value);
+    }
 }
 
 public class Author : ViewModel

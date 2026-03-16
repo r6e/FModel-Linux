@@ -84,39 +84,50 @@ public partial class UpdateViewModel : ViewModel
 
     private async Task LoadCoAuthors()
     {
-        var coAuthorMap = new Dictionary<GitHubCommit, HashSet<string>>();
-        foreach (var commit in Commits)
+        var coAuthorMap = await Task.Run(() =>
         {
-            if (!commit.Commit.Message.Contains("Co-authored-by"))
-                continue;
-
+            var map = new Dictionary<GitHubCommit, (string CleanMessage, HashSet<string> Usernames)>();
             var regex = GetCoAuthorRegex();
-            var matches = regex.Matches(commit.Commit.Message);
-            if (matches.Count == 0)
-                continue;
 
-            commit.Commit.Message = regex.Replace(commit.Commit.Message, string.Empty).Trim();
-
-            coAuthorMap[commit] = [];
-            foreach (Match match in matches)
+            foreach (var commit in Commits)
             {
-                if (match.Groups.Count < 3)
+                if (!commit.Commit.Message.Contains("Co-authored-by"))
                     continue;
 
-                var username = match.Groups[1].Value;
-                if (username.Equals("Asval", StringComparison.OrdinalIgnoreCase))
+                var matches = regex.Matches(commit.Commit.Message);
+                if (matches.Count == 0)
+                    continue;
+
+                var usernames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (Match match in matches)
                 {
-                    username = "4sval"; // found out the hard way co-authored usernames can't be trusted
+                    if (match.Groups.Count < 3)
+                        continue;
+
+                    var username = match.Groups[1].Value;
+                    if (username.Equals("Asval", StringComparison.OrdinalIgnoreCase))
+                        username = "4sval"; // found out the hard way co-authored usernames can't be trusted
+
+                    usernames.Add(username);
                 }
 
-                coAuthorMap[commit].Add(username);
+                if (usernames.Count == 0)
+                    continue;
+
+                var cleanMessage = regex.Replace(commit.Commit.Message, string.Empty).Trim();
+                map[commit] = (cleanMessage, usernames);
             }
-        }
+
+            return map;
+        });
 
         if (coAuthorMap.Count == 0)
             return;
 
-        var uniqueUsernames = coAuthorMap.Values.SelectMany(x => x).Distinct().ToArray();
+        foreach (var (commit, data) in coAuthorMap)
+            commit.Commit.Message = data.CleanMessage;
+
+        var uniqueUsernames = coAuthorMap.Values.SelectMany(x => x.Usernames).Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
         var authorCache = new Dictionary<string, Author>();
         foreach (var username in uniqueUsernames)
         {
@@ -132,9 +143,9 @@ public partial class UpdateViewModel : ViewModel
             }
         }
 
-        foreach (var (commit, usernames) in coAuthorMap)
+        foreach (var (commit, data) in coAuthorMap)
         {
-            var coAuthors = usernames
+            var coAuthors = data.Usernames
                 .Where(username => authorCache.ContainsKey(username))
                 .Select(username => authorCache[username])
                 .ToArray();
