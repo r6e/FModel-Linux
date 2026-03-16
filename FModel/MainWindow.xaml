@@ -294,7 +294,7 @@
                 <TabControl x:Name="LeftTabControl"
                             SelectionChanged="OnTabItemChange"
                             SelectedIndex="{Binding SelectedLeftTabIndex, Mode=TwoWay}">
-                    <TabItem Style="{StaticResource TabItemFillSpace}"
+                    <TabItem Theme="{StaticResource TabItemFillSpace}"
                              Header="Archives">
                         <DockPanel>
                             <Grid DockPanel.Dock="Top">
@@ -341,14 +341,14 @@
                                 </Grid.RowDefinitions>
 
                                 <Separator Grid.Row="0"
-                                           Style="{StaticResource CustomSeparator}"
+                                           Theme="{StaticResource CustomSeparator}"
                                            Tag="GAME ARCHIVES" />
                                 <ListBox Grid.Row="1"
                                          x:Name="DirectoryFilesListBox"
-                                         Style="{StaticResource DirectoryFilesListBox}"
+                                         Theme="{StaticResource DirectoryFilesListBox}"
                                          DoubleTapped="OnMouseDoubleClick" />
                                 <Separator Grid.Row="2"
-                                           Style="{StaticResource CustomSeparator}"
+                                           Theme="{StaticResource CustomSeparator}"
                                            Tag="INFORMATION" />
                                 <StackPanel Grid.Row="3"
                                             Orientation="Vertical"
@@ -410,7 +410,7 @@
                             </Grid>
                         </DockPanel>
                     </TabItem>
-                    <TabItem Style="{StaticResource TabItemFillSpace}"
+                    <TabItem Theme="{StaticResource TabItemFillSpace}"
                              Header="Folders">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -500,17 +500,17 @@
                                 </StackPanel>
                             </Grid>
                             <Separator Grid.Row="1"
-                                       Style="{StaticResource CustomSeparator}"
+                                       Theme="{StaticResource CustomSeparator}"
                                        Margin="0" />
                             <TreeView Grid.Row="2"
                                       x:Name="AssetsFolderName"
-                                      Style="{StaticResource AssetsFolderTreeView}"
+                                      Theme="{StaticResource AssetsFolderTreeView}"
                                       SelectionChanged="OnAssetsTreeSelectedItemChanged"
                                       KeyDown="OnFoldersPreviewKeyDown"
                                       DoubleTapped="OnAssetsTreeMouseDoubleClick">
                             </TreeView>
                             <Separator Grid.Row="3"
-                                       Style="{StaticResource CustomSeparator}"
+                                       Theme="{StaticResource CustomSeparator}"
                                        Tag="INFORMATION" />
                             <StackPanel Grid.Row="4"
                                         Orientation="Vertical"
@@ -582,7 +582,7 @@
                             </StackPanel>
                         </Grid>
                     </TabItem>
-                    <TabItem Style="{StaticResource TabItemFillSpace}"
+                    <TabItem Theme="{StaticResource TabItemFillSpace}"
                              Header="{Binding SelectedItem.AssetsList.Assets.Count, FallbackValue=0, ElementName=AssetsFolderName}"
                              HeaderStringFormat="{}{0} Packages">
                         <DockPanel>
@@ -613,7 +613,7 @@
                                          KeyDown="OnPreviewKeyDown" />
 
                                 <Separator Grid.Row="2"
-                                           Style="{StaticResource CustomSeparator}"
+                                           Theme="{StaticResource CustomSeparator}"
                                            Tag="INFORMATION" />
                                 <StackPanel Grid.Row="3"
                                             Orientation="Vertical"
@@ -752,7 +752,7 @@
                         </Border>
 
                         <TabControl x:Name="TabControlName"
-                                    Style="{StaticResource GameFilesTabControl}"
+                                    Theme="{StaticResource GameFilesTabControl}"
                                     IsVisible="{Binding IsAssetsExplorerVisible, Converter={x:Static converters:InvertBooleanConverter.Instance}}" />
                     </Grid>
 

@@ -123,6 +123,7 @@ public class TreeItem : ViewModel
             {
                 void CreateCombinedEntries()
                 {
+                    _combinedEntries?.Dispose();
                     _combinedEntries = new Framework.CompositeCollection(FilteredFoldersView, AssetsList.AssetsView);
                 }
 

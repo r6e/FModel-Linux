@@ -155,6 +155,7 @@ public class LoadCommand : ViewModelCommand<LoadingModesViewModel>
 
     private void FilterNewOrModifiedFilesToDisplay(CancellationToken cancellationToken)
     {
+        // TODO(P4-004): Replace Microsoft.Win32.OpenFileDialog with Avalonia StorageProvider API.
         var openFileDialog = new OpenFileDialog
         {
             Title = "Select a backup file older than your current game version",

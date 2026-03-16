@@ -1,3 +1,4 @@
+using System;
 using Avalonia;
 using Avalonia.Controls;
 
@@ -28,17 +29,28 @@ public sealed class TreeViewItemBehavior
         if (e.NewValue is not bool value)
             return;
 
-        if (value)
-            item.PropertyChanged += OnTreeViewItemPropertyChanged;
-        else
-            item.PropertyChanged -= OnTreeViewItemPropertyChanged;
-    }
-
-    private static void OnTreeViewItemPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
-    {
-        if (e.Property == TreeViewItem.IsSelectedProperty && e.NewValue is true && sender is TreeViewItem item)
+        // Clean up any existing subscription stored on the item
+        if (item.GetValue(SubscriptionProperty) is IDisposable oldSub)
         {
-            item.BringIntoView();
+            oldSub.Dispose();
+            item.SetValue(SubscriptionProperty, null);
+        }
+
+        if (value)
+        {
+            var sub = item.GetObservable(TreeViewItem.IsSelectedProperty)
+                .Subscribe(isSelected =>
+                {
+                    if (isSelected)
+                        item.BringIntoView();
+                });
+            item.SetValue(SubscriptionProperty, sub);
         }
     }
+
+    /// <summary>
+    /// Internal attached property to store the observable subscription for cleanup.
+    /// </summary>
+    private static readonly AttachedProperty<IDisposable?> SubscriptionProperty =
+        AvaloniaProperty.RegisterAttached<TreeViewItemBehavior, TreeViewItem, IDisposable?>("Subscription");
 }

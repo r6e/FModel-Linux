@@ -322,6 +322,7 @@ public class AudioPlayerViewModel : ViewModel, ISource, IDisposable
 
         if (!auto)
         {
+            // TODO(P4-004): Replace Microsoft.Win32.SaveFileDialog with Avalonia StorageProvider API.
             var saveFileDialog = new SaveFileDialog
             {
                 Title = "Save Audio",

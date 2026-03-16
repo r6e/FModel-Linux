@@ -130,6 +130,10 @@ public class SearchViewModel : ViewModel
         SearchResults.AddRange(sorted);
     }
 
+    private Regex? _cachedFilterRegex;
+    private string? _cachedFilterText;
+    private bool _cachedMatchCase;
+
     private bool ItemFilter(object item, IEnumerable<string> filters)
     {
         if (item is not GameFile entry)
@@ -138,9 +142,16 @@ public class SearchViewModel : ViewModel
         if (!HasRegexEnabled)
             return filters.All(x => entry.Path.Contains(x, HasMatchCaseEnabled ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase));
 
-        var o = RegexOptions.None;
-        if (!HasMatchCaseEnabled)
-            o |= RegexOptions.IgnoreCase;
-        return new Regex(FilterText, o).Match(entry.Path).Success;
+        if (_cachedFilterRegex == null || _cachedFilterText != FilterText || _cachedMatchCase != HasMatchCaseEnabled)
+        {
+            var o = RegexOptions.None;
+            if (!HasMatchCaseEnabled)
+                o |= RegexOptions.IgnoreCase;
+            _cachedFilterRegex = new Regex(FilterText, o);
+            _cachedFilterText = FilterText;
+            _cachedMatchCase = HasMatchCaseEnabled;
+        }
+
+        return _cachedFilterRegex.Match(entry.Path).Success;
     }
 }

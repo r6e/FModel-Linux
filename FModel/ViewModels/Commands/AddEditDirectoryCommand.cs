@@ -1,4 +1,6 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using FModel.Framework;
 using FModel.Settings;
 using FModel.Views;
@@ -11,25 +13,25 @@ public class AddEditDirectoryCommand : ViewModelCommand<CustomDirectoriesViewMod
     {
     }
 
-    public override void Execute(CustomDirectoriesViewModel contextViewModel, object parameter)
+    public override async void Execute(CustomDirectoriesViewModel contextViewModel, object parameter)
     {
         if (parameter is not CustomDirectory customDir)
             customDir = new CustomDirectory();
 
-        Helper.OpenWindow<Window>("Custom Directory", () =>
-        {
-            var index = contextViewModel.GetIndex(customDir);
-            var input = new CustomDir(customDir);
-            var result = input.ShowDialog();
-            if (!result.HasValue || !result.Value || string.IsNullOrEmpty(customDir.Header) && string.IsNullOrEmpty(customDir.DirectoryPath))
-                return;
+        var index = contextViewModel.GetIndex(customDir);
+        var input = new CustomDir(customDir);
+        var owner = (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
 
-            if (index > 1)
-            {
-                contextViewModel.Edit(index, customDir);
-            }
-            else
-                contextViewModel.Add(customDir);
-        });
+        bool? result = null;
+        if (owner != null)
+            result = await input.ShowDialog<bool?>(owner);
+
+        if (result is not true || string.IsNullOrEmpty(customDir.Header) && string.IsNullOrEmpty(customDir.DirectoryPath))
+            return;
+
+        if (index > 1)
+            contextViewModel.Edit(index, customDir);
+        else
+            contextViewModel.Add(customDir);
     }
 }

@@ -13,25 +13,30 @@
     <converters:InvertBooleanConverter x:Key="BoolToVisibilityConverter" />
 
     <!-- ==================== TabItemFillSpace ==================== -->
-    <Style x:Key="TabItemFillSpace"
-           Selector="TabItem">
-        <!-- TODO: Avalonia doesn't support binding Width via MultiBinding on TabItem easily.
-             This style is a placeholder; actual fill-space behavior handled by TabControl. -->
-    </Style>
+    <ControlTheme x:Key="TabItemFillSpace"
+                  TargetType="TabItem"
+                  BasedOn="{StaticResource {x:Type TabItem}}">
+        <Setter Property="HorizontalAlignment"
+                Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Center" />
+    </ControlTheme>
 
     <!-- ==================== HighlightedCheckBox ==================== -->
     <!-- Original had a color animation on border; simplified for Avalonia. -->
-    <Style x:Key="HighlightedCheckBox"
-           Selector="CheckBox">
+    <ControlTheme x:Key="HighlightedCheckBox"
+                  TargetType="CheckBox"
+                  BasedOn="{StaticResource {x:Type CheckBox}}">
         <Setter Property="BorderThickness"
                 Value="2" />
         <Setter Property="BorderBrush"
                 Value="Goldenrod" />
-    </Style>
+    </ControlTheme>
 
     <!-- ==================== CustomSeparator ==================== -->
-    <Style x:Key="CustomSeparator"
-           Selector="Separator">
+    <ControlTheme x:Key="CustomSeparator"
+                  TargetType="Separator"
+                  BasedOn="{StaticResource {x:Type Separator}}">
         <Setter Property="Margin"
                 Value="0 8" />
         <Setter Property="Template">
@@ -59,21 +64,23 @@
                 </Grid>
             </ControlTemplate>
         </Setter>
-    </Style>
+    </ControlTheme>
 
     <!-- ==================== CustomVerticalSeparator ==================== -->
-    <Style x:Key="CustomVerticalSeparator"
-           Selector="Separator">
+    <ControlTheme x:Key="CustomVerticalSeparator"
+                  TargetType="Separator"
+                  BasedOn="{StaticResource {x:Type Separator}}">
         <Setter Property="Margin"
                 Value="8 0" />
         <Setter Property="RenderTransform">
             <RotateTransform Angle="90" />
         </Setter>
-    </Style>
+    </ControlTheme>
 
     <!-- ==================== DirectoryFilesListBox ==================== -->
-    <Style x:Key="DirectoryFilesListBox"
-           Selector="ListBox">
+    <ControlTheme x:Key="DirectoryFilesListBox"
+                  TargetType="ListBox"
+                  BasedOn="{StaticResource {x:Type ListBox}}">
         <Setter Property="ItemsSource"
                 Value="{Binding CUE4Parse.GameDirectory.DirectoryFilesView, FallbackValue={x:Null}}" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility"
@@ -111,11 +118,12 @@
                 </Grid>
             </DataTemplate>
         </Setter>
-    </Style>
+    </ControlTheme>
 
     <!-- ==================== AudioFilesListBox ==================== -->
-    <Style x:Key="AudioFilesListBox"
-           Selector="ListBox">
+    <ControlTheme x:Key="AudioFilesListBox"
+                  TargetType="ListBox"
+                  BasedOn="{StaticResource {x:Type ListBox}}">
         <Setter Property="ItemsSource"
                 Value="{Binding AudioPlayer.AudioFilesView, FallbackValue={x:Null}}" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility"
@@ -139,11 +147,12 @@
                 </Grid>
             </DataTemplate>
         </Setter>
-    </Style>
+    </ControlTheme>
 
     <!-- ==================== AssetsFolderTreeView ==================== -->
-    <Style x:Key="AssetsFolderTreeView"
-           Selector="TreeView">
+    <ControlTheme x:Key="AssetsFolderTreeView"
+                  TargetType="TreeView"
+                  BasedOn="{StaticResource {x:Type TreeView}}">
         <Setter Property="ItemsSource"
                 Value="{Binding CUE4Parse.AssetsFolder.FoldersView, FallbackValue={x:Null}}" />
         <Setter Property="ItemTemplate">
@@ -154,7 +163,8 @@
                              Margin="0 0 3.5 0">
                         <Canvas Width="24"
                                 Height="24">
-                            <Path Data="{Binding Header, Converter={x:Static converters:FolderToGeometryConverter.Instance}}" />
+                            <Path Data="{Binding Header, Converter={x:Static converters:FolderToGeometryConverter.Instance}}"
+                                  Fill="{Binding Header, Converter={x:Static converters:FolderToGeometryConverter.Instance}, ConverterParameter=Brush}" />
                         </Canvas>
                     </Viewbox>
                     <Border x:Name="TreeBadge"
@@ -175,28 +185,27 @@
                     </Border>
                     <TextBlock Text="{Binding Header}"
                                HorizontalAlignment="Left">
-                        <TextBlock.ToolTip>
-                            <ToolTip>
-                                <TextBlock>
-                                    <TextBlock.Text>
-                                        <MultiBinding StringFormat="{}{0} has {1} folders and {2} packages">
-                                            <Binding Path="Header" />
-                                            <Binding Path="FoldersView.Count" />
-                                            <Binding Path="AssetsList.Assets.Count" />
-                                        </MultiBinding>
-                                    </TextBlock.Text>
-                                </TextBlock>
-                            </ToolTip>
-                        </TextBlock.ToolTip>
+                        <ToolTip.Tip>
+                            <TextBlock>
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}{0} has {1} folders and {2} packages">
+                                        <Binding Path="Header" />
+                                        <Binding Path="FoldersView.Count" />
+                                        <Binding Path="AssetsList.Assets.Count" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </ToolTip.Tip>
                     </TextBlock>
                 </StackPanel>
             </TreeDataTemplate>
         </Setter>
-    </Style>
+    </ControlTheme>
 
     <!-- ==================== GameFilesTabControl ==================== -->
-    <Style x:Key="GameFilesTabControl"
-           Selector="TabControl">
+    <ControlTheme x:Key="GameFilesTabControl"
+                  TargetType="TabControl"
+                  BasedOn="{StaticResource {x:Type TabControl}}">
         <Setter Property="ItemsSource"
                 Value="{Binding CUE4Parse.TabControl.TabsItems, FallbackValue={x:Null}}" />
         <Setter Property="SelectedItem"
@@ -227,29 +236,31 @@
                         <ColumnDefinition Width="{Binding AvalonImageSize, Source={x:Static settings:UserSettings.Default}, Mode=TwoWay}" />
                     </Grid.ColumnDefinitions>
 
+                    <!-- DataContext inside ContentTemplate is the selected TabItem VM -->
                     <controls:AvalonEditor x:Name="DynamicArea"
-                                           Grid.Column="0"
-                                           DataContext="{Binding SelectedItem, ElementName=TabControlName}" />
+                                           Grid.Column="0" />
                     <GridSplitter Grid.Column="1"
                                   Width="4"
                                   VerticalAlignment="Stretch"
-                                  IsVisible="{Binding SelectedItem.HasImage, ElementName=TabControlName}" />
+                                  IsVisible="{Binding HasImage}" />
                     <Border Grid.Column="2"
                             BorderBrush="#3b3d4a"
                             BorderThickness="1"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            IsVisible="{Binding SelectedItem.HasImage, ElementName=TabControlName}">
+                            IsVisible="{Binding HasImage}">
                         <Image VerticalAlignment="Center"
                                HorizontalAlignment="Center"
                                Stretch="Uniform"
-                               IsVisible="{Binding SelectedItem.HasImage, ElementName=TabControlName}"
-                               Source="{Binding SelectedItem.SelectedImage.Image, ElementName=TabControlName}">
+                               IsVisible="{Binding HasImage}"
+                               Source="{Binding SelectedImage.Image}">
                             <Image.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="Disable Alpha Channel" />
+                                <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                    <MenuItem Header="Disable Alpha Channel"
+                                              ToggleType="CheckBox"
+                                              IsChecked="{Binding NoAlpha}" />
                                     <MenuItem Header="Open Image"
-                                              Command="{Binding DataContext.ImageCommand}"
+                                              Command="{Binding ImageCommand}"
                                               CommandParameter="Open">
                                         <MenuItem.Icon>
                                             <Viewbox Width="16"
@@ -263,7 +274,7 @@
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <MenuItem Header="Copy Image"
-                                              Command="{Binding DataContext.ImageCommand}"
+                                              Command="{Binding ImageCommand}"
                                               CommandParameter="Copy">
                                         <MenuItem.Icon>
                                             <Viewbox Width="16"
@@ -277,7 +288,7 @@
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <MenuItem Header="Save Image"
-                                              Command="{Binding DataContext.ImageCommand}"
+                                              Command="{Binding ImageCommand}"
                                               CommandParameter="Save">
                                         <MenuItem.Icon>
                                             <Viewbox Width="16"
@@ -297,12 +308,12 @@
                     <TextBlock Grid.Column="2"
                                VerticalAlignment="Bottom"
                                HorizontalAlignment="Center"
-                               IsVisible="{Binding SelectedItem.HasMultipleImages, ElementName=TabControlName}"
-                               Text="{Binding SelectedItem.Page, ElementName=TabControlName}" />
+                               IsVisible="{Binding HasMultipleImages}"
+                               Text="{Binding Page}" />
                 </Grid>
             </DataTemplate>
         </Setter>
-    </Style>
+    </ControlTheme>
 
     <!-- ==================== AvalonEdit TextEditor ==================== -->
     <!-- Default Fluent theme styling is used; no override needed for AvaloniaEdit -->
@@ -323,18 +334,19 @@
     </ControlTemplate>
 
     <!-- ==================== UComboBox ==================== -->
-    <!-- Simplified: uses built-in Fluent ComboBox with watermark placeholder -->
-    <Style x:Key="UComboBox"
-           Selector="ComboBox">
-        <!-- TODO: AdonisUI WatermarkExtension replaced with Avalonia ComboBox.PlaceholderText when
-    available -->
-    </Style>
+    <ControlTheme x:Key="UComboBox"
+                  TargetType="ComboBox"
+                  BasedOn="{StaticResource {x:Type ComboBox}}">
+        <!-- TODO: AdonisUI WatermarkExtension replaced with Avalonia ComboBox.PlaceholderText
+             when available. -->
+    </ControlTheme>
 
     <!-- ==================== PlayPauseToolbarButton ==================== -->
     <!-- TODO: CSCore PlaybackState binding not available yet (deferred to audio migration).
-         Providing a simple play button style. -->
-    <Style x:Key="PlayPauseToolbarButton"
-           Selector="Button">
+         Providing a simple play button theme. -->
+    <ControlTheme x:Key="PlayPauseToolbarButton"
+                  TargetType="Button"
+                  BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="Content">
             <Viewbox Width="16"
                      Height="16">
@@ -355,7 +367,7 @@
                 Value="2" />
         <Setter Property="ToolTip.Tip"
                 Value="Play" />
-    </Style>
+    </ControlTheme>
 
     <!-- ==================== Audio Controls ==================== -->
     <!-- TODO: Audio control styles depend on CSCore (deferred to P3-013).
@@ -404,19 +416,21 @@
          This key is preserved but empty for compatibility. -->
 
     <!-- ==================== ModernToggleButtonStyle ==================== -->
-    <Style x:Key="ModernToggleButtonStyle"
-           Selector="ToggleButton">
+    <ControlTheme x:Key="ModernToggleButtonStyle"
+                  TargetType="ToggleButton"
+                  BasedOn="{StaticResource {x:Type ToggleButton}}">
         <Setter Property="BorderThickness"
                 Value="1" />
         <Setter Property="Padding"
                 Value="4" />
         <Setter Property="CornerRadius"
                 Value="8" />
-    </Style>
+    </ControlTheme>
 
     <!-- ==================== AssetsExplorerToggleButtonStyle ==================== -->
-    <Style x:Key="AssetsExplorerToggleButtonStyle"
-           Selector="ToggleButton">
+    <ControlTheme x:Key="AssetsExplorerToggleButtonStyle"
+                  TargetType="ToggleButton"
+                  BasedOn="{StaticResource {x:Type ToggleButton}}">
         <Setter Property="BorderThickness"
                 Value="1" />
         <Setter Property="Padding"
@@ -439,11 +453,12 @@
                 </Border>
             </ControlTemplate>
         </Setter>
-    </Style>
+    </ControlTheme>
 
     <!-- ==================== Custom Expander Header ==================== -->
-    <Style x:Key="CustomExpanderDownHeaderStyle"
-           Selector="ToggleButton">
+    <ControlTheme x:Key="CustomExpanderDownHeaderStyle"
+                  TargetType="ToggleButton"
+                  BasedOn="{StaticResource {x:Type ToggleButton}}">
         <Setter Property="Template">
             <ControlTemplate>
                 <Border Background="Transparent">
@@ -459,6 +474,6 @@
                 </Border>
             </ControlTemplate>
         </Setter>
-    </Style>
+    </ControlTheme>
 
 </ResourceDictionary>

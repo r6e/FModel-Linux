@@ -103,7 +103,7 @@
                 </Grid>
                 <Separator DockPanel.Dock="Top"
                            Tag="PLAYLIST"
-                           Style="{StaticResource CustomSeparator}" />
+                           Theme="{StaticResource CustomSeparator}" />
                 <Grid DockPanel.Dock="Top"
                       Height="24"
                       Margin="0 0 0 5">
@@ -135,7 +135,7 @@
                              Watermark="Search by name..." />
                 </Grid>
                 <ListBox DockPanel.Dock="Top"
-                         Style="{StaticResource AudioFilesListBox}"
+                         Theme="{StaticResource AudioFilesListBox}"
                          DoubleTapped="OnAudioFileMouseDoubleClick">
                     <ListBox.ContextMenu>
                         <ContextMenu>
@@ -226,7 +226,7 @@
                         </Canvas>
                     </Viewbox>
                 </Button>
-                <Button Style="{StaticResource PlayPauseToolbarButton}"
+                <Button Theme="{StaticResource PlayPauseToolbarButton}"
                         Command="{Binding AudioPlayer.AudioCommand}"
                         CommandParameter="PlayPause" />
                 <Button ToolTip="Next"

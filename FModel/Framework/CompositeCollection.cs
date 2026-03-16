@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -9,9 +10,10 @@ namespace FModel.Framework;
 /// Merges multiple <see cref="IEnumerable"/> sources into a single flat enumerable
 /// and relays <see cref="INotifyCollectionChanged"/> events from each source.
 /// </summary>
-public class CompositeCollection : IEnumerable, INotifyCollectionChanged
+public class CompositeCollection : IEnumerable, INotifyCollectionChanged, IDisposable
 {
     private readonly IEnumerable[] _sources;
+    private bool _disposed;
 
     public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
@@ -54,6 +56,19 @@ public class CompositeCollection : IEnumerable, INotifyCollectionChanged
                         count++;
             }
             return count;
+        }
+    }
+
+    public void Dispose()
+    {
+        if (_disposed)
+            return;
+        _disposed = true;
+
+        foreach (var source in _sources)
+        {
+            if (source is INotifyCollectionChanged ncc)
+                ncc.CollectionChanged -= OnSourceCollectionChanged;
         }
     }
 }

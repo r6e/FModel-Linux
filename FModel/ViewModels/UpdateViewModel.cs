@@ -30,7 +30,8 @@ public partial class UpdateViewModel : ViewModel
         Commits = [];
         CommitsView = new DataGridCollectionView(Commits)
         {
-            // TODO: Re-add date grouping once Avalonia grouping is implemented.
+            // TODO: Re-add date grouping. DataGridCollectionView supports GroupDescriptions, but
+            // non-DataGrid controls (ItemsControl/ListBox used in UpdateView) don't honor them.
             // WPF used: GroupDescriptions = { new PropertyGroupDescription("Commit.Author.Date", DateTimeToDateConverter) }
         };
 
