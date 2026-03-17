@@ -27,10 +27,6 @@ namespace FModel;
 /// </summary>
 public partial class App : Application
 {
-    [DllImport("kernel32.dll")]
-    [SupportedOSPlatform("windows")]
-    private static extern bool AttachConsole(int dwProcessId);
-
     [DllImport("winbrand.dll", CharSet = CharSet.Unicode)]
     [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     [SupportedOSPlatform("windows")]
@@ -48,11 +44,6 @@ public partial class App : Application
             desktop.MainWindow = new MainWindow();
             desktop.Exit += AppExit;
         }
-
-#if DEBUG
-        if (OperatingSystem.IsWindows())
-            AttachConsole(-1);
-#endif
 
         try
         {
