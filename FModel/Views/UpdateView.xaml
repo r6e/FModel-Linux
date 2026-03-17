@@ -37,17 +37,7 @@
                 <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <!-- <Grid.Style> -->
-            <!--     <Style TargetType="Grid"> -->
-            <!--         <Setter Property="Visibility" Value="Visible" /> -->
-            <!--         <Style.Triggers> -->
-            <!--             <DataTrigger Binding="{Binding Title, RelativeSource={RelativeSource
-            AncestorType=adonisControls:AdonisWindow}}" Value="Releases"> -->
-            <!--                 <Setter Property="Visibility" Value="Collapsed" /> -->
-            <!--             </DataTrigger> -->
-            <!--         </Style.Triggers> -->
-            <!--     </Style> -->
-            <!-- </Grid.Style> -->
+
 
             <Button Grid.Column="0"
                     VerticalAlignment="Top"
@@ -91,7 +81,7 @@
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Disabled">
             <Grid>
-                <ItemsControl ItemsSource="{Binding CommitGroups, IsAsync=True}">
+                <ItemsControl ItemsSource="{Binding CommitGroups}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>

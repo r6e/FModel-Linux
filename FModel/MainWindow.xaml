@@ -744,7 +744,7 @@
 
                                 <ListBox x:Name="AssetsExplorer"
                                          Grid.Row="2"
-                                         ItemsSource="{Binding SelectedItem.CombinedEntries, ElementName=AssetsFolderName, IsAsync=True}"
+                                         ItemsSource="{Binding SelectedItem.CombinedEntries, ElementName=AssetsFolderName}"
                                          Style="{StaticResource TiledExplorer}"
                                          Background="{DynamicResource SystemColors.AppWorkspaceBrushKey}"
                                          KeyDown="OnPreviewKeyDown" />

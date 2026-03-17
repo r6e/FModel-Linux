@@ -19,6 +19,7 @@ using FModel.Settings;
 using FModel.Views.Resources.Controls;
 using K4os.Compression.LZ4.Streams;
 using Microsoft.Win32;
+using Serilog;
 
 namespace FModel.ViewModels.Commands;
 
@@ -155,6 +156,12 @@ public class LoadCommand : ViewModelCommand<LoadingModesViewModel>
 
     private void FilterNewOrModifiedFilesToDisplay(CancellationToken cancellationToken)
     {
+        if (!OperatingSystem.IsWindows())
+        {
+            Log.Warning("Backup file comparison is not yet available on this platform (requires P4-004 StorageProvider migration)");
+            return;
+        }
+
         // TODO(P4-004): Replace Microsoft.Win32.OpenFileDialog with Avalonia StorageProvider API.
         var openFileDialog = new OpenFileDialog
         {

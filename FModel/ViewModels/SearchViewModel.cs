@@ -164,6 +164,13 @@ public class SearchViewModel : ViewModel
             _cachedMatchCase = HasMatchCaseEnabled;
         }
 
-        return _cachedFilterRegex?.Match(entry.Path).Success == true;
+        try
+        {
+            return _cachedFilterRegex?.Match(entry.Path).Success == true;
+        }
+        catch (RegexMatchTimeoutException)
+        {
+            return false;
+        }
     }
 }

@@ -23,7 +23,6 @@
     </ControlTheme>
 
     <!-- ==================== HighlightedCheckBox ==================== -->
-    <!-- Original had a color animation on border; simplified for Avalonia. -->
     <ControlTheme x:Key="HighlightedCheckBox"
                   TargetType="CheckBox"
                   BasedOn="{StaticResource {x:Type CheckBox}}">
@@ -31,6 +30,11 @@
                 Value="2" />
         <Setter Property="BorderBrush"
                 Value="Goldenrod" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.3" />
+            </Transitions>
+        </Setter>
     </ControlTheme>
 
     <!-- ==================== CustomSeparator ==================== -->

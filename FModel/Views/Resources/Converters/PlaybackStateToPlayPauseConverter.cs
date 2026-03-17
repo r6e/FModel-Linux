@@ -21,8 +21,11 @@ public class PlaybackStateToPlayPauseConverter : IValueConverter
         if (string.Equals(mode, "Tooltip", StringComparison.OrdinalIgnoreCase))
             return isPlaying ? "Pause" : "Play";
 
+        // "Icon" parameter or no parameter — return geometry resource
         var resourceKey = isPlaying ? "PauseIcon" : "PlayIcon";
-        return Application.Current!.TryGetResource(resourceKey, null, out var resource)
+        if (Application.Current is null)
+            return null;
+        return Application.Current.TryGetResource(resourceKey, null, out var resource)
             ? resource
             : null;
     }

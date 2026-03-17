@@ -1,6 +1,7 @@
 using System;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.VisualTree;
 
 namespace FModel.Views.Resources.Controls;
 
@@ -29,12 +30,7 @@ public sealed class TreeViewItemBehavior
         if (e.NewValue is not bool value)
             return;
 
-        // Clean up any existing subscription stored on the item
-        if (item.GetValue(SubscriptionProperty) is IDisposable oldSub)
-        {
-            oldSub.Dispose();
-            item.SetValue(SubscriptionProperty, null);
-        }
+        DisposeSubscription(item);
 
         if (value)
         {
@@ -45,12 +41,28 @@ public sealed class TreeViewItemBehavior
                         item.BringIntoView();
                 });
             item.SetValue(SubscriptionProperty, sub);
+
+            // Clean up when the item is removed from the visual tree (virtualization)
+            item.DetachedFromVisualTree -= OnDetachedFromVisualTree;
+            item.DetachedFromVisualTree += OnDetachedFromVisualTree;
         }
     }
 
-    /// <summary>
-    /// Internal attached property to store the observable subscription for cleanup.
-    /// </summary>
+    private static void OnDetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    {
+        if (sender is TreeViewItem item)
+            DisposeSubscription(item);
+    }
+
+    private static void DisposeSubscription(TreeViewItem item)
+    {
+        if (item.GetValue(SubscriptionProperty) is IDisposable oldSub)
+        {
+            oldSub.Dispose();
+            item.SetValue(SubscriptionProperty, null);
+        }
+    }
+
     private static readonly AttachedProperty<IDisposable?> SubscriptionProperty =
         AvaloniaProperty.RegisterAttached<TreeViewItemBehavior, TreeViewItem, IDisposable?>("Subscription");
 }

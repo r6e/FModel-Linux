@@ -28,18 +28,7 @@ public class AddEditDirectoryCommand : ViewModelCommand<CustomDirectoriesViewMod
 
             if (owner == null)
             {
-                input.Closed += (_, _) =>
-                {
-                    try
-                    {
-                        Apply(input.Result);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex, "AddEditDirectoryCommand owner-null callback failed");
-                    }
-                };
-                input.Show();
+                Log.Warning("AddEditDirectoryCommand: no owner window available, cannot show dialog");
                 return;
             }
 

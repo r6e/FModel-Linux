@@ -84,12 +84,13 @@ public partial class UpdateViewModel : ViewModel
 
     private async Task LoadCoAuthors()
     {
+        var snapshot = Commits.ToList();
         var coAuthorMap = await Task.Run(() =>
         {
             var map = new Dictionary<GitHubCommit, (string CleanMessage, HashSet<string> Usernames)>();
             var regex = GetCoAuthorRegex();
 
-            foreach (var commit in Commits)
+            foreach (var commit in snapshot)
             {
                 if (!commit.Commit.Message.Contains("Co-authored-by"))
                     continue;

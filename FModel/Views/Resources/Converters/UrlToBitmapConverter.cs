@@ -19,58 +19,58 @@ namespace FModel.Views.Resources.Converters;
 /// </remarks>
 public class UrlToBitmapConverter : IValueConverter
 {
-  public static readonly UrlToBitmapConverter Instance = new();
-  private static readonly HttpClient _http = new();
-  private static readonly ConcurrentDictionary<string, Bitmap?> _cache = new();
-  private static readonly ConcurrentDictionary<string, Task<Bitmap?>> _inFlight = new();
+    public static readonly UrlToBitmapConverter Instance = new();
+    private static readonly HttpClient _http = new() { Timeout = TimeSpan.FromSeconds(10) };
+    private static readonly ConcurrentDictionary<string, Bitmap?> _cache = new();
+    private static readonly ConcurrentDictionary<string, Task<Bitmap?>> _inFlight = new();
 
-  public static bool TryGetCached(string url, out Bitmap? bitmap)
-  {
-    return _cache.TryGetValue(url, out bitmap);
-  }
-
-  public static Task<Bitmap?> LoadAsync(string url)
-  {
-    if (string.IsNullOrWhiteSpace(url))
-      return Task.FromResult<Bitmap?>(null);
-
-    if (_cache.TryGetValue(url, out var cached))
-      return Task.FromResult(cached);
-
-    return _inFlight.GetOrAdd(url, DownloadAsync);
-  }
-
-  private static async Task<Bitmap?> DownloadAsync(string url)
-  {
-    try
+    public static bool TryGetCached(string url, out Bitmap? bitmap)
     {
-      using var stream = await _http.GetStreamAsync(url);
-      using var ms = new MemoryStream();
-      await stream.CopyToAsync(ms);
-      ms.Position = 0;
-      var bitmap = new Bitmap(ms);
-      _cache[url] = bitmap;
-      return bitmap;
+        return _cache.TryGetValue(url, out bitmap);
     }
-    catch
+
+    public static Task<Bitmap?> LoadAsync(string url)
     {
-      _cache.TryRemove(url, out _);
-      return null;
+        if (string.IsNullOrWhiteSpace(url))
+            return Task.FromResult<Bitmap?>(null);
+
+        if (_cache.TryGetValue(url, out var cached))
+            return Task.FromResult(cached);
+
+        return _inFlight.GetOrAdd(url, DownloadAsync);
     }
-    finally
+
+    private static async Task<Bitmap?> DownloadAsync(string url)
     {
-      _inFlight.TryRemove(url, out _);
+        try
+        {
+            using var stream = await _http.GetStreamAsync(url);
+            using var ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+            ms.Position = 0;
+            var bitmap = new Bitmap(ms);
+            _cache[url] = bitmap;
+            return bitmap;
+        }
+        catch
+        {
+            _cache.TryRemove(url, out _);
+            return null;
+        }
+        finally
+        {
+            _inFlight.TryRemove(url, out _);
+        }
     }
-  }
 
-  public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
-  {
-    if (value is not string url || string.IsNullOrWhiteSpace(url))
-      return null;
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is not string url || string.IsNullOrWhiteSpace(url))
+            return null;
 
-    return _cache.TryGetValue(url, out var cached) ? cached : null;
-  }
+        return _cache.TryGetValue(url, out var cached) ? cached : null;
+    }
 
-  public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-    => throw new NotImplementedException();
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => throw new NotImplementedException();
 }
