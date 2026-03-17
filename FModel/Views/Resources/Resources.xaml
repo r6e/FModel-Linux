@@ -249,7 +249,8 @@
 
                         <!-- DataContext inside ContentTemplate is the selected TabItem VM -->
                         <controls:AvalonEditor x:Name="DynamicArea"
-                                               Grid.Column="0" />
+                                               Grid.Column="0"
+                                               Grid.ColumnSpan="{Binding HasImage, Converter={x:Static converters:HasImageToColumnSpanConverter.Instance}}" />
                         <GridSplitter Grid.Column="1"
                                       Width="4"
                                       VerticalAlignment="Stretch"

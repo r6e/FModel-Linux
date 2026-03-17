@@ -69,11 +69,13 @@ public partial class UpdateViewModel : ViewModel
         {
             _ = LoadCoAuthors().ContinueWith(t =>
             {
-                if (t.IsFaulted) Log.Error(t.Exception, "Failed to load co-authors");
+                if (t.IsFaulted)
+                    Log.Error(t.Exception, "Failed to load co-authors");
             }, TaskScheduler.Default);
             _ = LoadAssets().ContinueWith(t =>
             {
-                if (t.IsFaulted) Log.Error(t.Exception, "Failed to load assets");
+                if (t.IsFaulted)
+                    Log.Error(t.Exception, "Failed to load assets");
             }, TaskScheduler.Default);
         }
         catch
@@ -125,8 +127,11 @@ public partial class UpdateViewModel : ViewModel
         if (coAuthorMap.Count == 0)
             return;
 
-        foreach (var (commit, data) in coAuthorMap)
-            commit.Commit.Message = data.CleanMessage;
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            foreach (var (commit, data) in coAuthorMap)
+                commit.Commit.Message = data.CleanMessage;
+        });
 
         var uniqueUsernames = coAuthorMap.Values.SelectMany(x => x.Usernames).Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
         var authorCache = new Dictionary<string, Author>();
@@ -144,16 +149,19 @@ public partial class UpdateViewModel : ViewModel
             }
         }
 
-        foreach (var (commit, data) in coAuthorMap)
+        await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            var coAuthors = data.Usernames
-                .Where(username => authorCache.ContainsKey(username))
-                .Select(username => authorCache[username])
-                .ToArray();
+            foreach (var (commit, data) in coAuthorMap)
+            {
+                var coAuthors = data.Usernames
+                    .Where(username => authorCache.ContainsKey(username))
+                    .Select(username => authorCache[username])
+                    .ToArray();
 
-            if (coAuthors.Length > 0)
-                commit.CoAuthors = coAuthors;
-        }
+                if (coAuthors.Length > 0)
+                    commit.CoAuthors = coAuthors;
+            }
+        });
 
         await LoadAvatars();
     }
@@ -163,41 +171,44 @@ public partial class UpdateViewModel : ViewModel
         var qa = await _apiEndpointView.GitHubApi.GetReleaseAsync("qa");
         var assets = qa.Assets.OrderByDescending(x => x.CreatedAt).ToList();
 
-        _suppressRegroup = true;
-        try
+        await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            for (var i = 0; i < assets.Count; i++)
+            _suppressRegroup = true;
+            try
             {
-                var asset = assets[i];
-                asset.IsLatest = i == 0;
+                for (var i = 0; i < assets.Count; i++)
+                {
+                    var asset = assets[i];
+                    asset.IsLatest = i == 0;
 
-                var commitSha = asset.Name.SubstringBeforeLast(".zip");
-                var commit = Commits.FirstOrDefault(x => x.Sha == commitSha);
-                if (commit != null)
-                {
-                    commit.Asset = asset;
-                }
-                else
-                {
-                    Commits.Add(new GitHubCommit
+                    var commitSha = asset.Name.SubstringBeforeLast(".zip");
+                    var commit = Commits.FirstOrDefault(x => x.Sha == commitSha);
+                    if (commit != null)
                     {
-                        Sha = commitSha,
-                        Commit = new Commit
+                        commit.Asset = asset;
+                    }
+                    else
+                    {
+                        Commits.Add(new GitHubCommit
                         {
-                            Message = $"FModel ({commitSha[..7]})",
-                            Author = new Author { Name = asset.Uploader.Login, Date = asset.CreatedAt }
-                        },
-                        Author = asset.Uploader,
-                        Asset = asset
-                    });
+                            Sha = commitSha,
+                            Commit = new Commit
+                            {
+                                Message = $"FModel ({commitSha[..7]})",
+                                Author = new Author { Name = asset.Uploader.Login, Date = asset.CreatedAt }
+                            },
+                            Author = asset.Uploader,
+                            Asset = asset
+                        });
+                    }
                 }
             }
-        }
-        finally
-        {
-            _suppressRegroup = false;
-            RebuildCommitGroups();
-        }
+            finally
+            {
+                _suppressRegroup = false;
+                RebuildCommitGroups();
+            }
+        });
 
         await LoadAvatars();
     }
