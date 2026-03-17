@@ -185,17 +185,29 @@ public class Snooper : GameWindow
         WindowShouldClose(true, true);
     }
 
-    public static unsafe int GetMaxRefreshFrequency()
+    /// <summary>Returns the primary monitor's current refresh rate in Hz, or 60 if unavailable.</summary>
+    public static unsafe int GetCurrentRefreshRate()
     {
-        if (!GLFW.Init())
-            return 60;
-
-        var monitor = GLFW.GetPrimaryMonitor();
-        if (monitor != null)
+        try
         {
-            var mode = GLFW.GetVideoMode(monitor);
-            if (mode != null && mode->RefreshRate > 0)
-                return mode->RefreshRate;
+            // GLFW.Init() is safe to call multiple times (no-op after first init).
+            // When called before any OpenTK NativeWindow exists, this performs the
+            // first GLFW initialisation; OpenTK will re-init (no-op) when the
+            // Snooper GameWindow is constructed immediately after.
+            if (!GLFW.Init())
+                return 60;
+
+            var monitor = GLFW.GetPrimaryMonitor();
+            if (monitor != null)
+            {
+                var mode = GLFW.GetVideoMode(monitor);
+                if (mode != null && mode->RefreshRate > 0)
+                    return mode->RefreshRate;
+            }
+        }
+        catch
+        {
+            // GLFW native library missing or failed to load — fall through.
         }
 
         return 60;
