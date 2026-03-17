@@ -12,7 +12,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using System.Threading.Tasks;
 using CUE4Parse;
 using FModel.Framework;
@@ -27,11 +26,6 @@ namespace FModel;
 /// </summary>
 public partial class App : Application
 {
-    [DllImport("winbrand.dll", CharSet = CharSet.Unicode)]
-    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-    [SupportedOSPlatform("windows")]
-    private static extern string BrandingFormatString(string format);
-
     public App()
     {
         InitializeComponent();
@@ -241,18 +235,7 @@ public partial class App : Application
 
     private string GetOperatingSystemProductName()
     {
-        var productName = string.Empty;
-        if (OperatingSystem.IsWindows())
-        {
-            try
-            {
-                productName = BrandingFormatString("%WINDOWS_LONG%");
-            }
-            catch
-            {
-                // ignored
-            }
-        }
+        var productName = RuntimeInformation.OSDescription;
 
         if (string.IsNullOrEmpty(productName))
             productName = Environment.OSVersion.VersionString;
