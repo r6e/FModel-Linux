@@ -126,7 +126,7 @@
                                   x:Name="SearchDataGrid"
                                   IsReadOnly="True"
                                   AutoGenerateColumns="False"
-                                  ItemsSource="{Binding SearchTab.SearchResultsView, IsAsync=True}"
+                                  ItemsSource="{Binding SearchTab.SearchResultsView}"
                                   DoubleTapped="OnAssetDoubleClick">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Path"
@@ -548,7 +548,7 @@
                                   x:Name="RefDataGrid"
                                   IsReadOnly="True"
                                   AutoGenerateColumns="False"
-                                  ItemsSource="{Binding RefTab.SearchResultsView, IsAsync=True}"
+                                  ItemsSource="{Binding RefTab.SearchResultsView}"
                                   DoubleTapped="OnAssetDoubleClick">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Path"

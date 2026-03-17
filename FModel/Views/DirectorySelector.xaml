@@ -105,7 +105,7 @@
                             Grid.Column="4"
                             Padding="0"
                             Click="OnDeleteDirectory"
-                            Width="{Binding ActualWidth, ElementName=OkGuysButWhoFuckingAsked}"
+                            Width="{Binding Bounds.Width, ElementName=OkGuysButWhoFuckingAsked}"
                             ToolTip="Delete Game"
                             IsVisible="{Binding SelectedDirectory.IsManual}">
                         <Viewbox Width="16"
@@ -125,7 +125,7 @@
 
                 <Expander ExpandDirection="Down"
                           IsExpanded="False">
-                    <Grid MaxWidth="{Binding ActualWidth, ElementName=Hello}">
+                    <Grid MaxWidth="{Binding Bounds.Width, ElementName=Hello}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="5" />

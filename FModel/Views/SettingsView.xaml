@@ -2,6 +2,7 @@
         xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:FModel"
+        xmlns:views="clr-namespace:FModel.Views"
         xmlns:c4pMeshes="clr-namespace:CUE4Parse_Conversion.Meshes;assembly=CUE4Parse-Conversion"
         xmlns:controls="clr-namespace:FModel.Views.Resources.Controls"
         xmlns:converters="clr-namespace:FModel.Views.Resources.Converters"
@@ -73,13 +74,13 @@
                               Grid.Column="6"
                               Margin="5 0 0 5"
                               ToolTip="Customize the directory of more output folders"
-                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Views.SettingsView}}}"
+                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SettingsView}}}"
                               IsChecked="{Binding SettingsView.UseCustomOutputFolders, Mode=TwoWay}" />
                     <Grid Grid.Row="1"
                           Grid.Column="0"
                           Grid.ColumnSpan="7"
                           HorizontalAlignment="Right"
-                          DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Views.SettingsView}}}"
+                          DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SettingsView}}}"
                           IsVisible="{Binding SettingsView.UseCustomOutputFolders}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -90,7 +91,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="{Binding ActualWidth, ElementName=ImJackedBro}" />
+                            <ColumnDefinition Width="{Binding Bounds.Width, ElementName=ImJackedBro}" />
                             <ColumnDefinition Width="5" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
@@ -189,7 +190,7 @@
                               Grid.ColumnSpan="5"
                               ItemsSource="{Binding SettingsView.DiscordRpcs}"
                               SelectedItem="{Binding SettingsView.SelectedDiscordRpc, Mode=TwoWay}"
-                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Views.SettingsView}}}">
+                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SettingsView}}}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Converter={x:Static converters:EnumToStringConverter.Instance}}" />
@@ -233,7 +234,7 @@
                                                  SelectedItem="{Binding SettingsView.SelectedUeGame, Mode=TwoWay}"
                                                  ItemsSource="{Binding SettingsView.UeGames}"
                                                  Theme="{StaticResource UComboBox}"
-                                                 DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Views.SettingsView}}}"
+                                                 DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SettingsView}}}"
                                                  Margin="0 0 0 5">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
@@ -253,7 +254,7 @@
                               Grid.ColumnSpan="5"
                               ItemsSource="{Binding SettingsView.Platforms}"
                               SelectedItem="{Binding SettingsView.SelectedUePlatform, Mode=TwoWay}"
-                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Views.SettingsView}}}"
+                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SettingsView}}}"
                               Margin="0 0 0 5">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
@@ -273,7 +274,7 @@
                               Grid.ColumnSpan="5"
                               ItemsSource="{Binding SettingsView.CompressedAudios}"
                               SelectedItem="{Binding SettingsView.SelectedCompressedAudio, Mode=TwoWay}"
-                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Views.SettingsView}}}"
+                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SettingsView}}}"
                               Margin="0 0 0 5">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
@@ -293,7 +294,7 @@
                               Grid.ColumnSpan="5"
                               ItemsSource="{Binding SettingsView.AssetLanguages}"
                               SelectedItem="{Binding SettingsView.SelectedAssetLanguage, Mode=TwoWay}"
-                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Views.SettingsView}}}"
+                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SettingsView}}}"
                               Margin="0 0 0 5">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
@@ -322,7 +323,7 @@
                     <CheckBox Grid.Row="10"
                               Grid.Column="2"
                               Margin="0 5 0 0"
-                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Views.SettingsView}}}"
+                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SettingsView}}}"
                               Content="{Binding IsChecked, RelativeSource={RelativeSource Self}, Converter={x:Static converters:BoolToToggleConverter.Instance}}"
                               IsChecked="{Binding SettingsView.MappingEndpoint.Overwrite, Mode=TwoWay}" />
 
@@ -331,14 +332,14 @@
                                Text="Mapping File Path"
                                VerticalAlignment="Center"
                                Margin="0 10 0 0"
-                               DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Views.SettingsView}}}"
+                               DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SettingsView}}}"
                                IsVisible="{Binding SettingsView.MappingEndpoint.Overwrite}" />
                     <TextBox Grid.Row="11"
                              Grid.Column="2"
                              Grid.ColumnSpan="3"
                              Margin="0 10 0 0"
                              Text="{Binding SettingsView.MappingEndpoint.FilePath, Mode=TwoWay}"
-                             DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Views.SettingsView}}}"
+                             DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SettingsView}}}"
                              IsVisible="{Binding SettingsView.MappingEndpoint.Overwrite}" />
                     <Button Grid.Row="11"
                             Grid.Column="6"
@@ -346,7 +347,7 @@
                             HorizontalAlignment="Right"
                             Click="OnBrowseMappings"
                             Margin="0 10 0 0"
-                            DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Views.SettingsView}}}"
+                            DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SettingsView}}}"
                             IsVisible="{Binding SettingsView.MappingEndpoint.Overwrite}" />
 
                     <Separator Grid.Row="12"
@@ -388,13 +389,13 @@
                                Text="AES Reload at Launch"
                                VerticalAlignment="Center"
                                Margin="0 0 0 5"
-                               DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Views.SettingsView}}}"
+                               DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SettingsView}}}"
                                IsVisible="{Binding SettingsView.AesEndpoint.IsValid}" />
                     <ComboBox Grid.Row="14"
                               Grid.Column="2"
                               Grid.ColumnSpan="5"
                               Margin="0 0 0 5"
-                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Views.SettingsView}}}"
+                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SettingsView}}}"
                               ItemsSource="{Binding SettingsView.AesReloads}"
                               SelectedItem="{Binding SettingsView.SelectedAesReload, Mode=TwoWay}"
                               IsVisible="{Binding SettingsView.AesEndpoint.IsValid}">
@@ -414,7 +415,7 @@
                           Grid.Column="2"
                           Grid.ColumnSpan="5"
                           Margin="0 0 0 5"
-                          DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Views.SettingsView}}}">
+                          DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SettingsView}}}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="5" />
@@ -539,7 +540,7 @@
 
                     <Image Grid.Column="0"
                            Grid.ColumnSpan="3"
-                           DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Views.SettingsView}}}"
+                           DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SettingsView}}}"
                            Source="avares://FModel/Resources/T_Placeholder_Item_Image.png" />
                     <!-- TODO(P2-003): Image source DataTrigger on SelectedCosmeticStyle not yet
                     supported (needs IValueConverter or code-behind) -->
@@ -566,7 +567,7 @@
                                   Grid.Column="2"
                                   ItemsSource="{Binding SettingsView.CosmeticStyles}"
                                   SelectedItem="{Binding SettingsView.SelectedCosmeticStyle, Mode=TwoWay}"
-                                  DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Views.SettingsView}}}"
+                                  DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SettingsView}}}"
                                   Margin="0 0 0 5">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
@@ -649,7 +650,7 @@
                               Grid.ColumnSpan="3"
                               ItemsSource="{Binding SettingsView.MeshExportFormats}"
                               SelectedItem="{Binding SettingsView.SelectedMeshExportFormat, Mode=TwoWay}"
-                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Views.SettingsView}}}"
+                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SettingsView}}}"
                               Margin="0 0 0 5">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
@@ -686,7 +687,7 @@
                               Grid.ColumnSpan="3"
                               ItemsSource="{Binding SettingsView.SocketExportFormats}"
                               SelectedItem="{Binding SettingsView.SelectedSocketExportFormat, Mode=TwoWay}"
-                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Views.SettingsView}}}"
+                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SettingsView}}}"
                               Margin="0 0 0 5"
                               IsEnabled="{Binding SettingsView.SocketSettingsEnabled}">
                         <ComboBox.ItemTemplate>
@@ -707,7 +708,7 @@
                               Grid.ColumnSpan="3"
                               ItemsSource="{Binding SettingsView.CompressionFormats}"
                               SelectedItem="{Binding SettingsView.SelectedCompressionFormat, Mode=TwoWay}"
-                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Views.SettingsView}}}"
+                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SettingsView}}}"
                               Margin="0 0 0 5"
                               IsEnabled="{Binding SettingsView.CompressionSettingsEnabled}">
                         <ComboBox.ItemTemplate>
@@ -727,7 +728,7 @@
                               Grid.ColumnSpan="3"
                               ItemsSource="{Binding SettingsView.LodExportFormats}"
                               SelectedItem="{Binding SettingsView.SelectedLodExportFormat, Mode=TwoWay}"
-                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Views.SettingsView}}}"
+                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SettingsView}}}"
                               Margin="0 0 0 5">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
@@ -869,7 +870,7 @@
                               Grid.ColumnSpan="3"
                               ItemsSource="{Binding SettingsView.NaniteMeshExportFormats}"
                               SelectedItem="{Binding SettingsView.SelectedNaniteMeshExportFormat, Mode=TwoWay}"
-                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Views.SettingsView}}}"
+                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SettingsView}}}"
                               Margin="0 0 0 5">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
@@ -888,7 +889,7 @@
                               Grid.ColumnSpan="3"
                               ItemsSource="{Binding SettingsView.MaterialExportFormats}"
                               SelectedItem="{Binding SettingsView.SelectedMaterialExportFormat, Mode=TwoWay}"
-                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Views.SettingsView}}}"
+                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SettingsView}}}"
                               Margin="0 0 0 5">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
@@ -907,7 +908,7 @@
                               Grid.ColumnSpan="3"
                               ItemsSource="{Binding SettingsView.TextureExportFormats}"
                               SelectedItem="{Binding SettingsView.SelectedTextureExportFormat, Mode=TwoWay}"
-                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Views.SettingsView}}}"
+                              DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SettingsView}}}"
                               Margin="0 0 0 5">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>

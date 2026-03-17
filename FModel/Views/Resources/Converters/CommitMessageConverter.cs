@@ -8,6 +8,9 @@ public class CommitMessageConverter : IValueConverter
 {
     public static readonly CommitMessageConverter Instance = new();
 
+    // Message may be cleaned by UpdateViewModel.LoadCoAuthors() which strips
+    // "Co-authored-by:" lines and trims; the split on "\n\n" still yields the
+    // correct title/description parts after that cleanup.
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is string commitMessage)

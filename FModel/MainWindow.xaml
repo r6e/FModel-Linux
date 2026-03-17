@@ -603,7 +603,7 @@
                                 <controls:Breadcrumb Grid.Row="0"
                                                      HorizontalAlignment="Left"
                                                      Margin="0 5 0 5"
-                                                     MaxWidth="{Binding ActualWidth, ElementName=AssetsSearchTextBox}"
+                                                     MaxWidth="{Binding Bounds.Width, ElementName=AssetsSearchTextBox}"
                                                      DataContext="{Binding SelectedItem.PathAtThisPoint, ElementName=AssetsFolderName, FallbackValue='No/Directory/Detected/In/Folder'}" />
 
                                 <ListBox Grid.Row="1"

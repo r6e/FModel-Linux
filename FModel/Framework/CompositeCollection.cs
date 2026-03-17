@@ -51,9 +51,8 @@ public class CompositeCollection : IEnumerable, INotifyCollectionChanged, IDispo
             {
                 if (source is ICollection c)
                     count += c.Count;
-                else
-                    foreach (var _ in source)
-                        count++;
+                // Skip non-ICollection sources; current callers (DataGridCollectionView)
+                // implement ICollection so this avoids O(n) enumeration.
             }
             return count;
         }

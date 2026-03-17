@@ -41,7 +41,7 @@
 
             <Button Grid.Column="0"
                     VerticalAlignment="Top"
-                    Height="{Binding ActualHeight, ElementName=RemindButton}"
+                    Height="{Binding Bounds.Height, ElementName=RemindButton}"
                     Click="OnDownloadLatest">
                 Download Latest Release
             </Button>

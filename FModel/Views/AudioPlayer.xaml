@@ -43,7 +43,7 @@
                                Margin="0 0 0 10" />
                     <ComboBox Grid.Row="0"
                               Grid.Column="2"
-                              ItemsSource="{Binding AudioPlayer.AudioDevicesView, IsAsync=True}"
+                              ItemsSource="{Binding AudioPlayer.AudioDevicesView}"
                               SelectedItem="{Binding AudioPlayer.SelectedAudioDevice, Mode=TwoWay}"
                               SelectionChanged="OnDeviceSwap">
                         <ComboBox.ItemTemplate>

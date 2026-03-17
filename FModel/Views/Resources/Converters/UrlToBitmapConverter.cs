@@ -29,15 +29,22 @@ public class UrlToBitmapConverter : IValueConverter
         return _cache.TryGetValue(url, out bitmap);
     }
 
-    public static Task<Bitmap?> LoadAsync(string url)
+    public static async Task<Bitmap?> LoadAsync(string url)
     {
         if (string.IsNullOrWhiteSpace(url))
-            return Task.FromResult<Bitmap?>(null);
+            return null;
 
         if (_cache.TryGetValue(url, out var cached))
-            return Task.FromResult(cached);
+            return cached;
 
-        return _inFlight.GetOrAdd(url, DownloadAsync);
+        try
+        {
+            return await _inFlight.GetOrAdd(url, DownloadAsync);
+        }
+        finally
+        {
+            _inFlight.TryRemove(url, out _);
+        }
     }
 
     private static async Task<Bitmap?> DownloadAsync(string url)
