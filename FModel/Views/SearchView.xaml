@@ -54,7 +54,7 @@
                                      Watermark="Write your pattern and press enter..." />
                             <StackPanel Grid.Column="1"
                                         Orientation="Horizontal">
-                                <ToggleButton ToolTip="Match Case"
+                                <ToggleButton ToolTip.Tip="Match Case"
                                               Padding="5"
                                               IsChecked="{Binding SearchTab.HasMatchCaseEnabled}">
                                     <Viewbox Width="16"
@@ -67,7 +67,7 @@
                                         </Canvas>
                                     </Viewbox>
                                 </ToggleButton>
-                                <ToggleButton ToolTip="Regex"
+                                <ToggleButton ToolTip.Tip="Regex"
                                               Padding="5"
                                               IsChecked="{Binding SearchTab.HasRegexEnabled}">
                                     <Viewbox Width="16"
@@ -80,7 +80,7 @@
                                         </Canvas>
                                     </Viewbox>
                                 </ToggleButton>
-                                <Button ToolTip="Sort File Sizes"
+                                <Button ToolTip.Tip="Sort File Sizes"
                                         Padding="5"
                                         Click="OnSearchSortClick">
                                     <Viewbox Width="16"
@@ -93,7 +93,7 @@
                                         </Canvas>
                                     </Viewbox>
                                 </Button>
-                                <Button ToolTip="Clear Search Filter"
+                                <Button ToolTip.Tip="Clear Search Filter"
                                         Padding="5"
                                         Click="OnDeleteSearchClick">
                                     <Viewbox Width="16"
@@ -475,7 +475,7 @@
                                      Watermark="Write your pattern and press enter..." />
                             <StackPanel Grid.Column="1"
                                         Orientation="Horizontal">
-                                <ToggleButton ToolTip="Match Case"
+                                <ToggleButton ToolTip.Tip="Match Case"
                                               Padding="5"
                                               IsChecked="{Binding RefTab.HasMatchCaseEnabled}">
                                     <Viewbox Width="16"
@@ -488,7 +488,7 @@
                                         </Canvas>
                                     </Viewbox>
                                 </ToggleButton>
-                                <ToggleButton ToolTip="Regex"
+                                <ToggleButton ToolTip.Tip="Regex"
                                               Padding="5"
                                               IsChecked="{Binding RefTab.HasRegexEnabled}">
                                     <Viewbox Width="16"
@@ -501,7 +501,7 @@
                                         </Canvas>
                                     </Viewbox>
                                 </ToggleButton>
-                                <Button ToolTip="Sort File Sizes"
+                                <Button ToolTip.Tip="Sort File Sizes"
                                         Padding="5"
                                         Click="OnSearchSortClick">
                                     <Viewbox Width="16"
@@ -514,7 +514,7 @@
                                         </Canvas>
                                     </Viewbox>
                                 </Button>
-                                <Button ToolTip="Clear Search Filter"
+                                <Button ToolTip.Tip="Clear Search Filter"
                                         Padding="5"
                                         Click="OnDeleteSearchClick">
                                     <Viewbox Width="16"

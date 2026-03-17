@@ -64,10 +64,6 @@ public class UrlToBitmapConverter : IValueConverter
             _cache.TryRemove(url, out _);
             return null;
         }
-        finally
-        {
-            _inFlight.TryRemove(url, out _);
-        }
     }
 
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)

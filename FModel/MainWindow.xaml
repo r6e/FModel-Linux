@@ -608,7 +608,7 @@
 
                                 <ListBox Grid.Row="1"
                                          x:Name="AssetsListName"
-                                         Style="{StaticResource AssetsListBox}"
+                                         Theme="{StaticResource AssetsListBox}"
                                          DoubleTapped="OnAssetsListMouseDoubleClick"
                                          KeyDown="OnPreviewKeyDown" />
 
@@ -745,7 +745,7 @@
                                 <ListBox x:Name="AssetsExplorer"
                                          Grid.Row="2"
                                          ItemsSource="{Binding SelectedItem.CombinedEntries, ElementName=AssetsFolderName}"
-                                         Style="{StaticResource TiledExplorer}"
+                                         Theme="{StaticResource TiledExplorer}"
                                          Background="{DynamicResource SystemColors.AppWorkspaceBrushKey}"
                                          KeyDown="OnPreviewKeyDown" />
                             </Grid>
@@ -828,8 +828,7 @@
 
                             <controls:CustomRichTextBox Grid.Column="0"
                                                         Grid.ColumnSpan="3"
-                                                        x:Name="LogRtbName"
-                                                        Style="{StaticResource CustomRichTextBox}" />
+                                                        x:Name="LogRtbName" />
                             <StackPanel Grid.Column="2"
                                         Orientation="Vertical"
                                         VerticalAlignment="Bottom"

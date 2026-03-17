@@ -106,7 +106,7 @@
                             Padding="0"
                             Click="OnDeleteDirectory"
                             Width="{Binding Bounds.Width, ElementName=OkGuysButWhoFuckingAsked}"
-                            ToolTip="Delete Game"
+                            ToolTip.Tip="Delete Game"
                             IsVisible="{Binding SelectedDirectory.IsManual}">
                         <Viewbox Width="16"
                                  Height="16"
@@ -167,7 +167,7 @@
                                 Grid.Column="6"
                                 Padding="0"
                                 Click="OnAddDirectory"
-                                ToolTip="Add Game">
+                                ToolTip.Tip="Add Game">
                             <Viewbox Width="16"
                                      Height="16"
                                      HorizontalAlignment="Center">

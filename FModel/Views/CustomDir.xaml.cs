@@ -6,8 +6,6 @@ namespace FModel.Views;
 
 public partial class CustomDir : Window
 {
-    public bool? Result { get; private set; }
-
     public CustomDir(CustomDirectory customDir)
     {
         DataContext = customDir;
@@ -20,13 +18,11 @@ public partial class CustomDir : Window
 
     private void OnClick(object sender, RoutedEventArgs e)
     {
-        Result = true;
         Close(true);
     }
 
     private void OnCancelClick(object sender, RoutedEventArgs e)
     {
-        Result = false;
         Close(false);
     }
 }

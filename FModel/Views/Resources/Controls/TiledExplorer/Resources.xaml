@@ -6,8 +6,9 @@
                     x:Class="FModel.Views.Resources.Controls.TiledExplorer.ResourcesDictionary">
     <controls:TypeDataTemplateSelector x:Key="TemplateSelector" />
 
-    <Style x:Key="TiledExplorer"
-           Selector="ListBox">
+    <ControlTheme x:Key="TiledExplorer"
+                  TargetType="ListBox"
+                  BasedOn="{StaticResource {x:Type ListBox}}">
         <Setter Property="local:SmoothScroll.IsEnabled"
                 Value="True" />
         <Setter Property="local:SmoothScroll.Factor"
@@ -108,7 +109,7 @@
             <Setter Property="BorderBrush"
                     Value="#80B8FF" />
         </Style>
-    </Style>
+    </ControlTheme>
 
     <DataTemplate x:Key="TextureNumTemplate">
         <Border VerticalAlignment="Top"
@@ -135,8 +136,9 @@
         </Border>
     </DataTemplate>
 
-    <Style x:Key="AssetsListBox"
-           Selector="ListBox">
+    <ControlTheme x:Key="AssetsListBox"
+                  TargetType="ListBox"
+                  BasedOn="{StaticResource {x:Type ListBox}}">
         <Setter Property="ItemsSource"
                 Value="{Binding SelectedItem.AssetsList.AssetsView, ElementName=AssetsFolderName}" />
         <!-- Avalonia Multiple = WPF Extended (Ctrl/Shift multi-select) -->
@@ -221,6 +223,6 @@
             <Setter Property="controls:ListBoxItemBehavior.SelectFileOnRightClick"
                     Value="True" />
         </Style>
-    </Style>
+    </ControlTheme>
 
 </ResourceDictionary>

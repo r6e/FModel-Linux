@@ -11,9 +11,6 @@
 
     <Styles.Resources>
 
-        <!-- ==================== Converters ==================== -->
-        <converters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
-
         <!-- ==================== TabItemFillSpace ==================== -->
         <ControlTheme x:Key="TabItemFillSpace"
                       TargetType="TabItem"
@@ -332,19 +329,6 @@
         <!-- ==================== AvalonEdit TextEditor ==================== -->
         <!-- Default Fluent theme styling is used; no override needed for AvaloniaEdit -->
 
-        <!-- ==================== CustomRichTextBox ==================== -->
-        <Style x:Key="CustomRichTextBox"
-               Selector="controls|CustomRichTextBox">
-            <Setter Property="Background"
-                    Value="{DynamicResource SystemControlBackgroundBaseLowBrush}" />
-            <Setter Property="Foreground"
-                    Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
-            <Setter Property="BorderBrush"
-                    Value="{DynamicResource SystemControlForegroundBaseLowBrush}" />
-            <Setter Property="BorderThickness"
-                    Value="1" />
-        </Style>
-
         <!-- ==================== Magnifier Templates ==================== -->
         <!-- Magnifier is implemented in Views/Resources/Controls/Mgn/Magnifier.cs.
          CircleTemplate and RectangleTemplate are no longer used; the Avalonia
@@ -461,6 +445,18 @@
         </ControlTheme>
 
     </Styles.Resources>
+
+    <!-- ==================== CustomRichTextBox ==================== -->
+    <Style Selector="controls|CustomRichTextBox">
+        <Setter Property="Background"
+                Value="{DynamicResource SystemControlBackgroundBaseLowBrush}" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource SystemControlForegroundBaseLowBrush}" />
+        <Setter Property="BorderThickness"
+                Value="1" />
+    </Style>
 
     <!-- ==================== Audio Controls ==================== -->
     <!-- TODO: Audio control styles depend on CSCore (deferred to P3-013).
