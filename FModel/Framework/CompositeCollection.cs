@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 
 namespace FModel.Framework;
 
@@ -51,8 +52,8 @@ public class CompositeCollection : IEnumerable, INotifyCollectionChanged, IDispo
             {
                 if (source is ICollection c)
                     count += c.Count;
-                // Skip non-ICollection sources; current callers (DataGridCollectionView)
-                // implement ICollection so this avoids O(n) enumeration.
+                else
+                    Debug.Fail($"CompositeCollection.Count: source {source.GetType().Name} does not implement ICollection; its items are not counted.");
             }
             return count;
         }

@@ -46,6 +46,10 @@ public sealed class TreeViewItemBehavior
             item.DetachedFromVisualTree -= OnDetachedFromVisualTree;
             item.DetachedFromVisualTree += OnDetachedFromVisualTree;
         }
+        else
+        {
+            item.DetachedFromVisualTree -= OnDetachedFromVisualTree;
+        }
     }
 
     private static void OnDetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)

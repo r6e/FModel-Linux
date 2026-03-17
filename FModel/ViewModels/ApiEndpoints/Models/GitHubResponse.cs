@@ -120,14 +120,14 @@ public class GitHubCommit : ViewModel
 
 public class Commit : ViewModel
 {
-    private Author _author;
+    private Author _author = null!;
     [J("author")] public Author Author
     {
         get => _author;
         set => SetProperty(ref _author, value);
     }
 
-    private string _message;
+    private string _message = null!;
     [J("message")] public string Message
     {
         get => _message;
@@ -137,11 +137,11 @@ public class Commit : ViewModel
 
 public class Author : ViewModel
 {
-    [J("name")] public string Name { get; set; }
-    [J("login")] public string Login { get; set; }
+    [J("name")] public string Name { get; set; } = null!;
+    [J("login")] public string Login { get; set; } = null!;
     [J("date")] public DateTime Date { get; set; }
-    [J("avatar_url")] public string AvatarUrl { get; set; }
-    [J("html_url")] public string HtmlUrl { get; set; }
+    [J("avatar_url")] public string AvatarUrl { get; set; } = null!;
+    [J("html_url")] public string HtmlUrl { get; set; } = null!;
 
     private Bitmap? _avatarImage;
 

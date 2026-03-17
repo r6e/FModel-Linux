@@ -133,6 +133,7 @@ public class SearchViewModel : ViewModel
     private Regex? _cachedFilterRegex;
     private string? _cachedFilterText;
     private bool _cachedMatchCase;
+    private bool _cachedRegexInvalid;
 
     private bool ItemFilter(object item, IEnumerable<string> filters)
     {
@@ -142,7 +143,7 @@ public class SearchViewModel : ViewModel
         if (!HasRegexEnabled)
             return filters.All(x => entry.Path.Contains(x, HasMatchCaseEnabled ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase));
 
-        if (_cachedFilterRegex == null || _cachedFilterText != FilterText || _cachedMatchCase != HasMatchCaseEnabled)
+        if (_cachedFilterText != FilterText || _cachedMatchCase != HasMatchCaseEnabled)
         {
             var o = RegexOptions.None;
             if (!HasMatchCaseEnabled)
@@ -151,18 +152,20 @@ public class SearchViewModel : ViewModel
             try
             {
                 _cachedFilterRegex = new Regex(FilterText, o, TimeSpan.FromSeconds(1));
+                _cachedRegexInvalid = false;
             }
             catch (ArgumentException)
             {
                 _cachedFilterRegex = null;
-                _cachedFilterText = FilterText;
-                _cachedMatchCase = HasMatchCaseEnabled;
-                return false;
+                _cachedRegexInvalid = true;
             }
 
             _cachedFilterText = FilterText;
             _cachedMatchCase = HasMatchCaseEnabled;
         }
+
+        if (_cachedRegexInvalid)
+            return false;
 
         try
         {

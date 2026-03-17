@@ -7,7 +7,8 @@ namespace FModel.Views.Resources.Converters;
 
 /// <summary>
 /// Converts <see cref="ELoadingMode"/> to <see cref="SelectionMode"/>.
-/// "Multiple" mode uses Extended (multi-select), all other modes use Single.
+/// "Multiple" mode uses <see cref="SelectionMode.Multiple"/> (multi-select),
+/// all other modes use <see cref="SelectionMode.Single"/>.
 /// </summary>
 public class LoadingModeToSelectionModeConverter : IValueConverter
 {
