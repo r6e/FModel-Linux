@@ -11,6 +11,9 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceInclude Source="avares://FModel/Views/Resources/Colors.xaml" />
                 <ResourceInclude Source="avares://FModel/Views/Resources/Icons.xaml" />
+                <ResourceInclude Source="avares://FModel/Views/Resources/Controls/ContextMenus/FileContextMenu.xaml" />
+                <ResourceInclude Source="avares://FModel/Views/Resources/Controls/ContextMenus/FolderContextMenu.xaml" />
+                <ResourceInclude Source="avares://FModel/Views/Resources/Controls/TiledExplorer/Resources.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <!-- Accent colours preserved from original AdonisUI scheme -->
             <Color x:Key="AccentColor">#206BD4</Color>

@@ -959,7 +959,6 @@
                                Margin="0 0 0 5" />
                     <controls:HotkeyTextBox Grid.Row="0"
                                             Grid.Column="2"
-                                            Style="{StaticResource TextBoxDefaultStyle}"
                                             Margin="0 0 0 5"
                                             HotKey="{Binding DirLeftTab, Source={x:Static local:Settings.UserSettings.Default}, Mode=TwoWay}" />
                     <TextBlock Grid.Row="1"
@@ -968,7 +967,6 @@
                                VerticalAlignment="Center" />
                     <controls:HotkeyTextBox Grid.Row="1"
                                             Grid.Column="2"
-                                            Style="{StaticResource TextBoxDefaultStyle}"
                                             HotKey="{Binding DirRightTab, Source={x:Static local:Settings.UserSettings.Default}, Mode=TwoWay}" />
 
                     <Separator Grid.Row="2"
@@ -983,7 +981,6 @@
                                Margin="0 0 0 5" />
                     <controls:HotkeyTextBox Grid.Row="3"
                                             Grid.Column="2"
-                                            Style="{StaticResource TextBoxDefaultStyle}"
                                             Margin="0 0 0 5"
                                             HotKey="{Binding SwitchAssetExplorer, Source={x:Static local:Settings.UserSettings.Default}, Mode=TwoWay}" />
                     <TextBlock Grid.Row="4"
@@ -993,7 +990,6 @@
                                Margin="0 0 0 5" />
                     <controls:HotkeyTextBox Grid.Row="4"
                                             Grid.Column="2"
-                                            Style="{StaticResource TextBoxDefaultStyle}"
                                             Margin="0 0 0 5"
                                             HotKey="{Binding AssetLeftTab, Source={x:Static local:Settings.UserSettings.Default}, Mode=TwoWay}" />
                     <TextBlock Grid.Row="5"
@@ -1003,7 +999,6 @@
                                Margin="0 0 0 5" />
                     <controls:HotkeyTextBox Grid.Row="5"
                                             Grid.Column="2"
-                                            Style="{StaticResource TextBoxDefaultStyle}"
                                             Margin="0 0 0 5"
                                             HotKey="{Binding AssetRightTab, Source={x:Static local:Settings.UserSettings.Default}, Mode=TwoWay}" />
                     <TextBlock Grid.Row="6"
@@ -1013,7 +1008,6 @@
                                Margin="0 0 0 5" />
                     <controls:HotkeyTextBox Grid.Row="6"
                                             Grid.Column="2"
-                                            Style="{StaticResource TextBoxDefaultStyle}"
                                             Margin="0 0 0 5"
                                             HotKey="{Binding AssetAddTab, Source={x:Static local:Settings.UserSettings.Default}, Mode=TwoWay}" />
                     <TextBlock Grid.Row="7"
@@ -1022,7 +1016,6 @@
                                VerticalAlignment="Center" />
                     <controls:HotkeyTextBox Grid.Row="7"
                                             Grid.Column="2"
-                                            Style="{StaticResource TextBoxDefaultStyle}"
                                             HotKey="{Binding AssetRemoveTab, Source={x:Static local:Settings.UserSettings.Default}, Mode=TwoWay}" />
 
                     <Separator Grid.Row="8"
@@ -1037,7 +1030,6 @@
                                Margin="0 0 0 5" />
                     <controls:HotkeyTextBox Grid.Row="9"
                                             Grid.Column="2"
-                                            Style="{StaticResource TextBoxDefaultStyle}"
                                             Margin="0 0 0 5"
                                             HotKey="{Binding AddAudio, Source={x:Static local:Settings.UserSettings.Default}, Mode=TwoWay}" />
                     <TextBlock Grid.Row="10"
@@ -1047,7 +1039,6 @@
                                Margin="0 0 0 5" />
                     <controls:HotkeyTextBox Grid.Row="10"
                                             Grid.Column="2"
-                                            Style="{StaticResource TextBoxDefaultStyle}"
                                             Margin="0 0 0 5"
                                             HotKey="{Binding PlayPauseAudio, Source={x:Static local:Settings.UserSettings.Default}, Mode=TwoWay}" />
                     <TextBlock Grid.Row="11"
@@ -1057,7 +1048,6 @@
                                Margin="0 0 0 5" />
                     <controls:HotkeyTextBox Grid.Row="11"
                                             Grid.Column="2"
-                                            Style="{StaticResource TextBoxDefaultStyle}"
                                             Margin="0 0 0 5"
                                             HotKey="{Binding PreviousAudio, Source={x:Static local:Settings.UserSettings.Default}, Mode=TwoWay}" />
                     <TextBlock Grid.Row="12"
@@ -1067,7 +1057,6 @@
                                Margin="0 0 0 5" />
                     <controls:HotkeyTextBox Grid.Row="12"
                                             Grid.Column="2"
-                                            Style="{StaticResource TextBoxDefaultStyle}"
                                             Margin="0 0 0 5"
                                             HotKey="{Binding NextAudio, Source={x:Static local:Settings.UserSettings.Default}, Mode=TwoWay}" />
                 </Grid>
