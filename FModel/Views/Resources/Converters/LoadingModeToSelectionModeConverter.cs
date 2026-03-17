@@ -8,8 +8,8 @@ namespace FModel.Views.Resources.Converters;
 
 /// <summary>
 /// Converts <see cref="ELoadingMode"/> to <see cref="SelectionMode"/>.
-/// "Multiple" mode uses <see cref="SelectionMode.Multiple"/> (multi-select),
-/// all other modes use <see cref="SelectionMode.Single"/>.
+/// Multiple, All, AllButNew, AllButModified, and AllButPatched use <see cref="SelectionMode.Multiple"/> (multi-select);
+/// any future single-file modes would use <see cref="SelectionMode.Single"/>.
 /// </summary>
 public class LoadingModeToSelectionModeConverter : IValueConverter
 {
@@ -20,6 +20,10 @@ public class LoadingModeToSelectionModeConverter : IValueConverter
         return value switch
         {
             ELoadingMode.Multiple => SelectionMode.Multiple,
+            ELoadingMode.All => SelectionMode.Multiple,
+            ELoadingMode.AllButNew => SelectionMode.Multiple,
+            ELoadingMode.AllButModified => SelectionMode.Multiple,
+            ELoadingMode.AllButPatched => SelectionMode.Multiple,
             _ => SelectionMode.Single
         };
     }
