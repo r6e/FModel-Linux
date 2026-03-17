@@ -137,7 +137,7 @@ public class CUE4ParseViewModel : ViewModel
                 Snooper MakeSnooper()
                 {
                     var scale = ImGuiController.GetDpiScale();
-                    var htz = Snooper.GetMaxRefreshFrequency();
+                    var htz = Snooper.GetCurrentRefreshRate();
                     var primaryScreen = (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow?.Screens.Primary;
                     var screenWidth = primaryScreen?.Bounds.Width ?? 1920;
                     var screenHeight = primaryScreen?.Bounds.Height ?? 1080;

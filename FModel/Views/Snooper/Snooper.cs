@@ -185,61 +185,31 @@ public class Snooper : GameWindow
         WindowShouldClose(true, true);
     }
 
-    [DllImport("user32.dll")]
-    private static extern bool EnumDisplaySettings(
-        string deviceName, int modeNum, ref DEVMODE devMode);
-
-    [StructLayout(LayoutKind.Sequential)]
-    private struct DEVMODE
+    /// <summary>Returns the primary monitor's current refresh rate in Hz, or 60 if unavailable.</summary>
+    public static unsafe int GetCurrentRefreshRate()
     {
-        private const int CCHDEVICENAME = 0x20;
-        private const int CCHFORMNAME = 0x20;
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 0x20)]
-        public string dmDeviceName;
-        public short dmSpecVersion;
-        public short dmDriverVersion;
-        public short dmSize;
-        public short dmDriverExtra;
-        public int dmFields;
-        public int dmPositionX;
-        public int dmPositionY;
-        public ScreenOrientation dmDisplayOrientation;
-        public int dmDisplayFixedOutput;
-        public short dmColor;
-        public short dmDuplex;
-        public short dmYResolution;
-        public short dmTTOption;
-        public short dmCollate;
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 0x20)]
-        public string dmFormName;
-        public short dmLogPixels;
-        public int dmBitsPerPel;
-        public int dmPelsWidth;
-        public int dmPelsHeight;
-        public int dmDisplayFlags;
-        public int dmDisplayFrequency;
-        public int dmICMMethod;
-        public int dmICMIntent;
-        public int dmMediaType;
-        public int dmDitherType;
-        public int dmReserved1;
-        public int dmReserved2;
-        public int dmPanningWidth;
-        public int dmPanningHeight;
-
-    }
-
-    public static int GetMaxRefreshFrequency()
-    {
-        var rf = 60;
-        var vDevMode = new DEVMODE();
-        var i = 0;
-        while (EnumDisplaySettings(null, i, ref vDevMode))
+        try
         {
-            i++;
-            rf = Math.Max(rf, vDevMode.dmDisplayFrequency);
+            // GLFW.Init() is safe to call multiple times (no-op after first init).
+            // When called before any OpenTK NativeWindow exists, this performs the
+            // first GLFW initialisation; OpenTK will re-init (no-op) when the
+            // Snooper GameWindow is constructed immediately after.
+            if (!GLFW.Init())
+                return 60;
+
+            var monitor = GLFW.GetPrimaryMonitor();
+            if (monitor != null)
+            {
+                var mode = GLFW.GetVideoMode(monitor);
+                if (mode != null && mode->RefreshRate > 0)
+                    return mode->RefreshRate;
+            }
+        }
+        catch
+        {
+            // GLFW native library missing or failed to load — fall through.
         }
 
-        return rf;
+        return 60;
     }
 }
